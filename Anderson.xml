@@ -6607,7 +6607,7 @@ xprText:echo(calcAscendTime(xaos.Level,xaos.LevelPercent))
 </script>
 						<command></command>
 						<packageName></packageName>
-						<time>00:01:00.000</time>
+						<time>00:05:00.000</time>
 					</Timer>
 					<TimerGroup isActive="yes" isFolder="yes" isTempTimer="no" isOffsetTimer="no">
 						<name></name>
@@ -16147,13 +16147,13 @@ hunting = false</script>
 				<Variable>
 					<name>autologin</name>
 					<keyType>4</keyType>
-					<value>true</value>
+					<value>false</value>
 					<valueType>1</valueType>
 				</Variable>
 				<Variable>
 					<name>autologinaction</name>
 					<keyType>4</keyType>
-					<value>q;kreov;hello</value>
+					<value></value>
 					<valueType>4</valueType>
 				</Variable>
 				<Variable>
@@ -16171,7 +16171,7 @@ hunting = false</script>
 				<Variable>
 					<name>reconnectaction</name>
 					<keyType>4</keyType>
-					<value>setarea twistedforest;phunt twistedfae</value>
+					<value></value>
 					<valueType>4</valueType>
 				</Variable>
 				<VariableGroup>
