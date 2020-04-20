@@ -3,7 +3,7 @@
 <MudletPackage version="1.001">
 	<TriggerPackage>
 		<TriggerGroup isActive="yes" isFolder="yes" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
-			<name>Xaos</name>
+			<name>Anderson</name>
 			<script></script>
 			<triggerType>0</triggerType>
 			<conditonLineDelta>0</conditonLineDelta>
@@ -4122,7 +4122,7 @@ echo("  -- grabbed")
 
 table.insert(curpartystatus.members,
 {
-  name = matches[5],
+  name = string.trim(matches[5]),
   hp = matches[2],
   mana = matches[3],
   move = matches[4],
@@ -4168,12 +4168,12 @@ if table.size(findmember) ~= 0 then
 end
 table.insert(curpartystatus.members,
 {
-  name = matches[2],
+  name = string.trim(matches[2]),
   hp = "??",
   mana = 0,
   move = 0,
   missingcount=missingcount+1,
-  charmie = rex.match(matches[5],[[^([aA] |[tT]he |[aA]n )]]) ~= nil
+  charmie = rex.match(matches[2],[[^([aA] |[tT]he |[aA]n )]]) ~= nil
 })
 --debugecho(missingcount)
 if xaos.party.leader == "Your" and xaos.config.scripting.findmode and missingcount &gt; 3 then
@@ -6064,40 +6064,16 @@ RoundCalc.opp.phase = RoundCalc.opp.phase + 1</script>
 	</TriggerPackage>
 	<TimerPackage>
 		<TimerGroup isActive="yes" isFolder="yes" isTempTimer="no" isOffsetTimer="no">
-			<name>18-04-2020#10-24-44</name>
+			<name>Anderson</name>
 			<script></script>
 			<command></command>
-			<packageName>18-04-2020#10-24-44</packageName>
-			<time></time>
-			<Timer isActive="no" isFolder="no" isTempTimer="no" isOffsetTimer="no">
-				<name>Stuff Coinsp</name>
-				<script>send("put coin cloak")</script>
-				<command></command>
-				<packageName></packageName>
-				<time>00:01:00.000</time>
-			</Timer>
-			<Timer isActive="no" isFolder="no" isTempTimer="no" isOffsetTimer="no">
-				<name>Fury Timer</name>
-				<script>if not xaos.buffs.statusFury and combat then
-  send("fury")
-end</script>
-				<command></command>
-				<packageName></packageName>
-				<time>00:00:02.000</time>
-			</Timer>
-			<Timer isActive="no" isFolder="no" isTempTimer="no" isOffsetTimer="no">
-				<name>Update Panels</name>
-				<script>send("score")
-send("quest cur")</script>
-				<command></command>
-				<packageName></packageName>
-				<time>00:05:00.000</time>
-			</Timer>
+			<packageName></packageName>
+			<time>00:00:00.000</time>
 			<TimerGroup isActive="yes" isFolder="yes" isTempTimer="no" isOffsetTimer="no">
-				<name>Xaos</name>
+				<name>xaos-ui-0120</name>
 				<script></script>
 				<command></command>
-				<packageName></packageName>
+				<packageName>xaos-ui-0120</packageName>
 				<time>00:00:00.000</time>
 				<TimerGroup isActive="yes" isFolder="yes" isTempTimer="no" isOffsetTimer="no">
 					<name>xaos-ui-0120</name>
@@ -6106,20 +6082,14 @@ send("quest cur")</script>
 					<packageName>xaos-ui-0120</packageName>
 					<time>00:00:00.000</time>
 					<TimerGroup isActive="yes" isFolder="yes" isTempTimer="no" isOffsetTimer="no">
-						<name>xaos-ui-0120</name>
+						<name>auto_hunt</name>
 						<script></script>
 						<command></command>
-						<packageName>xaos-ui-0120</packageName>
+						<packageName></packageName>
 						<time>00:00:00.000</time>
-						<TimerGroup isActive="yes" isFolder="yes" isTempTimer="no" isOffsetTimer="no">
-							<name>auto_hunt</name>
-							<script></script>
-							<command></command>
-							<packageName></packageName>
-							<time>00:00:00.000</time>
-							<Timer isActive="no" isFolder="no" isTempTimer="no" isOffsetTimer="no">
-								<name>hunt listener</name>
-								<script>  
+						<Timer isActive="no" isFolder="no" isTempTimer="no" isOffsetTimer="no">
+							<name>hunt listener</name>
+							<script>  
   if auto_hunt then 
 
 			expandAlias("auto_hunt") 
@@ -6135,13 +6105,13 @@ send("quest cur")</script>
 	
 	
 </script>
-								<command></command>
-								<packageName></packageName>
-								<time>00:00:04.000</time>
-							</Timer>
-							<Timer isActive="no" isFolder="no" isTempTimer="no" isOffsetTimer="no">
-								<name>scan listener</name>
-								<script>  
+							<command></command>
+							<packageName></packageName>
+							<time>00:00:04.000</time>
+						</Timer>
+						<Timer isActive="no" isFolder="no" isTempTimer="no" isOffsetTimer="no">
+							<name>scan listener</name>
+							<script>  
   if auto_hunt then 
 
 			expandAlias("auto_hunt") 
@@ -6157,44 +6127,44 @@ send("quest cur")</script>
 	
 	
 </script>
-								<command></command>
-								<packageName></packageName>
-								<time>00:00:01.000</time>
-							</Timer>
-						</TimerGroup>
-						<TimerGroup isActive="yes" isFolder="yes" isTempTimer="no" isOffsetTimer="no">
-							<name>Combat_timer</name>
-							<script></script>
 							<command></command>
 							<packageName></packageName>
-							<time>00:00:00.000</time>
-							<Timer isActive="yes" isFolder="no" isTempTimer="no" isOffsetTimer="no">
-								<name>disarm check</name>
-								<script>
+							<time>00:00:01.000</time>
+						</Timer>
+					</TimerGroup>
+					<TimerGroup isActive="yes" isFolder="yes" isTempTimer="no" isOffsetTimer="no">
+						<name>Combat_timer</name>
+						<script></script>
+						<command></command>
+						<packageName></packageName>
+						<time>00:00:00.000</time>
+						<Timer isActive="yes" isFolder="no" isTempTimer="no" isOffsetTimer="no">
+							<name>disarm check</name>
+							<script>
 wielded = wielded or sword
 if statusDisarm==true then
 	send("wield "..wielded)
 end
 </script>
-								<command></command>
-								<packageName></packageName>
-								<time>00:00:03.000</time>
-							</Timer>
+							<command></command>
+							<packageName></packageName>
+							<time>00:00:03.000</time>
+						</Timer>
+						<TimerGroup isActive="yes" isFolder="yes" isTempTimer="no" isOffsetTimer="no">
+							<name>Specialized</name>
+							<script></script>
+							<command></command>
+							<packageName></packageName>
+							<time>00:00:00.000</time>
 							<TimerGroup isActive="yes" isFolder="yes" isTempTimer="no" isOffsetTimer="no">
-								<name>Specialized</name>
+								<name>Mentalist Combat</name>
 								<script></script>
 								<command></command>
 								<packageName></packageName>
 								<time>00:00:00.000</time>
-								<TimerGroup isActive="yes" isFolder="yes" isTempTimer="no" isOffsetTimer="no">
-									<name>Mentalist Combat</name>
-									<script></script>
-									<command></command>
-									<packageName></packageName>
-									<time>00:00:00.000</time>
-									<Timer isActive="no" isFolder="no" isTempTimer="no" isOffsetTimer="no">
-										<name>mentalistAutoTimer</name>
-										<script>mentalistAutoDebuff = mentalistAutoDebuff or false
+								<Timer isActive="no" isFolder="no" isTempTimer="no" isOffsetTimer="no">
+									<name>mentalistAutoTimer</name>
+									<script>mentalistAutoDebuff = mentalistAutoDebuff or false
 autoMode = autoMode or "normal"
 if autoAction ~= "cast 'divided will'" and autoMode == "normal" and mentalistAutoDebuff and combat and not divided then
   send("auto cast 'divided will'")
@@ -6203,30 +6173,30 @@ elseif divided and autoMode == "mentalist debuff" then
   send("auto cast wrack")
   autoMode = "normal"
 end</script>
-										<command></command>
-										<packageName></packageName>
-										<time>00:00:04.000</time>
-									</Timer>
-									<Timer isActive="yes" isFolder="no" isTempTimer="no" isOffsetTimer="no">
-										<name>Stay Woke</name>
-										<script>if mentalist and not combat and auto_hunt and not buffThirdEye then
+									<command></command>
+									<packageName></packageName>
+									<time>00:00:04.000</time>
+								</Timer>
+								<Timer isActive="yes" isFolder="no" isTempTimer="no" isOffsetTimer="no">
+									<name>Stay Woke</name>
+									<script>if mentalist and not combat and auto_hunt and not buffThirdEye then
 	send("cast third")
 	
 end</script>
-										<command></command>
-										<packageName></packageName>
-										<time>00:00:04.000</time>
-									</Timer>
-								</TimerGroup>
-								<TimerGroup isActive="yes" isFolder="yes" isTempTimer="no" isOffsetTimer="no">
-									<name>Utility</name>
-									<script></script>
 									<command></command>
 									<packageName></packageName>
-									<time>00:00:00.000</time>
-									<Timer isActive="yes" isFolder="no" isTempTimer="no" isOffsetTimer="no">
-										<name>healing Util</name>
-										<script>
+									<time>00:00:04.000</time>
+								</Timer>
+							</TimerGroup>
+							<TimerGroup isActive="yes" isFolder="yes" isTempTimer="no" isOffsetTimer="no">
+								<name>Utility</name>
+								<script></script>
+								<command></command>
+								<packageName></packageName>
+								<time>00:00:00.000</time>
+								<Timer isActive="yes" isFolder="no" isTempTimer="no" isOffsetTimer="no">
+									<name>healing Util</name>
+									<script>
 if auto_hunt and autoHeal then
   if (current_health &lt; 90 and not combat) then
     send("bclear;"..autoHealCommand)
@@ -6244,20 +6214,20 @@ if (current_health &gt; 85 and autoAction == autoHealCommand and autoHeal and au
 	autoMode = "normal"
   debugc("Evaluated and found I am healed. Switching to an attack")
 end</script>
-										<command></command>
-										<packageName></packageName>
-										<time>00:00:03.000</time>
-									</Timer>
-								</TimerGroup>
-								<TimerGroup isActive="yes" isFolder="yes" isTempTimer="no" isOffsetTimer="no">
-									<name>Thief Combat</name>
-									<script></script>
 									<command></command>
 									<packageName></packageName>
-									<time>00:00:00.000</time>
-									<Timer isActive="yes" isFolder="no" isTempTimer="no" isOffsetTimer="no">
-										<name>Trance</name>
-										<script>thiefAutoTrance = thiefAutoTrance or false
+									<time>00:00:03.000</time>
+								</Timer>
+							</TimerGroup>
+							<TimerGroup isActive="yes" isFolder="yes" isTempTimer="no" isOffsetTimer="no">
+								<name>Thief Combat</name>
+								<script></script>
+								<command></command>
+								<packageName></packageName>
+								<time>00:00:00.000</time>
+								<Timer isActive="yes" isFolder="no" isTempTimer="no" isOffsetTimer="no">
+									<name>Trance</name>
+									<script>thiefAutoTrance = thiefAutoTrance or false
 if (thiefAutoTrance and not statusTrance and combat and autoMode ~= "trance" and autoMode == "normal") then
 	send("auto trance")
 	autoMode = "trance"
@@ -6267,114 +6237,114 @@ if (thiefAutoTrance and statusTrance and autoMode == "trance") then
 	send("auto "..inputAttack)
 	autoMode = "normal"
 end</script>
-										<command></command>
-										<packageName></packageName>
-										<time>00:00:04.000</time>
-									</Timer>
-									<TimerGroup isActive="yes" isFolder="yes" isTempTimer="no" isOffsetTimer="no">
-										<name>Rake</name>
-										<script></script>
-										<command></command>
-										<packageName></packageName>
-										<time>00:00:00.000</time>
-										<Timer isActive="yes" isFolder="no" isTempTimer="no" isOffsetTimer="no">
-											<name>Spell Slip</name>
-											<script>if not statusSpellSlip and not statusSilence  and autoSpellSlip then
-	send("cast 'spell slip'")
-	end</script>
-											<command></command>
-											<packageName></packageName>
-											<time>00:00:03.000</time>
-										</Timer>
-									</TimerGroup>
-								</TimerGroup>
+									<command></command>
+									<packageName></packageName>
+									<time>00:00:04.000</time>
+								</Timer>
 								<TimerGroup isActive="yes" isFolder="yes" isTempTimer="no" isOffsetTimer="no">
-									<name>pledges</name>
+									<name>Rake</name>
 									<script></script>
 									<command></command>
 									<packageName></packageName>
 									<time>00:00:00.000</time>
 									<Timer isActive="yes" isFolder="no" isTempTimer="no" isOffsetTimer="no">
-										<name>pledges</name>
-										<script>
+										<name>Spell Slip</name>
+										<script>if not statusSpellSlip and not statusSilence  and autoSpellSlip then
+	send("cast 'spell slip'")
+	end</script>
+										<command></command>
+										<packageName></packageName>
+										<time>00:00:03.000</time>
+									</Timer>
+								</TimerGroup>
+							</TimerGroup>
+							<TimerGroup isActive="yes" isFolder="yes" isTempTimer="no" isOffsetTimer="no">
+								<name>pledges</name>
+								<script></script>
+								<command></command>
+								<packageName></packageName>
+								<time>00:00:00.000</time>
+								<Timer isActive="yes" isFolder="no" isTempTimer="no" isOffsetTimer="no">
+									<name>pledges</name>
+									<script>
 if autoRenovi and renoviAvailable and tonumber(current_mana)&lt;tonumber(renoviThreshold) then
 	send("cast renovi")
 end</script>
-										<command></command>
-										<packageName></packageName>
-										<time>00:00:03.000</time>
-									</Timer>
-									<Timer isActive="no" isFolder="no" isTempTimer="no" isOffsetTimer="no">
-										<name>Prosel</name>
-										<script>if current_health &lt; 50 then
+									<command></command>
+									<packageName></packageName>
+									<time>00:00:03.000</time>
+								</Timer>
+								<Timer isActive="no" isFolder="no" isTempTimer="no" isOffsetTimer="no">
+									<name>Prosel</name>
+									<script>if current_health &lt; 50 then
 	send("cast prosel")
 end</script>
-										<command></command>
-										<packageName></packageName>
-										<time>00:00:03.000</time>
-									</Timer>
-								</TimerGroup>
+									<command></command>
+									<packageName></packageName>
+									<time>00:00:03.000</time>
+								</Timer>
+							</TimerGroup>
+							<TimerGroup isActive="yes" isFolder="yes" isTempTimer="no" isOffsetTimer="no">
+								<name>warrior</name>
+								<script></script>
+								<command></command>
+								<packageName></packageName>
+								<time>00:00:00.000</time>
+								<Timer isActive="yes" isFolder="no" isTempTimer="no" isOffsetTimer="no">
+									<name>Center</name>
+									<script>if not statusCenter and not combat and centerHack then
+	send("center")
+end</script>
+									<command></command>
+									<packageName></packageName>
+									<time>00:00:03.000</time>
+								</Timer>
 								<TimerGroup isActive="yes" isFolder="yes" isTempTimer="no" isOffsetTimer="no">
-									<name>warrior</name>
+									<name>Determination</name>
 									<script></script>
 									<command></command>
 									<packageName></packageName>
 									<time>00:00:00.000</time>
 									<Timer isActive="yes" isFolder="no" isTempTimer="no" isOffsetTimer="no">
-										<name>Center</name>
-										<script>if not statusCenter and not combat and centerHack then
-	send("center")
-end</script>
-										<command></command>
-										<packageName></packageName>
-										<time>00:00:03.000</time>
-									</Timer>
-									<TimerGroup isActive="yes" isFolder="yes" isTempTimer="no" isOffsetTimer="no">
 										<name>Determination</name>
-										<script></script>
-										<command></command>
-										<packageName></packageName>
-										<time>00:00:00.000</time>
-										<Timer isActive="yes" isFolder="no" isTempTimer="no" isOffsetTimer="no">
-											<name>Determination</name>
-											<script>if current_health &lt; tonumber(determThresh) and determ == false and determMgmt == true then
+										<script>if current_health &lt; tonumber(determThresh) and determ == false and determMgmt == true then
 	send("determ "..determThresh2)
 end
 
 if current_health &gt; tonumber(determThresh) and determ == true and determMgmt == true then
 	send("determ 0")
 end</script>
-											<command></command>
-											<packageName></packageName>
-											<time>00:00:03.000</time>
-										</Timer>
-									</TimerGroup>
+										<command></command>
+										<packageName></packageName>
+										<time>00:00:03.000</time>
+									</Timer>
 								</TimerGroup>
 							</TimerGroup>
 						</TimerGroup>
-						<TimerGroup isActive="no" isFolder="yes" isTempTimer="no" isOffsetTimer="no">
-							<name>Ilkin Spam</name>
-							<script></script>
+					</TimerGroup>
+					<TimerGroup isActive="no" isFolder="yes" isTempTimer="no" isOffsetTimer="no">
+						<name>Ilkin Spam</name>
+						<script></script>
+						<command></command>
+						<packageName></packageName>
+						<time>00:00:08.000</time>
+						<Timer isActive="no" isFolder="no" isTempTimer="no" isOffsetTimer="no">
+							<name>Ilkin spam</name>
+							<script>send("cast harmony Mmmmm")</script>
 							<command></command>
 							<packageName></packageName>
 							<time>00:00:08.000</time>
-							<Timer isActive="no" isFolder="no" isTempTimer="no" isOffsetTimer="no">
-								<name>Ilkin spam</name>
-								<script>send("cast harmony Mmmmm")</script>
-								<command></command>
-								<packageName></packageName>
-								<time>00:00:08.000</time>
-							</Timer>
-						</TimerGroup>
-						<TimerGroup isActive="yes" isFolder="yes" isTempTimer="no" isOffsetTimer="no">
-							<name>Trackers and bars</name>
-							<script></script>
-							<command></command>
-							<packageName></packageName>
-							<time>00:00:00.000</time>
-							<Timer isActive="no" isFolder="no" isTempTimer="no" isOffsetTimer="no">
-								<name>DPS (burst) Calc + Display</name>
-								<script>if combat then
+						</Timer>
+					</TimerGroup>
+					<TimerGroup isActive="yes" isFolder="yes" isTempTimer="no" isOffsetTimer="no">
+						<name>Trackers and bars</name>
+						<script></script>
+						<command></command>
+						<packageName></packageName>
+						<time>00:00:00.000</time>
+						<Timer isActive="no" isFolder="no" isTempTimer="no" isOffsetTimer="no">
+							<name>DPS (burst) Calc + Display</name>
+							<script>if combat then
 if dpsCount == nil then
   dpsCount = 0
 end
@@ -6474,13 +6444,13 @@ damageReport = 0
 -- Finished with this round's value. Back to zero.
 -- end
 end</script>
-								<command></command>
-								<packageName></packageName>
-								<time>00:00:03.200</time>
-							</Timer>
-							<Timer isActive="no" isFolder="no" isTempTimer="no" isOffsetTimer="no">
-								<name>XPRate</name>
-								<script>table.insert(xpcollector,{time=getTime(true,"HH.mm"),xp=xpCollection1})
+							<command></command>
+							<packageName></packageName>
+							<time>00:00:03.200</time>
+						</Timer>
+						<Timer isActive="no" isFolder="no" isTempTimer="no" isOffsetTimer="no">
+							<name>XPRate</name>
+							<script>table.insert(xpcollector,{time=getTime(true,"HH.mm"),xp=xpCollection1})
 
 xpCollection10 = xpCollection9
 xpCollection9 = xpCollection8
@@ -6517,13 +6487,13 @@ xpCollection3 = xpCollection2
 xpCollection2 = xpCollection1
 xpCollection1 = 0
 </script>
-								<command></command>
-								<packageName></packageName>
-								<time>00:05:00.000</time>
-							</Timer>
-							<Timer isActive="no" isFolder="no" isTempTimer="no" isOffsetTimer="no">
-								<name>Health Flow</name>
-								<script>
+							<command></command>
+							<packageName></packageName>
+							<time>00:05:00.000</time>
+						</Timer>
+						<Timer isActive="no" isFolder="no" isTempTimer="no" isOffsetTimer="no">
+							<name>Health Flow</name>
+							<script>
 -- Calculate hp Delta
 hpDelta = (current_health - lastHP)
 
@@ -6567,13 +6537,13 @@ hpDelta2 = hpDelta
 if current_health &lt; 20 and auto_hunt then
 	send("bclear;hero recall")
 end</script>
-								<command></command>
-								<packageName></packageName>
-								<time>00:00:03.000</time>
-							</Timer>
-							<Timer isActive="no" isFolder="no" isTempTimer="no" isOffsetTimer="no">
-								<name>Gold rate and kill rate</name>
-								<script>-- Sum up the last minute of gold 
+							<command></command>
+							<packageName></packageName>
+							<time>00:00:03.000</time>
+						</Timer>
+						<Timer isActive="no" isFolder="no" isTempTimer="no" isOffsetTimer="no">
+							<name>Gold rate and kill rate</name>
+							<script>-- Sum up the last minute of gold 
 totalGold = (recentGold + goldBucket1 + goldBucket2)/3
 totalKill = (killCount + killBucket1 + killBucket2 + killBucket3 + killBucket4 + killBucket5)/6
 -- report that gold to the window
@@ -6601,24 +6571,24 @@ killCount = 0
 
 -- Do it for kill count
 </script>
-								<command></command>
-								<packageName></packageName>
-								<time>00:01:00.000</time>
-							</Timer>
-							<Timer isActive="no" isFolder="no" isTempTimer="no" isOffsetTimer="no">
-								<name>Cleanup</name>
-								<script>if not combat then
+							<command></command>
+							<packageName></packageName>
+							<time>00:01:00.000</time>
+						</Timer>
+						<Timer isActive="no" isFolder="no" isTempTimer="no" isOffsetTimer="no">
+							<name>Cleanup</name>
+							<script>if not combat then
 	cecho("conditionDisplay", "")
 end
 combat = false</script>
-								<command></command>
-								<packageName></packageName>
-								<time>00:00:06.000</time>
-							</Timer>
-						</TimerGroup>
-						<Timer isActive="yes" isFolder="no" isTempTimer="no" isOffsetTimer="no">
-							<name>XPRate</name>
-							<script>table.insert(xpcollector,{time=getTime(true,"HH.mm"),xp=xpCollection1})
+							<command></command>
+							<packageName></packageName>
+							<time>00:00:06.000</time>
+						</Timer>
+					</TimerGroup>
+					<Timer isActive="yes" isFolder="no" isTempTimer="no" isOffsetTimer="no">
+						<name>XPRate</name>
+						<script>table.insert(xpcollector,{time=getTime(true,"HH.mm"),xp=xpCollection1})
 
 
 
@@ -6630,23 +6600,24 @@ xpCollection1 = 0
 
 updateXPbars()
 
+xprText:echo(calcAscendTime(xaos.Level,xaos.LevelPercent))
 
 
 
 </script>
-							<command></command>
-							<packageName></packageName>
-							<time>00:05:00.000</time>
-						</Timer>
-						<TimerGroup isActive="yes" isFolder="yes" isTempTimer="no" isOffsetTimer="no">
-							<name></name>
-							<script></script>
-							<command></command>
-							<packageName></packageName>
-							<time>00:01:06.000</time>
-							<Timer isActive="yes" isFolder="no" isTempTimer="no" isOffsetTimer="no">
-								<name>drinkTimer</name>
-								<script>
+						<command></command>
+						<packageName></packageName>
+						<time>00:01:00.000</time>
+					</Timer>
+					<TimerGroup isActive="yes" isFolder="yes" isTempTimer="no" isOffsetTimer="no">
+						<name></name>
+						<script></script>
+						<command></command>
+						<packageName></packageName>
+						<time>00:01:06.000</time>
+						<Timer isActive="yes" isFolder="no" isTempTimer="no" isOffsetTimer="no">
+							<name>drinkTimer</name>
+							<script>
 if drinkMode=="soup" then
 	send("drink soup")
 elseif drinkMode=="creation" then
@@ -6660,53 +6631,53 @@ elseif drinkMode == "corpse" then
 	send("drink "..customDrink)
 end
 </script>
-								<command></command>
-								<packageName></packageName>
-								<time>00:01:00.000</time>
-							</Timer>
-							<Timer isActive="yes" isFolder="no" isTempTimer="no" isOffsetTimer="no">
-								<name>Go away silver</name>
-								<script>send("drop 10000 silver")</script>
-								<command></command>
-								<packageName></packageName>
-								<time>00:10:00.000</time>
-							</Timer>
-						</TimerGroup>
+							<command></command>
+							<packageName></packageName>
+							<time>00:01:00.000</time>
+						</Timer>
+						<Timer isActive="yes" isFolder="no" isTempTimer="no" isOffsetTimer="no">
+							<name>Go away silver</name>
+							<script>send("drop 10000 silver")</script>
+							<command></command>
+							<packageName></packageName>
+							<time>00:10:00.000</time>
+						</Timer>
 					</TimerGroup>
 				</TimerGroup>
-				<TimerGroup isActive="yes" isFolder="yes" isTempTimer="no" isOffsetTimer="no">
-					<name>Enchanting Extras</name>
-					<script></script>
-					<command></command>
-					<packageName></packageName>
-					<time>00:00:00.000</time>
-					<Timer isActive="no" isFolder="no" isTempTimer="no" isOffsetTimer="no">
-						<name>DE Boot</name>
-						<script>send("disenchant boot")
+			</TimerGroup>
+			<TimerGroup isActive="yes" isFolder="yes" isTempTimer="no" isOffsetTimer="no">
+				<name>Enchanting Extras</name>
+				<script></script>
+				<command></command>
+				<packageName></packageName>
+				<time>00:00:00.000</time>
+				<Timer isActive="no" isFolder="no" isTempTimer="no" isOffsetTimer="no">
+					<name>DE Boot</name>
+					<script>send("disenchant boot")
 send("disenchant charged axe")
 send("disenchant static blade")</script>
-						<command></command>
-						<packageName></packageName>
-						<time>00:00:10.000</time>
-					</Timer>
-					<Timer isActive="no" isFolder="no" isTempTimer="no" isOffsetTimer="no">
-						<name>Check Skills</name>
-						<script>send("skills")</script>
-						<command></command>
-						<packageName></packageName>
-						<time>00:05:00.000</time>
-					</Timer>
-					<Timer isActive="no" isFolder="no" isTempTimer="no" isOffsetTimer="no">
-						<name>Make Master Stab</name>
-						<script>send("make new master ench;show;pro;put all.master cloak")</script>
-						<command></command>
-						<packageName></packageName>
-						<time>00:00:15.000</time>
-					</Timer>
-				</TimerGroup>
-				<Timer isActive="yes" isFolder="no" isTempTimer="no" isOffsetTimer="no">
-					<name>Update Variables</name>
-					<script>clearWindow("VariableList")
+					<command></command>
+					<packageName></packageName>
+					<time>00:00:10.000</time>
+				</Timer>
+				<Timer isActive="no" isFolder="no" isTempTimer="no" isOffsetTimer="no">
+					<name>Check Skills</name>
+					<script>send("skills")</script>
+					<command></command>
+					<packageName></packageName>
+					<time>00:05:00.000</time>
+				</Timer>
+				<Timer isActive="no" isFolder="no" isTempTimer="no" isOffsetTimer="no">
+					<name>Make Master Stab</name>
+					<script>send("make new master ench;show;pro;put all.master cloak")</script>
+					<command></command>
+					<packageName></packageName>
+					<time>00:00:15.000</time>
+				</Timer>
+			</TimerGroup>
+			<Timer isActive="yes" isFolder="no" isTempTimer="no" isOffsetTimer="no">
+				<name>Update Variables</name>
+				<script>clearWindow("VariableList")
 
 cecho("VariableList","&lt;white&gt;Buffs\n")
 for key,value in pairs(xaos.buffs) do
@@ -6735,13 +6706,13 @@ cecho("VariableList","Highest Dam         : " .. tostring(highestdam) .. "\n")
 cecho("VariableList","\n&lt;white&gt;UI\n")
 cecho("VariableList","Show Exp            : " .. tostring(xaos.config.show_killed) .. "\n")
 </script>
-					<command></command>
-					<packageName></packageName>
-					<time>00:00:01.000</time>
-				</Timer>
-				<Timer isActive="yes" isFolder="no" isTempTimer="no" isOffsetTimer="no">
-					<name>Update Score</name>
-					<script>clearWindow("ScoreList")
+				<command></command>
+				<packageName></packageName>
+				<time>00:00:01.000</time>
+			</Timer>
+			<Timer isActive="yes" isFolder="no" isTempTimer="no" isOffsetTimer="no">
+				<name>Update Score</name>
+				<script>clearWindow("ScoreList")
 
 cecho("ScoreList","\n&lt;white&gt;Fighting\n")
 cecho("ScoreList","Tactics             : " .. tostring(xaos.tactics) .. "\n")
@@ -6765,13 +6736,13 @@ cecho("ScoreList","Fragments           : " .. tostring(xaos.currency.frags) .. "
 --cecho("ScoreList",damageDisplay(TotalCalc))
 
 </script>
-					<command></command>
-					<packageName></packageName>
-					<time>00:00:01.000</time>
-				</Timer>
-				<Timer isActive="yes" isFolder="no" isTempTimer="no" isOffsetTimer="no">
-					<name>Quest Update</name>
-					<script>
+				<command></command>
+				<packageName></packageName>
+				<time>00:00:01.000</time>
+			</Timer>
+			<Timer isActive="yes" isFolder="no" isTempTimer="no" isOffsetTimer="no">
+				<name>Quest Update</name>
+				<script>
 clearWindow("queststatus")
 echo("queststatus","Current Quests: \n")
 
@@ -6824,29 +6795,29 @@ end
 
 
 </script>
-					<command></command>
-					<packageName></packageName>
-					<time>00:00:01.000</time>
-				</Timer>
-				<Timer isActive="yes" isFolder="no" isTempTimer="no" isOffsetTimer="no">
-					<name>Full Update</name>
-					<script>updatestats()</script>
-					<command></command>
-					<packageName></packageName>
-					<time>00:05:00.000</time>
-				</Timer>
-				<Timer isActive="yes" isFolder="no" isTempTimer="no" isOffsetTimer="no">
-					<name>Party Grab</name>
-					<script>partystatusgrab=true
+				<command></command>
+				<packageName></packageName>
+				<time>00:00:01.000</time>
+			</Timer>
+			<Timer isActive="yes" isFolder="no" isTempTimer="no" isOffsetTimer="no">
+				<name>Full Update</name>
+				<script>updatestats()</script>
+				<command></command>
+				<packageName></packageName>
+				<time>00:05:00.000</time>
+			</Timer>
+			<Timer isActive="yes" isFolder="no" isTempTimer="no" isOffsetTimer="no">
+				<name>Party Grab</name>
+				<script>partystatusgrab=true
 send("party")
 deleteLine()</script>
-					<command></command>
-					<packageName></packageName>
-					<time>00:00:05.000</time>
-				</Timer>
-				<Timer isActive="yes" isFolder="no" isTempTimer="no" isOffsetTimer="no">
-					<name>Party Timer</name>
-					<script>
+				<command></command>
+				<packageName></packageName>
+				<time>00:00:05.000</time>
+			</Timer>
+			<Timer isActive="yes" isFolder="no" isTempTimer="no" isOffsetTimer="no">
+				<name>Party Timer</name>
+				<script>
 
 local lbltext = "" --"Party&lt;br/&gt;"
 local lbltext2 = ""
@@ -6879,26 +6850,25 @@ for k=1,5 do
 end
 partyDisplay:echo(lblentries[1])
 partyDisplay2:echo(lblentries[2])</script>
-					<command></command>
-					<packageName></packageName>
-					<time>00:00:00.500</time>
-				</Timer>
-				<Timer isActive="yes" isFolder="no" isTempTimer="no" isOffsetTimer="no">
-					<name>Damage Scenario</name>
-					<script>if combatdisplay ~= null then
+				<command></command>
+				<packageName></packageName>
+				<time>00:00:00.500</time>
+			</Timer>
+			<Timer isActive="yes" isFolder="no" isTempTimer="no" isOffsetTimer="no">
+				<name>Damage Scenario</name>
+				<script>if combatdisplay ~= null then
   clearWindow("combat")
   cecho("combat",damageDisplay(TotalCalc))
 end</script>
-					<command></command>
-					<packageName></packageName>
-					<time>00:00:01.000</time>
-				</Timer>
-			</TimerGroup>
+				<command></command>
+				<packageName></packageName>
+				<time>00:00:01.000</time>
+			</Timer>
 		</TimerGroup>
 	</TimerPackage>
 	<AliasPackage>
 		<AliasGroup isActive="yes" isFolder="yes">
-			<name>Xaos</name>
+			<name>Anderson</name>
 			<script>partycapture=true</script>
 			<command></command>
 			<packageName></packageName>
@@ -7524,6 +7494,15 @@ end</script>
 					<name>Start Scripting</name>
 					<script>local prey = matches[2]
 
+--  {
+--    name = "twistedforest",
+--    keyword = "twistedfae",
+--    keywordoverride = true,
+--    scanmode = true,
+--    killarray = {"Angry Pixie","quickling ranger","abandoned lesh","gnarled brownie","wicked sprite","wandering wailing lesh"},
+--  }
+
+
 if prey ~= nil and prey ~= "" then
 
   expandAlias("cleararea")
@@ -7533,7 +7512,7 @@ if prey ~= nil and prey ~= "" then
 else
 
   if xaos.scripting.area.name ~= nil then
-    local tim = ""
+    expandAlias("phunt " .. xaos.scripting.area.keyword)    
   else
     echo("\n\nNo Scripting Area has been set.  Pass in a mobname to hunt or setarea\n\n")
   end
@@ -8463,22 +8442,32 @@ expandAlias("multi 5 hero empower resist pierce")
 expandAlias("multi 5 hero empower resist slash")
 
 if command=="all" then
-  expandAlias("multi 5 hero empower resist acid")
-  
-  expandAlias("multi 5 hero empower resist cold")
-  expandAlias("multi 5 hero empower resist disease")
-  expandAlias("multi 5 hero empower resist fire")
-  expandAlias("multi 5 hero empower resist holy")
-  expandAlias("multi 5 hero empower resist light")
-  expandAlias("multi 5 hero empower resist lightning")
-  expandAlias("multi 5 hero empower resist magic")
-  expandAlias("multi 5 hero empower resist mental")
-  expandAlias("multi 5 hero empower resist negative")
-  
-  expandAlias("multi 5 hero empower resist poison")
-  
-  expandAlias("multi 5 hero empower resist sound")
-  expandAlias("multi 5 hero empower resist unholy")
+  temptime = 1
+  tempTimer(temptime,function () expandAlias("multi 5 hero empower resist acid") end)
+  temptime = temptime + 1
+  tempTimer(temptime,function () expandAlias("multi 5 hero empower resist cold") end)
+  temptime = temptime + 1
+  tempTimer(temptime,function () expandAlias("multi 5 hero empower resist disease") end)
+  temptime = temptime + 1
+  tempTimer(temptime,function () expandAlias("multi 5 hero empower resist fire") end)
+  temptime = temptime + 1
+  tempTimer(temptime,function () expandAlias("multi 5 hero empower resist holy") end)
+  temptime = temptime + 1
+  tempTimer(temptime,function () expandAlias("multi 5 hero empower resist light") end)
+  temptime = temptime + 1
+  tempTimer(temptime,function () expandAlias("multi 5 hero empower resist lightning") end)
+  temptime = temptime + 1
+  tempTimer(temptime,function () expandAlias("multi 5 hero empower resist magic") end)
+  temptime = temptime + 1
+  tempTimer(temptime,function () expandAlias("multi 5 hero empower resist mental") end)
+  temptime = temptime + 1
+  tempTimer(temptime,function () expandAlias("multi 5 hero empower resist negative") end)
+  temptime = temptime + 1
+  tempTimer(temptime,function ()expandAlias("multi 5 hero empower resist poison")  end)
+  temptime = temptime + 1
+  tempTimer(temptime,function ()expandAlias("multi 5 hero empower resist sound")  end)
+  temptime = temptime + 1
+  tempTimer(temptime,function ()expandAlias("multi 5 hero empower resist unholy")  end)
 end</script>
 					<command></command>
 					<packageName></packageName>
@@ -8697,7 +8686,7 @@ enableScrollBar("combat")</script>
 	</AliasPackage>
 	<ActionPackage>
 		<ActionGroup isActive="yes" isFolder="yes" isPushButton="no" isFlatButton="no" useCustomLayout="no">
-			<name>Empty0</name>
+			<name>Left</name>
 			<packageName></packageName>
 			<script></script>
 			<css></css>
@@ -8716,7 +8705,7 @@ enableScrollBar("combat")</script>
 			<buttonColor>#ffffff</buttonColor>
 		</ActionGroup>
 		<ActionGroup isActive="yes" isFolder="yes" isPushButton="no" isFlatButton="no" useCustomLayout="no">
-			<name>Right Side</name>
+			<name>Middle</name>
 			<packageName></packageName>
 			<script></script>
 			<css></css>
@@ -8754,7 +8743,7 @@ enableScrollBar("combat")</script>
 			</Action>
 		</ActionGroup>
 		<ActionGroup isActive="yes" isFolder="yes" isPushButton="no" isFlatButton="no" useCustomLayout="no">
-			<name>New toolbar</name>
+			<name>Right</name>
 			<packageName></packageName>
 			<script></script>
 			<css></css>
@@ -11721,7 +11710,7 @@ tempTimer(1.1,[[statusDisarm = false]])</script>
 	</ActionPackage>
 	<ScriptPackage>
 		<ScriptGroup isActive="yes" isFolder="yes">
-			<name>Xaos</name>
+			<name>Anderson</name>
 			<packageName></packageName>
 			<script>-------------------------------------------------
 --         Put your Lua functions here.        --
@@ -12127,6 +12116,48 @@ function debugecho(text)
   end
 end
 
+function calcAscendTime(lvl,lvlpercent) 
+  lvl = lvl % 100
+  lvl = lvl -1
+	local curascdings = lvl*((2+(lvl*2))/2)
+	local nextascdings = (lvl+1)*((2+((lvl+1)*2))/2)
+	
+	local curdings = curascdings + ((nextascdings-curascdings)*(lvlpercent/100))
+	local leftdings = 9900-curdings
+	leftdings = leftdings * 100 
+	--debugecho(leftdings)
+	local firstindex = table.size(xpcollector)
+	local lastindex = firstindex-11
+	if lastindex &lt;= 0 then
+	lastindex = 1
+	end
+	if firstindex == lastindex then return "unknown" end
+	local total = 0
+	for k=firstindex,lastindex,-1 do
+		total = total + xpcollector[k].xp
+	end
+	--Average
+	total = total / (firstindex - lastindex)
+  --debugecho(total)
+	--Down to minute chunks
+	total = total / 5
+	--debugecho(total)
+	total = leftdings/total
+	--debugecho(total)
+  
+  totalstring = ""
+  --if (total/1440) &gt; 0 then
+    totalstring = totalstring .. math.floor(total/1440) .. " days, "
+    total = total % 1440
+  --end
+  --if (total/60) &gt; 0 then
+    totalstring = totalstring .. math.floor(total/60) .. " hours, "
+    total = total % 60
+  --end
+  totalstring = totalstring .. string.format("%4.2f",total) .. " minutes."
+  return totalstring
+end
+
 function calcAscendPercent(level, levelPercent)
   level = tonumber(level)%100
   levelPercent = tonumber(levelPercent)
@@ -12335,7 +12366,7 @@ questStatusCon = Geyser.MiniConsole:new({
   fgColor = "white",
   color = "black",
   width="96%", height="96%",
-  fontSize=14,
+  fontSize=mysettings.questfontsize,
   scrollBar = true,
 },menu.Quests)
 
@@ -12369,7 +12400,7 @@ scoreCon = Geyser.MiniConsole:new({
   scrollBar = true,
 },menu.Score)
 scoreCon:setColor("black")
-scoreCon:setFontSize(12)
+scoreCon:setFontSize(mysettings.scorefontsize)
 
 enableScrollBar("ScoreList")</script>
 					<eventHandlerList />
@@ -12395,7 +12426,7 @@ variableCon = Geyser.MiniConsole:new({
   scrollBar = true,
 },menu.Variable)
 variableCon:setColor("black")
-variableCon:setFontSize(12)
+variableCon:setFontSize(mysettings.variablefontsize)
 
 enableScrollBar("VariableList")</script>
 					<eventHandlerList />
@@ -12432,12 +12463,11 @@ OOCCon = Geyser.UserWindow:new({
   width=chatWidth, height=(windowHeight/2),
   fgColor = "white",
   color = "black",
-  fontSize=chatFontSize,
   docked = true,
   scrollBar = false,
 })
 OOCCon:setColor("black")
-OOCCon:setFontSize(12)
+OOCCon:setFontSize(mysettings.oocchatsize)
 enableScrollBar("OOC")
 OOCCon:resetAutoWrap()
 end
@@ -12462,7 +12492,7 @@ dataCon = Geyser.MiniConsole:new({
   width="100%", height="100%"
 },menu.Data)
 dataCon:setColor("black")
-dataCon:setFontSize(12)
+dataCon:setFontSize(mysettings.datafontsize)
 
 enableScrollBar("data")
 --createMiniConsole("tab1Center", "data", 1, 1, 500, 500)</script>
@@ -12624,6 +12654,19 @@ mvmbar.back:setStyleSheet(
 --                                             --
 -- Note that you can also use external Scripts --
 -------------------------------------------------
+xprText = xprText or
+  Geyser.Label:new(
+    {
+      name = "xprText",
+      x = "2%",
+      y = "15c",
+      width = "100%",
+      height = "3c",
+      message = [[&lt;center&gt;&lt;/center&gt;]],
+    },
+    left_container
+  )
+
 xprDisplay = xprDisplay or
   Geyser.Label:new(
     {
@@ -14815,7 +14858,7 @@ function RoundCalc.Clear()
 	</ScriptPackage>
 	<KeyPackage>
 		<KeyGroup isActive="yes" isFolder="yes">
-			<name>Xaos</name>
+			<name>Anderson</name>
 			<packageName></packageName>
 			<script></script>
 			<command></command>
@@ -15026,7 +15069,7 @@ hunting = false</script>
 		<Variable>
 			<name>currentLevelPercent</name>
 			<keyType>4</keyType>
-			<value>6</value>
+			<value>95</value>
 			<valueType>4</valueType>
 		</Variable>
 		<Variable>
@@ -16164,7 +16207,7 @@ hunting = false</script>
 				<Variable>
 					<name>frags</name>
 					<keyType>4</keyType>
-					<value>647</value>
+					<value>704</value>
 					<valueType>4</valueType>
 				</Variable>
 			</VariableGroup>
@@ -16435,13 +16478,13 @@ hunting = false</script>
 			<Variable>
 				<name>Level</name>
 				<keyType>4</keyType>
-				<value>349</value>
+				<value>373</value>
 				<valueType>4</valueType>
 			</Variable>
 			<Variable>
 				<name>LevelPercent</name>
 				<keyType>4</keyType>
-				<value>6</value>
+				<value>95</value>
 				<valueType>4</valueType>
 			</Variable>
 			<VariableGroup>
@@ -16769,6 +16812,270 @@ hunting = false</script>
 					<Variable>
 						<name>name</name>
 						<keyType>4</keyType>
+						<value>Swamps Fauna</value>
+						<valueType>4</valueType>
+					</Variable>
+					<VariableGroup>
+						<name>objectives</name>
+						<keyType>4</keyType>
+						<value></value>
+						<valueType>5</valueType>
+						<VariableGroup>
+							<name>1</name>
+							<keyType>3</keyType>
+							<value></value>
+							<valueType>5</valueType>
+							<Variable>
+								<name>complete</name>
+								<keyType>4</keyType>
+								<value>false</value>
+								<valueType>1</valueType>
+							</Variable>
+							<Variable>
+								<name>current</name>
+								<keyType>4</keyType>
+								<value>0</value>
+								<valueType>4</valueType>
+							</Variable>
+							<Variable>
+								<name>kill</name>
+								<keyType>4</keyType>
+								<value>true</value>
+								<valueType>1</valueType>
+							</Variable>
+							<Variable>
+								<name>max</name>
+								<keyType>4</keyType>
+								<value>1</value>
+								<valueType>4</valueType>
+							</Variable>
+							<Variable>
+								<name>name</name>
+								<keyType>4</keyType>
+								<value>dragonfly queen</value>
+								<valueType>4</valueType>
+							</Variable>
+						</VariableGroup>
+					</VariableGroup>
+					<Variable>
+						<name>qm</name>
+						<keyType>4</keyType>
+						<value>Ivq</value>
+						<valueType>4</valueType>
+					</Variable>
+				</VariableGroup>
+				<VariableGroup>
+					<name>2</name>
+					<keyType>3</keyType>
+					<value></value>
+					<valueType>5</valueType>
+					<Variable>
+						<name>name</name>
+						<keyType>4</keyType>
+						<value>Lay them to rest</value>
+						<valueType>4</valueType>
+					</Variable>
+					<VariableGroup>
+						<name>objectives</name>
+						<keyType>4</keyType>
+						<value></value>
+						<valueType>5</valueType>
+						<VariableGroup>
+							<name>1</name>
+							<keyType>3</keyType>
+							<value></value>
+							<valueType>5</valueType>
+							<Variable>
+								<name>complete</name>
+								<keyType>4</keyType>
+								<value>false</value>
+								<valueType>1</valueType>
+							</Variable>
+							<Variable>
+								<name>current</name>
+								<keyType>4</keyType>
+								<value>0</value>
+								<valueType>4</valueType>
+							</Variable>
+							<Variable>
+								<name>kill</name>
+								<keyType>4</keyType>
+								<value>true</value>
+								<valueType>1</valueType>
+							</Variable>
+							<Variable>
+								<name>max</name>
+								<keyType>4</keyType>
+								<value>15</value>
+								<valueType>4</valueType>
+							</Variable>
+							<Variable>
+								<name>name</name>
+								<keyType>4</keyType>
+								<value>blaze ghoul</value>
+								<valueType>4</valueType>
+							</Variable>
+						</VariableGroup>
+					</VariableGroup>
+					<Variable>
+						<name>qm</name>
+						<keyType>4</keyType>
+						<value>a hooded drow magi</value>
+						<valueType>4</valueType>
+					</Variable>
+				</VariableGroup>
+				<VariableGroup>
+					<name>3</name>
+					<keyType>3</keyType>
+					<value></value>
+					<valueType>5</valueType>
+					<Variable>
+						<name>name</name>
+						<keyType>4</keyType>
+						<value>Piklar's Elimination of Danger</value>
+						<valueType>4</valueType>
+					</Variable>
+					<VariableGroup>
+						<name>objectives</name>
+						<keyType>4</keyType>
+						<value></value>
+						<valueType>5</valueType>
+						<VariableGroup>
+							<name>1</name>
+							<keyType>3</keyType>
+							<value></value>
+							<valueType>5</valueType>
+							<Variable>
+								<name>complete</name>
+								<keyType>4</keyType>
+								<value>false</value>
+								<valueType>1</valueType>
+							</Variable>
+							<Variable>
+								<name>current</name>
+								<keyType>4</keyType>
+								<value>0</value>
+								<valueType>4</valueType>
+							</Variable>
+							<Variable>
+								<name>kill</name>
+								<keyType>4</keyType>
+								<value>true</value>
+								<valueType>1</valueType>
+							</Variable>
+							<Variable>
+								<name>max</name>
+								<keyType>4</keyType>
+								<value>1</value>
+								<valueType>4</valueType>
+							</Variable>
+							<Variable>
+								<name>name</name>
+								<keyType>4</keyType>
+								<value>ill fated gnome enchanter</value>
+								<valueType>4</valueType>
+							</Variable>
+						</VariableGroup>
+						<VariableGroup>
+							<name>2</name>
+							<keyType>3</keyType>
+							<value></value>
+							<valueType>5</valueType>
+							<Variable>
+								<name>complete</name>
+								<keyType>4</keyType>
+								<value>false</value>
+								<valueType>1</valueType>
+							</Variable>
+							<Variable>
+								<name>current</name>
+								<keyType>4</keyType>
+								<value>0</value>
+								<valueType>4</valueType>
+							</Variable>
+							<Variable>
+								<name>kill</name>
+								<keyType>4</keyType>
+								<value>true</value>
+								<valueType>1</valueType>
+							</Variable>
+							<Variable>
+								<name>max</name>
+								<keyType>4</keyType>
+								<value>1</value>
+								<valueType>4</valueType>
+							</Variable>
+							<Variable>
+								<name>name</name>
+								<keyType>4</keyType>
+								<value>bound guardian</value>
+								<valueType>4</valueType>
+							</Variable>
+						</VariableGroup>
+						<VariableGroup>
+							<name>3</name>
+							<keyType>3</keyType>
+							<value></value>
+							<valueType>5</valueType>
+							<Variable>
+								<name>current</name>
+								<keyType>4</keyType>
+								<value></value>
+								<valueType>4</valueType>
+							</Variable>
+							<Variable>
+								<name>max</name>
+								<keyType>4</keyType>
+								<value></value>
+								<valueType>4</valueType>
+							</Variable>
+							<Variable>
+								<name>name</name>
+								<keyType>4</keyType>
+								<value></value>
+								<valueType>4</valueType>
+							</Variable>
+						</VariableGroup>
+						<VariableGroup>
+							<name>4</name>
+							<keyType>3</keyType>
+							<value></value>
+							<valueType>5</valueType>
+							<Variable>
+								<name>current</name>
+								<keyType>4</keyType>
+								<value></value>
+								<valueType>4</valueType>
+							</Variable>
+							<Variable>
+								<name>max</name>
+								<keyType>4</keyType>
+								<value></value>
+								<valueType>4</valueType>
+							</Variable>
+							<Variable>
+								<name>name</name>
+								<keyType>4</keyType>
+								<value></value>
+								<valueType>4</valueType>
+							</Variable>
+						</VariableGroup>
+					</VariableGroup>
+					<Variable>
+						<name>qm</name>
+						<keyType>4</keyType>
+						<value>Piklar</value>
+						<valueType>4</valueType>
+					</Variable>
+				</VariableGroup>
+				<VariableGroup>
+					<name>4</name>
+					<keyType>3</keyType>
+					<value></value>
+					<valueType>5</valueType>
+					<Variable>
+						<name>name</name>
+						<keyType>4</keyType>
 						<value>Fragments of the Fallen God</value>
 						<valueType>4</valueType>
 					</Variable>
@@ -16813,6 +17120,78 @@ hunting = false</script>
 								<valueType>4</valueType>
 							</Variable>
 						</VariableGroup>
+						<VariableGroup>
+							<name>2</name>
+							<keyType>3</keyType>
+							<value></value>
+							<valueType>5</valueType>
+							<Variable>
+								<name>current</name>
+								<keyType>4</keyType>
+								<value></value>
+								<valueType>4</valueType>
+							</Variable>
+							<Variable>
+								<name>max</name>
+								<keyType>4</keyType>
+								<value></value>
+								<valueType>4</valueType>
+							</Variable>
+							<Variable>
+								<name>name</name>
+								<keyType>4</keyType>
+								<value></value>
+								<valueType>4</valueType>
+							</Variable>
+						</VariableGroup>
+						<VariableGroup>
+							<name>3</name>
+							<keyType>3</keyType>
+							<value></value>
+							<valueType>5</valueType>
+							<Variable>
+								<name>current</name>
+								<keyType>4</keyType>
+								<value></value>
+								<valueType>4</valueType>
+							</Variable>
+							<Variable>
+								<name>max</name>
+								<keyType>4</keyType>
+								<value></value>
+								<valueType>4</valueType>
+							</Variable>
+							<Variable>
+								<name>name</name>
+								<keyType>4</keyType>
+								<value></value>
+								<valueType>4</valueType>
+							</Variable>
+						</VariableGroup>
+						<VariableGroup>
+							<name>4</name>
+							<keyType>3</keyType>
+							<value></value>
+							<valueType>5</valueType>
+							<Variable>
+								<name>current</name>
+								<keyType>4</keyType>
+								<value></value>
+								<valueType>4</valueType>
+							</Variable>
+							<Variable>
+								<name>max</name>
+								<keyType>4</keyType>
+								<value></value>
+								<valueType>4</valueType>
+							</Variable>
+							<Variable>
+								<name>name</name>
+								<keyType>4</keyType>
+								<value></value>
+								<valueType>4</valueType>
+							</Variable>
+						</VariableGroup>
 					</VariableGroup>
 					<Variable>
 						<name>qm</name>
@@ -16822,7 +17201,7 @@ hunting = false</script>
 					</Variable>
 				</VariableGroup>
 				<VariableGroup>
-					<name>2</name>
+					<name>5</name>
 					<keyType>3</keyType>
 					<value></value>
 					<valueType>5</valueType>
@@ -16882,7 +17261,7 @@ hunting = false</script>
 					</Variable>
 				</VariableGroup>
 				<VariableGroup>
-					<name>3</name>
+					<name>6</name>
 					<keyType>3</keyType>
 					<value></value>
 					<valueType>5</valueType>
@@ -16933,114 +17312,6 @@ hunting = false</script>
 								<valueType>4</valueType>
 							</Variable>
 						</VariableGroup>
-						<VariableGroup>
-							<name>2</name>
-							<keyType>3</keyType>
-							<value></value>
-							<valueType>5</valueType>
-							<Variable>
-								<name>complete</name>
-								<keyType>4</keyType>
-								<value>false</value>
-								<valueType>1</valueType>
-							</Variable>
-							<Variable>
-								<name>current</name>
-								<keyType>4</keyType>
-								<value>0</value>
-								<valueType>4</valueType>
-							</Variable>
-							<Variable>
-								<name>kill</name>
-								<keyType>4</keyType>
-								<value>true</value>
-								<valueType>1</valueType>
-							</Variable>
-							<Variable>
-								<name>max</name>
-								<keyType>4</keyType>
-								<value>1</value>
-								<valueType>4</valueType>
-							</Variable>
-							<Variable>
-								<name>name</name>
-								<keyType>4</keyType>
-								<value>grotesque troll abomination</value>
-								<valueType>4</valueType>
-							</Variable>
-						</VariableGroup>
-						<VariableGroup>
-							<name>3</name>
-							<keyType>3</keyType>
-							<value></value>
-							<valueType>5</valueType>
-							<Variable>
-								<name>complete</name>
-								<keyType>4</keyType>
-								<value>false</value>
-								<valueType>1</valueType>
-							</Variable>
-							<Variable>
-								<name>current</name>
-								<keyType>4</keyType>
-								<value>0</value>
-								<valueType>4</valueType>
-							</Variable>
-							<Variable>
-								<name>kill</name>
-								<keyType>4</keyType>
-								<value>true</value>
-								<valueType>1</valueType>
-							</Variable>
-							<Variable>
-								<name>max</name>
-								<keyType>4</keyType>
-								<value>1</value>
-								<valueType>4</valueType>
-							</Variable>
-							<Variable>
-								<name>name</name>
-								<keyType>4</keyType>
-								<value>master surgeon</value>
-								<valueType>4</valueType>
-							</Variable>
-						</VariableGroup>
-						<VariableGroup>
-							<name>4</name>
-							<keyType>3</keyType>
-							<value></value>
-							<valueType>5</valueType>
-							<Variable>
-								<name>complete</name>
-								<keyType>4</keyType>
-								<value>false</value>
-								<valueType>1</valueType>
-							</Variable>
-							<Variable>
-								<name>current</name>
-								<keyType>4</keyType>
-								<value>0</value>
-								<valueType>4</valueType>
-							</Variable>
-							<Variable>
-								<name>kill</name>
-								<keyType>4</keyType>
-								<value>true</value>
-								<valueType>1</valueType>
-							</Variable>
-							<Variable>
-								<name>max</name>
-								<keyType>4</keyType>
-								<value>1</value>
-								<valueType>4</valueType>
-							</Variable>
-							<Variable>
-								<name>name</name>
-								<keyType>4</keyType>
-								<value>elven girl</value>
-								<valueType>4</valueType>
-							</Variable>
-						</VariableGroup>
 					</VariableGroup>
 					<Variable>
 						<name>qm</name>
@@ -17050,7 +17321,7 @@ hunting = false</script>
 					</Variable>
 				</VariableGroup>
 				<VariableGroup>
-					<name>4</name>
+					<name>7</name>
 					<keyType>3</keyType>
 					<value></value>
 					<valueType>5</valueType>
@@ -17137,78 +17408,6 @@ hunting = false</script>
 								<valueType>4</valueType>
 							</Variable>
 						</VariableGroup>
-						<VariableGroup>
-							<name>3</name>
-							<keyType>3</keyType>
-							<value></value>
-							<valueType>5</valueType>
-							<Variable>
-								<name>complete</name>
-								<keyType>4</keyType>
-								<value>false</value>
-								<valueType>1</valueType>
-							</Variable>
-							<Variable>
-								<name>current</name>
-								<keyType>4</keyType>
-								<value>0</value>
-								<valueType>4</valueType>
-							</Variable>
-							<Variable>
-								<name>kill</name>
-								<keyType>4</keyType>
-								<value>true</value>
-								<valueType>1</valueType>
-							</Variable>
-							<Variable>
-								<name>max</name>
-								<keyType>4</keyType>
-								<value>5</value>
-								<valueType>4</valueType>
-							</Variable>
-							<Variable>
-								<name>name</name>
-								<keyType>4</keyType>
-								<value>disgusting blood imp</value>
-								<valueType>4</valueType>
-							</Variable>
-						</VariableGroup>
-						<VariableGroup>
-							<name>4</name>
-							<keyType>3</keyType>
-							<value></value>
-							<valueType>5</valueType>
-							<Variable>
-								<name>complete</name>
-								<keyType>4</keyType>
-								<value>false</value>
-								<valueType>1</valueType>
-							</Variable>
-							<Variable>
-								<name>current</name>
-								<keyType>4</keyType>
-								<value>0</value>
-								<valueType>4</valueType>
-							</Variable>
-							<Variable>
-								<name>kill</name>
-								<keyType>4</keyType>
-								<value>true</value>
-								<valueType>1</valueType>
-							</Variable>
-							<Variable>
-								<name>max</name>
-								<keyType>4</keyType>
-								<value>1</value>
-								<valueType>4</valueType>
-							</Variable>
-							<Variable>
-								<name>name</name>
-								<keyType>4</keyType>
-								<value>Nebalu</value>
-								<valueType>4</valueType>
-							</Variable>
-						</VariableGroup>
 					</VariableGroup>
 					<Variable>
 						<name>qm</name>
@@ -17218,7 +17417,7 @@ hunting = false</script>
 					</Variable>
 				</VariableGroup>
 				<VariableGroup>
-					<name>5</name>
+					<name>8</name>
 					<keyType>3</keyType>
 					<value></value>
 					<valueType>5</valueType>
@@ -17269,6 +17468,42 @@ hunting = false</script>
 								<valueType>4</valueType>
 							</Variable>
 						</VariableGroup>
+						<VariableGroup>
+							<name>2</name>
+							<keyType>3</keyType>
+							<value></value>
+							<valueType>5</valueType>
+							<Variable>
+								<name>complete</name>
+								<keyType>4</keyType>
+								<value>false</value>
+								<valueType>1</valueType>
+							</Variable>
+							<Variable>
+								<name>current</name>
+								<keyType>4</keyType>
+								<value>0</value>
+								<valueType>4</valueType>
+							</Variable>
+							<Variable>
+								<name>kill</name>
+								<keyType>4</keyType>
+								<value>true</value>
+								<valueType>1</valueType>
+							</Variable>
+							<Variable>
+								<name>max</name>
+								<keyType>4</keyType>
+								<value>10</value>
+								<valueType>4</valueType>
+							</Variable>
+							<Variable>
+								<name>name</name>
+								<keyType>4</keyType>
+								<value>large energy golem</value>
+								<valueType>4</valueType>
+							</Variable>
+						</VariableGroup>
 					</VariableGroup>
 					<Variable>
 						<name>qm</name>
@@ -17278,7 +17513,7 @@ hunting = false</script>
 					</Variable>
 				</VariableGroup>
 				<VariableGroup>
-					<name>6</name>
+					<name>9</name>
 					<keyType>3</keyType>
 					<value></value>
 					<valueType>5</valueType>
@@ -17338,7 +17573,7 @@ hunting = false</script>
 					</Variable>
 				</VariableGroup>
 				<VariableGroup>
-					<name>7</name>
+					<name>10</name>
 					<keyType>3</keyType>
 					<value></value>
 					<valueType>5</valueType>
@@ -17389,42 +17624,6 @@ hunting = false</script>
 								<valueType>4</valueType>
 							</Variable>
 						</VariableGroup>
-						<VariableGroup>
-							<name>2</name>
-							<keyType>3</keyType>
-							<value></value>
-							<valueType>5</valueType>
-							<Variable>
-								<name>complete</name>
-								<keyType>4</keyType>
-								<value>false</value>
-								<valueType>1</valueType>
-							</Variable>
-							<Variable>
-								<name>current</name>
-								<keyType>4</keyType>
-								<value>0</value>
-								<valueType>4</valueType>
-							</Variable>
-							<Variable>
-								<name>kill</name>
-								<keyType>4</keyType>
-								<value>true</value>
-								<valueType>1</valueType>
-							</Variable>
-							<Variable>
-								<name>max</name>
-								<keyType>4</keyType>
-								<value>5</value>
-								<valueType>4</valueType>
-							</Variable>
-							<Variable>
-								<name>name</name>
-								<keyType>4</keyType>
-								<value>Undead Shaman</value>
-								<valueType>4</valueType>
-							</Variable>
-						</VariableGroup>
 					</VariableGroup>
 					<Variable>
 						<name>qm</name>
@@ -17434,7 +17633,7 @@ hunting = false</script>
 					</Variable>
 				</VariableGroup>
 				<VariableGroup>
-					<name>8</name>
+					<name>11</name>
 					<keyType>3</keyType>
 					<value></value>
 					<valueType>5</valueType>
@@ -17485,42 +17684,6 @@ hunting = false</script>
 								<valueType>4</valueType>
 							</Variable>
 						</VariableGroup>
-						<VariableGroup>
-							<name>2</name>
-							<keyType>3</keyType>
-							<value></value>
-							<valueType>5</valueType>
-							<Variable>
-								<name>complete</name>
-								<keyType>4</keyType>
-								<value>false</value>
-								<valueType>1</valueType>
-							</Variable>
-							<Variable>
-								<name>current</name>
-								<keyType>4</keyType>
-								<value>0</value>
-								<valueType>4</valueType>
-							</Variable>
-							<Variable>
-								<name>kill</name>
-								<keyType>4</keyType>
-								<value>false</value>
-								<valueType>1</valueType>
-							</Variable>
-							<Variable>
-								<name>max</name>
-								<keyType>4</keyType>
-								<value>1</value>
-								<valueType>4</valueType>
-							</Variable>
-							<Variable>
-								<name>name</name>
-								<keyType>4</keyType>
-								<value>Gather a glowing prismatic gemstone</value>
-								<valueType>4</valueType>
-							</Variable>
-						</VariableGroup>
 					</VariableGroup>
 					<Variable>
 						<name>qm</name>
@@ -17530,7 +17693,7 @@ hunting = false</script>
 					</Variable>
 				</VariableGroup>
 				<VariableGroup>
-					<name>9</name>
+					<name>12</name>
 					<keyType>3</keyType>
 					<value></value>
 					<valueType>5</valueType>
@@ -17590,7 +17753,7 @@ hunting = false</script>
 					</Variable>
 				</VariableGroup>
 				<VariableGroup>
-					<name>10</name>
+					<name>13</name>
 					<keyType>3</keyType>
 					<value></value>
 					<valueType>5</valueType>
@@ -17650,7 +17813,7 @@ hunting = false</script>
 					</Variable>
 				</VariableGroup>
 				<VariableGroup>
-					<name>11</name>
+					<name>14</name>
 					<keyType>3</keyType>
 					<value></value>
 					<valueType>5</valueType>
@@ -17658,6 +17821,66 @@ hunting = false</script>
 						<name>name</name>
 						<keyType>4</keyType>
 						<value>Purge the Abominations</value>
+						<valueType>4</valueType>
+					</Variable>
+					<VariableGroup>
+						<name>objectives</name>
+						<keyType>4</keyType>
+						<value></value>
+						<valueType>5</valueType>
+						<VariableGroup>
+							<name>1</name>
+							<keyType>3</keyType>
+							<value></value>
+							<valueType>5</valueType>
+							<Variable>
+								<name>complete</name>
+								<keyType>4</keyType>
+								<value>false</value>
+								<valueType>1</valueType>
+							</Variable>
+							<Variable>
+								<name>current</name>
+								<keyType>4</keyType>
+								<value>2</value>
+								<valueType>4</valueType>
+							</Variable>
+							<Variable>
+								<name>kill</name>
+								<keyType>4</keyType>
+								<value>true</value>
+								<valueType>1</valueType>
+							</Variable>
+							<Variable>
+								<name>max</name>
+								<keyType>4</keyType>
+								<value>8</value>
+								<valueType>4</valueType>
+							</Variable>
+							<Variable>
+								<name>name</name>
+								<keyType>4</keyType>
+								<value>Conqueror machine</value>
+								<valueType>4</valueType>
+							</Variable>
+						</VariableGroup>
+					</VariableGroup>
+					<Variable>
+						<name>qm</name>
+						<keyType>4</keyType>
+						<value>Technoyeti Kaluba</value>
+						<valueType>4</valueType>
+					</Variable>
+				</VariableGroup>
+				<VariableGroup>
+					<name>15</name>
+					<keyType>3</keyType>
+					<value></value>
+					<valueType>5</valueType>
+					<Variable>
+						<name>name</name>
+						<keyType>4</keyType>
+						<value>Ending the Blasphemy</value>
 						<valueType>4</valueType>
 					</Variable>
 					<VariableGroup>
@@ -17691,66 +17914,6 @@ hunting = false</script>
 							<Variable>
 								<name>max</name>
 								<keyType>4</keyType>
-								<value>8</value>
-								<valueType>4</valueType>
-							</Variable>
-							<Variable>
-								<name>name</name>
-								<keyType>4</keyType>
-								<value>Conqueror machine</value>
-								<valueType>4</valueType>
-							</Variable>
-						</VariableGroup>
-					</VariableGroup>
-					<Variable>
-						<name>qm</name>
-						<keyType>4</keyType>
-						<value>Technoyeti Kaluba</value>
-						<valueType>4</valueType>
-					</Variable>
-				</VariableGroup>
-				<VariableGroup>
-					<name>12</name>
-					<keyType>3</keyType>
-					<value></value>
-					<valueType>5</valueType>
-					<Variable>
-						<name>name</name>
-						<keyType>4</keyType>
-						<value>Ending the Blasphemy</value>
-						<valueType>4</valueType>
-					</Variable>
-					<VariableGroup>
-						<name>objectives</name>
-						<keyType>4</keyType>
-						<value></value>
-						<valueType>5</valueType>
-						<VariableGroup>
-							<name>1</name>
-							<keyType>3</keyType>
-							<value></value>
-							<valueType>5</valueType>
-							<Variable>
-								<name>complete</name>
-								<keyType>4</keyType>
-								<value>false</value>
-								<valueType>1</valueType>
-							</Variable>
-							<Variable>
-								<name>current</name>
-								<keyType>4</keyType>
-								<value>0</value>
-								<valueType>4</valueType>
-							</Variable>
-							<Variable>
-								<name>kill</name>
-								<keyType>4</keyType>
-								<value>true</value>
-								<valueType>1</valueType>
-							</Variable>
-							<Variable>
-								<name>max</name>
-								<keyType>4</keyType>
 								<value>6</value>
 								<valueType>4</valueType>
 							</Variable>
@@ -17770,7 +17933,7 @@ hunting = false</script>
 					</Variable>
 				</VariableGroup>
 				<VariableGroup>
-					<name>13</name>
+					<name>16</name>
 					<keyType>3</keyType>
 					<value></value>
 					<valueType>5</valueType>
@@ -17830,7 +17993,7 @@ hunting = false</script>
 					</Variable>
 				</VariableGroup>
 				<VariableGroup>
-					<name>14</name>
+					<name>17</name>
 					<keyType>3</keyType>
 					<value></value>
 					<valueType>5</valueType>
@@ -17890,7 +18053,7 @@ hunting = false</script>
 					</Variable>
 				</VariableGroup>
 				<VariableGroup>
-					<name>15</name>
+					<name>18</name>
 					<keyType>3</keyType>
 					<value></value>
 					<valueType>5</valueType>
@@ -17950,7 +18113,7 @@ hunting = false</script>
 					</Variable>
 				</VariableGroup>
 				<VariableGroup>
-					<name>16</name>
+					<name>19</name>
 					<keyType>3</keyType>
 					<value></value>
 					<valueType>5</valueType>
@@ -18001,6 +18164,114 @@ hunting = false</script>
 								<valueType>4</valueType>
 							</Variable>
 						</VariableGroup>
+						<VariableGroup>
+							<name>2</name>
+							<keyType>3</keyType>
+							<value></value>
+							<valueType>5</valueType>
+							<Variable>
+								<name>complete</name>
+								<keyType>4</keyType>
+								<value>false</value>
+								<valueType>1</valueType>
+							</Variable>
+							<Variable>
+								<name>current</name>
+								<keyType>4</keyType>
+								<value>0</value>
+								<valueType>4</valueType>
+							</Variable>
+							<Variable>
+								<name>kill</name>
+								<keyType>4</keyType>
+								<value>true</value>
+								<valueType>1</valueType>
+							</Variable>
+							<Variable>
+								<name>max</name>
+								<keyType>4</keyType>
+								<value>1</value>
+								<valueType>4</valueType>
+							</Variable>
+							<Variable>
+								<name>name</name>
+								<keyType>4</keyType>
+								<value>Viklar</value>
+								<valueType>4</valueType>
+							</Variable>
+						</VariableGroup>
+						<VariableGroup>
+							<name>3</name>
+							<keyType>3</keyType>
+							<value></value>
+							<valueType>5</valueType>
+							<Variable>
+								<name>complete</name>
+								<keyType>4</keyType>
+								<value>false</value>
+								<valueType>1</valueType>
+							</Variable>
+							<Variable>
+								<name>current</name>
+								<keyType>4</keyType>
+								<value>0</value>
+								<valueType>4</valueType>
+							</Variable>
+							<Variable>
+								<name>kill</name>
+								<keyType>4</keyType>
+								<value>true</value>
+								<valueType>1</valueType>
+							</Variable>
+							<Variable>
+								<name>max</name>
+								<keyType>4</keyType>
+								<value>1</value>
+								<valueType>4</valueType>
+							</Variable>
+							<Variable>
+								<name>name</name>
+								<keyType>4</keyType>
+								<value>Vasint</value>
+								<valueType>4</valueType>
+							</Variable>
+						</VariableGroup>
+						<VariableGroup>
+							<name>4</name>
+							<keyType>3</keyType>
+							<value></value>
+							<valueType>5</valueType>
+							<Variable>
+								<name>complete</name>
+								<keyType>4</keyType>
+								<value>false</value>
+								<valueType>1</valueType>
+							</Variable>
+							<Variable>
+								<name>current</name>
+								<keyType>4</keyType>
+								<value>0</value>
+								<valueType>4</valueType>
+							</Variable>
+							<Variable>
+								<name>kill</name>
+								<keyType>4</keyType>
+								<value>true</value>
+								<valueType>1</valueType>
+							</Variable>
+							<Variable>
+								<name>max</name>
+								<keyType>4</keyType>
+								<value>1</value>
+								<valueType>4</valueType>
+							</Variable>
+							<Variable>
+								<name>name</name>
+								<keyType>4</keyType>
+								<value>Vosul</value>
+								<valueType>4</valueType>
+							</Variable>
+						</VariableGroup>
 					</VariableGroup>
 					<Variable>
 						<name>qm</name>
@@ -18010,7 +18281,7 @@ hunting = false</script>
 					</Variable>
 				</VariableGroup>
 				<VariableGroup>
-					<name>17</name>
+					<name>20</name>
 					<keyType>3</keyType>
 					<value></value>
 					<valueType>5</valueType>
@@ -18070,7 +18341,7 @@ hunting = false</script>
 					</Variable>
 				</VariableGroup>
 				<VariableGroup>
-					<name>18</name>
+					<name>21</name>
 					<keyType>3</keyType>
 					<value></value>
 					<valueType>5</valueType>
@@ -18130,7 +18401,7 @@ hunting = false</script>
 					</Variable>
 				</VariableGroup>
 				<VariableGroup>
-					<name>19</name>
+					<name>22</name>
 					<keyType>3</keyType>
 					<value></value>
 					<valueType>5</valueType>
@@ -18181,114 +18452,6 @@ hunting = false</script>
 								<valueType>4</valueType>
 							</Variable>
 						</VariableGroup>
-						<VariableGroup>
-							<name>2</name>
-							<keyType>3</keyType>
-							<value></value>
-							<valueType>5</valueType>
-							<Variable>
-								<name>complete</name>
-								<keyType>4</keyType>
-								<value>false</value>
-								<valueType>1</valueType>
-							</Variable>
-							<Variable>
-								<name>current</name>
-								<keyType>4</keyType>
-								<value>0</value>
-								<valueType>4</valueType>
-							</Variable>
-							<Variable>
-								<name>kill</name>
-								<keyType>4</keyType>
-								<value>true</value>
-								<valueType>1</valueType>
-							</Variable>
-							<Variable>
-								<name>max</name>
-								<keyType>4</keyType>
-								<value>2</value>
-								<valueType>4</valueType>
-							</Variable>
-							<Variable>
-								<name>name</name>
-								<keyType>4</keyType>
-								<value>flame imp destroyer</value>
-								<valueType>4</valueType>
-							</Variable>
-						</VariableGroup>
-						<VariableGroup>
-							<name>3</name>
-							<keyType>3</keyType>
-							<value></value>
-							<valueType>5</valueType>
-							<Variable>
-								<name>complete</name>
-								<keyType>4</keyType>
-								<value>false</value>
-								<valueType>1</valueType>
-							</Variable>
-							<Variable>
-								<name>current</name>
-								<keyType>4</keyType>
-								<value>0</value>
-								<valueType>4</valueType>
-							</Variable>
-							<Variable>
-								<name>kill</name>
-								<keyType>4</keyType>
-								<value>true</value>
-								<valueType>1</valueType>
-							</Variable>
-							<Variable>
-								<name>max</name>
-								<keyType>4</keyType>
-								<value>3</value>
-								<valueType>4</valueType>
-							</Variable>
-							<Variable>
-								<name>name</name>
-								<keyType>4</keyType>
-								<value>untamed flame imp</value>
-								<valueType>4</valueType>
-							</Variable>
-						</VariableGroup>
-						<VariableGroup>
-							<name>4</name>
-							<keyType>3</keyType>
-							<value></value>
-							<valueType>5</valueType>
-							<Variable>
-								<name>complete</name>
-								<keyType>4</keyType>
-								<value>false</value>
-								<valueType>1</valueType>
-							</Variable>
-							<Variable>
-								<name>current</name>
-								<keyType>4</keyType>
-								<value>0</value>
-								<valueType>4</valueType>
-							</Variable>
-							<Variable>
-								<name>kill</name>
-								<keyType>4</keyType>
-								<value>true</value>
-								<valueType>1</valueType>
-							</Variable>
-							<Variable>
-								<name>max</name>
-								<keyType>4</keyType>
-								<value>5</value>
-								<valueType>4</valueType>
-							</Variable>
-							<Variable>
-								<name>name</name>
-								<keyType>4</keyType>
-								<value>fully formed flame imp</value>
-								<valueType>4</valueType>
-							</Variable>
-						</VariableGroup>
 					</VariableGroup>
 					<Variable>
 						<name>qm</name>
@@ -18298,7 +18461,7 @@ hunting = false</script>
 					</Variable>
 				</VariableGroup>
 				<VariableGroup>
-					<name>20</name>
+					<name>23</name>
 					<keyType>3</keyType>
 					<value></value>
 					<valueType>5</valueType>
@@ -18349,6 +18512,78 @@ hunting = false</script>
 								<valueType>4</valueType>
 							</Variable>
 						</VariableGroup>
+						<VariableGroup>
+							<name>2</name>
+							<keyType>3</keyType>
+							<value></value>
+							<valueType>5</valueType>
+							<Variable>
+								<name>complete</name>
+								<keyType>4</keyType>
+								<value>false</value>
+								<valueType>1</valueType>
+							</Variable>
+							<Variable>
+								<name>current</name>
+								<keyType>4</keyType>
+								<value>3</value>
+								<valueType>4</valueType>
+							</Variable>
+							<Variable>
+								<name>kill</name>
+								<keyType>4</keyType>
+								<value>true</value>
+								<valueType>1</valueType>
+							</Variable>
+							<Variable>
+								<name>max</name>
+								<keyType>4</keyType>
+								<value>5</value>
+								<valueType>4</valueType>
+							</Variable>
+							<Variable>
+								<name>name</name>
+								<keyType>4</keyType>
+								<value>cryo imp spawnling</value>
+								<valueType>4</valueType>
+							</Variable>
+						</VariableGroup>
+						<VariableGroup>
+							<name>3</name>
+							<keyType>3</keyType>
+							<value></value>
+							<valueType>5</valueType>
+							<Variable>
+								<name>complete</name>
+								<keyType>4</keyType>
+								<value>true</value>
+								<valueType>1</valueType>
+							</Variable>
+							<Variable>
+								<name>current</name>
+								<keyType>4</keyType>
+								<value>5</value>
+								<valueType>4</valueType>
+							</Variable>
+							<Variable>
+								<name>kill</name>
+								<keyType>4</keyType>
+								<value>true</value>
+								<valueType>1</valueType>
+							</Variable>
+							<Variable>
+								<name>max</name>
+								<keyType>4</keyType>
+								<value>5</value>
+								<valueType>4</valueType>
+							</Variable>
+							<Variable>
+								<name>name</name>
+								<keyType>4</keyType>
+								<value>cryo soldier</value>
+								<valueType>4</valueType>
+							</Variable>
+						</VariableGroup>
 					</VariableGroup>
 					<Variable>
 						<name>qm</name>
@@ -18358,7 +18593,7 @@ hunting = false</script>
 					</Variable>
 				</VariableGroup>
 				<VariableGroup>
-					<name>21</name>
+					<name>24</name>
 					<keyType>3</keyType>
 					<value></value>
 					<valueType>5</valueType>
@@ -18409,6 +18644,30 @@ hunting = false</script>
 								<valueType>4</valueType>
 							</Variable>
 						</VariableGroup>
+						<VariableGroup>
+							<name>2</name>
+							<keyType>3</keyType>
+							<value></value>
+							<valueType>5</valueType>
+							<Variable>
+								<name>current</name>
+								<keyType>4</keyType>
+								<value></value>
+								<valueType>4</valueType>
+							</Variable>
+							<Variable>
+								<name>max</name>
+								<keyType>4</keyType>
+								<value></value>
+								<valueType>4</valueType>
+							</Variable>
+							<Variable>
+								<name>name</name>
+								<keyType>4</keyType>
+								<value></value>
+								<valueType>4</valueType>
+							</Variable>
+						</VariableGroup>
 					</VariableGroup>
 					<Variable>
 						<name>qm</name>
@@ -18418,7 +18677,7 @@ hunting = false</script>
 					</Variable>
 				</VariableGroup>
 				<VariableGroup>
-					<name>22</name>
+					<name>25</name>
 					<keyType>3</keyType>
 					<value></value>
 					<valueType>5</valueType>
@@ -18478,7 +18737,7 @@ hunting = false</script>
 					</Variable>
 				</VariableGroup>
 				<VariableGroup>
-					<name>23</name>
+					<name>26</name>
 					<keyType>3</keyType>
 					<value></value>
 					<valueType>5</valueType>
@@ -18529,78 +18788,6 @@ hunting = false</script>
 								<valueType>4</valueType>
 							</Variable>
 						</VariableGroup>
-						<VariableGroup>
-							<name>2</name>
-							<keyType>3</keyType>
-							<value></value>
-							<valueType>5</valueType>
-							<Variable>
-								<name>complete</name>
-								<keyType>4</keyType>
-								<value>false</value>
-								<valueType>1</valueType>
-							</Variable>
-							<Variable>
-								<name>current</name>
-								<keyType>4</keyType>
-								<value>0</value>
-								<valueType>4</valueType>
-							</Variable>
-							<Variable>
-								<name>kill</name>
-								<keyType>4</keyType>
-								<value>true</value>
-								<valueType>1</valueType>
-							</Variable>
-							<Variable>
-								<name>max</name>
-								<keyType>4</keyType>
-								<value>2</value>
-								<valueType>4</valueType>
-							</Variable>
-							<Variable>
-								<name>name</name>
-								<keyType>4</keyType>
-								<value>chaos weaver</value>
-								<valueType>4</valueType>
-							</Variable>
-						</VariableGroup>
-						<VariableGroup>
-							<name>3</name>
-							<keyType>3</keyType>
-							<value></value>
-							<valueType>5</valueType>
-							<Variable>
-								<name>complete</name>
-								<keyType>4</keyType>
-								<value>false</value>
-								<valueType>1</valueType>
-							</Variable>
-							<Variable>
-								<name>current</name>
-								<keyType>4</keyType>
-								<value>0</value>
-								<valueType>4</valueType>
-							</Variable>
-							<Variable>
-								<name>kill</name>
-								<keyType>4</keyType>
-								<value>true</value>
-								<valueType>1</valueType>
-							</Variable>
-							<Variable>
-								<name>max</name>
-								<keyType>4</keyType>
-								<value>10</value>
-								<valueType>4</valueType>
-							</Variable>
-							<Variable>
-								<name>name</name>
-								<keyType>4</keyType>
-								<value>blood widow</value>
-								<valueType>4</valueType>
-							</Variable>
-						</VariableGroup>
 					</VariableGroup>
 					<Variable>
 						<name>qm</name>
@@ -18610,7 +18797,7 @@ hunting = false</script>
 					</Variable>
 				</VariableGroup>
 				<VariableGroup>
-					<name>24</name>
+					<name>27</name>
 					<keyType>3</keyType>
 					<value></value>
 					<valueType>5</valueType>
@@ -18661,42 +18848,6 @@ hunting = false</script>
 								<valueType>4</valueType>
 							</Variable>
 						</VariableGroup>
-						<VariableGroup>
-							<name>2</name>
-							<keyType>3</keyType>
-							<value></value>
-							<valueType>5</valueType>
-							<Variable>
-								<name>complete</name>
-								<keyType>4</keyType>
-								<value>false</value>
-								<valueType>1</valueType>
-							</Variable>
-							<Variable>
-								<name>current</name>
-								<keyType>4</keyType>
-								<value>0</value>
-								<valueType>4</valueType>
-							</Variable>
-							<Variable>
-								<name>kill</name>
-								<keyType>4</keyType>
-								<value>true</value>
-								<valueType>1</valueType>
-							</Variable>
-							<Variable>
-								<name>max</name>
-								<keyType>4</keyType>
-								<value>1</value>
-								<valueType>4</valueType>
-							</Variable>
-							<Variable>
-								<name>name</name>
-								<keyType>4</keyType>
-								<value>ogre foreseer</value>
-								<valueType>4</valueType>
-							</Variable>
-						</VariableGroup>
 					</VariableGroup>
 					<Variable>
 						<name>qm</name>
@@ -18706,7 +18857,7 @@ hunting = false</script>
 					</Variable>
 				</VariableGroup>
 				<VariableGroup>
-					<name>25</name>
+					<name>28</name>
 					<keyType>3</keyType>
 					<value></value>
 					<valueType>5</valueType>
@@ -18766,7 +18917,7 @@ hunting = false</script>
 					</Variable>
 				</VariableGroup>
 				<VariableGroup>
-					<name>26</name>
+					<name>29</name>
 					<keyType>3</keyType>
 					<value></value>
 					<valueType>5</valueType>
@@ -18826,7 +18977,7 @@ hunting = false</script>
 					</Variable>
 				</VariableGroup>
 				<VariableGroup>
-					<name>27</name>
+					<name>30</name>
 					<keyType>3</keyType>
 					<value></value>
 					<valueType>5</valueType>
@@ -18877,6 +19028,30 @@ hunting = false</script>
 								<valueType>4</valueType>
 							</Variable>
 						</VariableGroup>
+						<VariableGroup>
+							<name>2</name>
+							<keyType>3</keyType>
+							<value></value>
+							<valueType>5</valueType>
+							<Variable>
+								<name>current</name>
+								<keyType>4</keyType>
+								<value></value>
+								<valueType>4</valueType>
+							</Variable>
+							<Variable>
+								<name>max</name>
+								<keyType>4</keyType>
+								<value></value>
+								<valueType>4</valueType>
+							</Variable>
+							<Variable>
+								<name>name</name>
+								<keyType>4</keyType>
+								<value></value>
+								<valueType>4</valueType>
+							</Variable>
+						</VariableGroup>
 					</VariableGroup>
 					<Variable>
 						<name>qm</name>
@@ -18886,14 +19061,14 @@ hunting = false</script>
 					</Variable>
 				</VariableGroup>
 				<VariableGroup>
-					<name>28</name>
+					<name>31</name>
 					<keyType>3</keyType>
 					<value></value>
 					<valueType>5</valueType>
 					<Variable>
 						<name>name</name>
 						<keyType>4</keyType>
-						<value>The Defilers fortune.</value>
+						<value>The Defiler's fortune.</value>
 						<valueType>4</valueType>
 					</Variable>
 					<VariableGroup>
@@ -18937,6 +19112,78 @@ hunting = false</script>
 								<valueType>4</valueType>
 							</Variable>
 						</VariableGroup>
+						<VariableGroup>
+							<name>2</name>
+							<keyType>3</keyType>
+							<value></value>
+							<valueType>5</valueType>
+							<Variable>
+								<name>current</name>
+								<keyType>4</keyType>
+								<value></value>
+								<valueType>4</valueType>
+							</Variable>
+							<Variable>
+								<name>max</name>
+								<keyType>4</keyType>
+								<value></value>
+								<valueType>4</valueType>
+							</Variable>
+							<Variable>
+								<name>name</name>
+								<keyType>4</keyType>
+								<value></value>
+								<valueType>4</valueType>
+							</Variable>
+						</VariableGroup>
+						<VariableGroup>
+							<name>3</name>
+							<keyType>3</keyType>
+							<value></value>
+							<valueType>5</valueType>
+							<Variable>
+								<name>current</name>
+								<keyType>4</keyType>
+								<value></value>
+								<valueType>4</valueType>
+							</Variable>
+							<Variable>
+								<name>max</name>
+								<keyType>4</keyType>
+								<value></value>
+								<valueType>4</valueType>
+							</Variable>
+							<Variable>
+								<name>name</name>
+								<keyType>4</keyType>
+								<value></value>
+								<valueType>4</valueType>
+							</Variable>
+						</VariableGroup>
+						<VariableGroup>
+							<name>4</name>
+							<keyType>3</keyType>
+							<value></value>
+							<valueType>5</valueType>
+							<Variable>
+								<name>current</name>
+								<keyType>4</keyType>
+								<value></value>
+								<valueType>4</valueType>
+							</Variable>
+							<Variable>
+								<name>max</name>
+								<keyType>4</keyType>
+								<value></value>
+								<valueType>4</valueType>
+							</Variable>
+							<Variable>
+								<name>name</name>
+								<keyType>4</keyType>
+								<value></value>
+								<valueType>4</valueType>
+							</Variable>
+						</VariableGroup>
 					</VariableGroup>
 					<Variable>
 						<name>qm</name>
@@ -18946,163 +19193,7 @@ hunting = false</script>
 					</Variable>
 				</VariableGroup>
 				<VariableGroup>
-					<name>29</name>
-					<keyType>3</keyType>
-					<value></value>
-					<valueType>5</valueType>
-					<Variable>
-						<name>name</name>
-						<keyType>4</keyType>
-						<value>Destroy Kalshet</value>
-						<valueType>4</valueType>
-					</Variable>
-					<VariableGroup>
-						<name>objectives</name>
-						<keyType>4</keyType>
-						<value></value>
-						<valueType>5</valueType>
-						<VariableGroup>
-							<name>1</name>
-							<keyType>3</keyType>
-							<value></value>
-							<valueType>5</valueType>
-							<Variable>
-								<name>complete</name>
-								<keyType>4</keyType>
-								<value>false</value>
-								<valueType>1</valueType>
-							</Variable>
-							<Variable>
-								<name>current</name>
-								<keyType>4</keyType>
-								<value>0</value>
-								<valueType>4</valueType>
-							</Variable>
-							<Variable>
-								<name>kill</name>
-								<keyType>4</keyType>
-								<value>true</value>
-								<valueType>1</valueType>
-							</Variable>
-							<Variable>
-								<name>max</name>
-								<keyType>4</keyType>
-								<value>1</value>
-								<valueType>4</valueType>
-							</Variable>
-							<Variable>
-								<name>name</name>
-								<keyType>4</keyType>
-								<value>zombie Kalshet</value>
-								<valueType>4</valueType>
-							</Variable>
-						</VariableGroup>
-					</VariableGroup>
-					<Variable>
-						<name>qm</name>
-						<keyType>4</keyType>
-						<value>Ivq</value>
-						<valueType>4</valueType>
-					</Variable>
-				</VariableGroup>
-				<VariableGroup>
-					<name>30</name>
-					<keyType>3</keyType>
-					<value></value>
-					<valueType>5</valueType>
-					<Variable>
-						<name>name</name>
-						<keyType>4</keyType>
-						<value>Soldiers of Entropy</value>
-						<valueType>4</valueType>
-					</Variable>
-					<VariableGroup>
-						<name>objectives</name>
-						<keyType>4</keyType>
-						<value></value>
-						<valueType>5</valueType>
-						<VariableGroup>
-							<name>1</name>
-							<keyType>3</keyType>
-							<value></value>
-							<valueType>5</valueType>
-							<Variable>
-								<name>complete</name>
-								<keyType>4</keyType>
-								<value>false</value>
-								<valueType>1</valueType>
-							</Variable>
-							<Variable>
-								<name>current</name>
-								<keyType>4</keyType>
-								<value>0</value>
-								<valueType>4</valueType>
-							</Variable>
-							<Variable>
-								<name>kill</name>
-								<keyType>4</keyType>
-								<value>true</value>
-								<valueType>1</valueType>
-							</Variable>
-							<Variable>
-								<name>max</name>
-								<keyType>4</keyType>
-								<value>6</value>
-								<valueType>4</valueType>
-							</Variable>
-							<Variable>
-								<name>name</name>
-								<keyType>4</keyType>
-								<value>ogre invoker</value>
-								<valueType>4</valueType>
-							</Variable>
-						</VariableGroup>
-						<VariableGroup>
-							<name>2</name>
-							<keyType>3</keyType>
-							<value></value>
-							<valueType>5</valueType>
-							<Variable>
-								<name>complete</name>
-								<keyType>4</keyType>
-								<value>false</value>
-								<valueType>1</valueType>
-							</Variable>
-							<Variable>
-								<name>current</name>
-								<keyType>4</keyType>
-								<value>0</value>
-								<valueType>4</valueType>
-							</Variable>
-							<Variable>
-								<name>kill</name>
-								<keyType>4</keyType>
-								<value>true</value>
-								<valueType>1</valueType>
-							</Variable>
-							<Variable>
-								<name>max</name>
-								<keyType>4</keyType>
-								<value>6</value>
-								<valueType>4</valueType>
-							</Variable>
-							<Variable>
-								<name>name</name>
-								<keyType>4</keyType>
-								<value>yeti undead</value>
-								<valueType>4</valueType>
-							</Variable>
-						</VariableGroup>
-					</VariableGroup>
-					<Variable>
-						<name>qm</name>
-						<keyType>4</keyType>
-						<value>Ivq</value>
-						<valueType>4</valueType>
-					</Variable>
-				</VariableGroup>
-				<VariableGroup>
-					<name>31</name>
+					<name>32</name>
 					<keyType>3</keyType>
 					<value></value>
 					<valueType>5</valueType>
@@ -19270,7 +19361,7 @@ hunting = false</script>
 					</Variable>
 				</VariableGroup>
 				<VariableGroup>
-					<name>32</name>
+					<name>33</name>
 					<keyType>3</keyType>
 					<value></value>
 					<valueType>5</valueType>
@@ -19393,42 +19484,6 @@ hunting = false</script>
 								<valueType>4</valueType>
 							</Variable>
 						</VariableGroup>
-						<VariableGroup>
-							<name>4</name>
-							<keyType>3</keyType>
-							<value></value>
-							<valueType>5</valueType>
-							<Variable>
-								<name>complete</name>
-								<keyType>4</keyType>
-								<value>false</value>
-								<valueType>1</valueType>
-							</Variable>
-							<Variable>
-								<name>current</name>
-								<keyType>4</keyType>
-								<value>0</value>
-								<valueType>4</valueType>
-							</Variable>
-							<Variable>
-								<name>kill</name>
-								<keyType>4</keyType>
-								<value>true</value>
-								<valueType>1</valueType>
-							</Variable>
-							<Variable>
-								<name>max</name>
-								<keyType>4</keyType>
-								<value>1</value>
-								<valueType>4</valueType>
-							</Variable>
-							<Variable>
-								<name>name</name>
-								<keyType>4</keyType>
-								<value>Theuros</value>
-								<valueType>4</valueType>
-							</Variable>
-						</VariableGroup>
 					</VariableGroup>
 					<Variable>
 						<name>qm</name>
@@ -19438,14 +19493,14 @@ hunting = false</script>
 					</Variable>
 				</VariableGroup>
 				<VariableGroup>
-					<name>33</name>
+					<name>34</name>
 					<keyType>3</keyType>
 					<value></value>
 					<valueType>5</valueType>
 					<Variable>
 						<name>name</name>
 						<keyType>4</keyType>
-						<value>Koruks handmaiden</value>
+						<value>Koruk's handmaiden</value>
 						<valueType>4</valueType>
 					</Variable>
 					<VariableGroup>
@@ -19461,13 +19516,13 @@ hunting = false</script>
 							<Variable>
 								<name>complete</name>
 								<keyType>4</keyType>
-								<value>false</value>
+								<value>true</value>
 								<valueType>1</valueType>
 							</Variable>
 							<Variable>
 								<name>current</name>
 								<keyType>4</keyType>
-								<value>5</value>
+								<value>10</value>
 								<valueType>4</valueType>
 							</Variable>
 							<Variable>
@@ -19497,13 +19552,13 @@ hunting = false</script>
 							<Variable>
 								<name>complete</name>
 								<keyType>4</keyType>
-								<value>false</value>
+								<value>true</value>
 								<valueType>1</valueType>
 							</Variable>
 							<Variable>
 								<name>current</name>
 								<keyType>4</keyType>
-								<value>3</value>
+								<value>5</value>
 								<valueType>4</valueType>
 							</Variable>
 							<Variable>
@@ -19525,42 +19580,6 @@ hunting = false</script>
 								<valueType>4</valueType>
 							</Variable>
 						</VariableGroup>
-						<VariableGroup>
-							<name>3</name>
-							<keyType>3</keyType>
-							<value></value>
-							<valueType>5</valueType>
-							<Variable>
-								<name>complete</name>
-								<keyType>4</keyType>
-								<value>false</value>
-								<valueType>1</valueType>
-							</Variable>
-							<Variable>
-								<name>current</name>
-								<keyType>4</keyType>
-								<value>0</value>
-								<valueType>4</valueType>
-							</Variable>
-							<Variable>
-								<name>kill</name>
-								<keyType>4</keyType>
-								<value>true</value>
-								<valueType>1</valueType>
-							</Variable>
-							<Variable>
-								<name>max</name>
-								<keyType>4</keyType>
-								<value>1</value>
-								<valueType>4</valueType>
-							</Variable>
-							<Variable>
-								<name>name</name>
-								<keyType>4</keyType>
-								<value>maiden of Koruk</value>
-								<valueType>4</valueType>
-							</Variable>
-						</VariableGroup>
 					</VariableGroup>
 					<Variable>
 						<name>qm</name>
@@ -19570,7 +19589,7 @@ hunting = false</script>
 					</Variable>
 				</VariableGroup>
 				<VariableGroup>
-					<name>34</name>
+					<name>35</name>
 					<keyType>3</keyType>
 					<value></value>
 					<valueType>5</valueType>
@@ -19665,102 +19684,6 @@ hunting = false</script>
 						<valueType>4</valueType>
 					</Variable>
 				</VariableGroup>
-				<VariableGroup>
-					<name>35</name>
-					<keyType>3</keyType>
-					<value></value>
-					<valueType>5</valueType>
-					<Variable>
-						<name>name</name>
-						<keyType>4</keyType>
-						<value>Lay them to rest</value>
-						<valueType>4</valueType>
-					</Variable>
-					<VariableGroup>
-						<name>objectives</name>
-						<keyType>4</keyType>
-						<value></value>
-						<valueType>5</valueType>
-						<VariableGroup>
-							<name>1</name>
-							<keyType>3</keyType>
-							<value></value>
-							<valueType>5</valueType>
-							<Variable>
-								<name>complete</name>
-								<keyType>4</keyType>
-								<value>false</value>
-								<valueType>1</valueType>
-							</Variable>
-							<Variable>
-								<name>current</name>
-								<keyType>4</keyType>
-								<value>0</value>
-								<valueType>4</valueType>
-							</Variable>
-							<Variable>
-								<name>kill</name>
-								<keyType>4</keyType>
-								<value>true</value>
-								<valueType>1</valueType>
-							</Variable>
-							<Variable>
-								<name>max</name>
-								<keyType>4</keyType>
-								<value>15</value>
-								<valueType>4</valueType>
-							</Variable>
-							<Variable>
-								<name>name</name>
-								<keyType>4</keyType>
-								<value>blaze ghoul</value>
-								<valueType>4</valueType>
-							</Variable>
-						</VariableGroup>
-						<VariableGroup>
-							<name>2</name>
-							<keyType>3</keyType>
-							<value></value>
-							<valueType>5</valueType>
-							<Variable>
-								<name>complete</name>
-								<keyType>4</keyType>
-								<value>false</value>
-								<valueType>1</valueType>
-							</Variable>
-							<Variable>
-								<name>current</name>
-								<keyType>4</keyType>
-								<value>0</value>
-								<valueType>4</valueType>
-							</Variable>
-							<Variable>
-								<name>kill</name>
-								<keyType>4</keyType>
-								<value>true</value>
-								<valueType>1</valueType>
-							</Variable>
-							<Variable>
-								<name>max</name>
-								<keyType>4</keyType>
-								<value>15</value>
-								<valueType>4</valueType>
-							</Variable>
-							<Variable>
-								<name>name</name>
-								<keyType>4</keyType>
-								<value>paladin of koruk</value>
-								<valueType>4</valueType>
-							</Variable>
-						</VariableGroup>
-					</VariableGroup>
-					<Variable>
-						<name>qm</name>
-						<keyType>4</keyType>
-						<value>a hooded drow magi</value>
-						<valueType>4</valueType>
-					</Variable>
-				</VariableGroup>
 			</VariableGroup>
 			<VariableGroup>
 				<name>scripting</name>
@@ -19777,7 +19700,7 @@ hunting = false</script>
 			<Variable>
 				<name>traits</name>
 				<keyType>4</keyType>
-				<value>Bruiser reborn mastermind</value>
+				<value>Bruiser chosen reborn mastermind</value>
 				<valueType>4</valueType>
 			</Variable>
 		</VariableGroup>
