@@ -6862,7 +6862,7 @@ partyDisplay2:echo(lblentries[2])</script>
 				<packageName></packageName>
 				<time>00:00:00.500</time>
 			</Timer>
-			<Timer isActive="yes" isFolder="no" isTempTimer="no" isOffsetTimer="no">
+			<Timer isActive="no" isFolder="no" isTempTimer="no" isOffsetTimer="no">
 				<name>Damage Scenario</name>
 				<script>if combatdisplay ~= null then
   clearWindow("combat")
@@ -14818,21 +14818,24 @@ function scenarioDisplay(index)
 return DamageScenarios[index].name .. "\n" .. damageDisplay(DamageScenarios[index].data)
 end
 
+function getDef(sub,opp)
+	local subreturn = "&lt;grey&gt;"
+	local hitcnt = totalhit(opp,sub)
+	subreturn = subreturn .. " Dodge  : " .. string.format("%5.2f",100*(sub.dodge / hitcnt)) .. "%  - " .. sub.dodge .. "\n"
+	subreturn = subreturn .. " Parry  : " .. string.format("%5.2f",100*(sub.parry / hitcnt)) .. "%  - " .. sub.parry .. "\n"
+	subreturn = subreturn .. " Block  : " .. string.format("%5.2f",100*(sub.block / hitcnt)) .. "%  - " .. sub.block .. "\n"
+	subreturn = subreturn .. " Phase  : " .. string.format("%5.2f",100*(sub.phase / hitcnt)) .. "%  - " .. sub.phase .. "\n"
+	subreturn = subreturn .. " Reflect: " .. string.format("%5.2f",100*(sub.reflect / hitcnt)) .. "%  - " .. sub.reflect .. "\n"
+	subreturn = subreturn .. " Miss   : " .. string.format("%5.2f",100*(sub.miss / hitcnt)) .. "%  - " .. sub.miss .. "\n"
+	subreturn = subreturn .. " Hit    : " .. string.format("%5.2f",100*(opp.hit / hitcnt)) .. "%  - " .. opp.hit .. "\n"
+	  --subreturn = subreturn .. totalhit(opp,sub) .. "\n"
+	return subreturn
+end
+
 function damageDisplay(data)
   local toreturn = ""
 
-  local function getDef(sub,opp)
-    local subreturn = "&lt;grey&gt;"
-    subreturn = subreturn .. " Dodge  : " .. string.format("%5.2f",100*(sub.dodge / totalhit(opp,sub))) .. "%  - " .. sub.dodge .. "\n"
-    subreturn = subreturn .. " Parry  : " .. string.format("%5.2f",100*(sub.parry / totalhit(opp,sub))) .. "%  - " .. sub.parry .. "\n"
-    subreturn = subreturn .. " Block  : " .. string.format("%5.2f",100*(sub.block / totalhit(opp,sub))) .. "%  - " .. sub.block .. "\n"
-    subreturn = subreturn .. " Phase  : " .. string.format("%5.2f",100*(sub.phase / totalhit(opp,sub))) .. "%  - " .. sub.phase .. "\n"
-    subreturn = subreturn .. " Reflect: " .. string.format("%5.2f",100*(sub.reflect / totalhit(opp,sub))) .. "%  - " .. sub.reflect .. "\n"
-    subreturn = subreturn .. " Miss   : " .. string.format("%5.2f",100*(sub.miss / totalhit(opp,sub))) .. "%  - " .. sub.miss .. "\n"
-    subreturn = subreturn .. " Hit    : " .. string.format("%5.2f",100*(opp.hit / totalhit(opp,sub))) .. "%  - " .. opp.hit .. "\n"
-	  --subreturn = subreturn .. totalhit(opp,sub) .. "\n"
-    return subreturn
-  end
+
   toreturn = toreturn .."\n&lt;white&gt;Defense Per Round - " .. totalhit(data.mine,data.opp) .. "\n"
   toreturn = toreturn ..getDef(data.mine,data.opp)
   toreturn = toreturn .."&lt;white&gt;Offense Per Round - " .. totalhit(data.opp,data.mine) .. "\n"
@@ -14848,9 +14851,27 @@ function getScenario(name)
 
 end
 
-function TotalCalc.Remove(self,rnd)
-  TotalCalc.SubRemove(self.mine,rnd.mine)
-  TotalCalc.SubRemove(self.opp,rnd.opp)
+function TotalCalc.Remove(rnd)
+  --TotalCalc.SubRemove(self.mine,rnd.mine)
+  --TotalCalc.SubRemove(self.opp,rnd.opp)
+  
+  TotalCalc.mine.hit=TotalCalc.mine.hit-rnd.mine.hit
+  TotalCalc.mine.damage=TotalCalc.mine.damage-rnd.mine.damage
+  TotalCalc.mine.block=TotalCalc.mine.block-rnd.mine.block
+  TotalCalc.mine.dodge=TotalCalc.mine.dodge-rnd.mine.dodge
+  TotalCalc.mine.parry=TotalCalc.mine.parry-rnd.mine.parry
+  TotalCalc.mine.miss=TotalCalc.mine.miss-rnd.mine.miss
+  TotalCalc.mine.reflect=TotalCalc.mine.reflect-rnd.mine.reflect
+  TotalCalc.mine.phase=TotalCalc.mine.phase-rnd.mine.phase
+  
+  TotalCalc.opp.hit=TotalCalc.opp.hit-rnd.opp.hit
+  TotalCalc.opp.damage=TotalCalc.opp.damage-rnd.opp.damage
+  TotalCalc.opp.block=TotalCalc.opp.block-rnd.opp.block
+  TotalCalc.opp.dodge=TotalCalc.opp.dodge-rnd.opp.dodge
+  TotalCalc.opp.parry=TotalCalc.opp.parry-rnd.opp.parry
+  TotalCalc.opp.miss=TotalCalc.opp.miss-rnd.opp.miss
+  TotalCalc.opp.reflect=TotalCalc.opp.reflect-rnd.opp.reflect
+  TotalCalc.opp.phase=TotalCalc.opp.phase-rnd.opp.phase
 end
 
 function TotalCalc.SubRemove(self,rnd)
@@ -14876,26 +14897,48 @@ function TotalCalc.SubCombine(self,rnd)
 end
 
 function TotalCalc.Combine(rnd)
-  TotalCalc.SubCombine(self.mine,rnd.mine)
-  TotalCalc.SubCombine(self.opp,rnd.opp)
+  --TotalCalc.SubCombine(TotalCalc.mine,TotalCalc.mine)
+  --TotalCalc.SubCombine(TotalCalc.opp,TotalCalc.opp)
+  
+  TotalCalc.mine.hit=TotalCalc.mine.hit+rnd.mine.hit
+  TotalCalc.mine.damage=TotalCalc.mine.damage+rnd.mine.damage
+  TotalCalc.mine.block=TotalCalc.mine.block+rnd.mine.block
+  TotalCalc.mine.dodge=TotalCalc.mine.dodge+rnd.mine.dodge
+  TotalCalc.mine.parry=TotalCalc.mine.parry+rnd.mine.parry
+  TotalCalc.mine.miss=TotalCalc.mine.miss+rnd.mine.miss
+  TotalCalc.mine.reflect=TotalCalc.mine.reflect+rnd.mine.reflect
+  TotalCalc.mine.phase=TotalCalc.mine.phase+rnd.mine.phase
+  
+  TotalCalc.opp.hit=TotalCalc.opp.hit+rnd.opp.hit
+  TotalCalc.opp.damage=TotalCalc.opp.damage+rnd.opp.damage
+  TotalCalc.opp.block=TotalCalc.opp.block+rnd.opp.block
+  TotalCalc.opp.dodge=TotalCalc.opp.dodge+rnd.opp.dodge
+  TotalCalc.opp.parry=TotalCalc.opp.parry+rnd.opp.parry
+  TotalCalc.opp.miss=TotalCalc.opp.miss+rnd.opp.miss
+  TotalCalc.opp.reflect=TotalCalc.opp.reflect+rnd.opp.reflect
+  TotalCalc.opp.phase=TotalCalc.opp.phase+rnd.opp.phase
   
   TotalCalc.count=TotalCalc.count+1
   
-  table.insert(TotalCalc.History,rnd)
+  table.insert(TotalCalc.history,table.deepcopy(rnd))
   
-  if scenario_round_count == TotalCalc.count then
+  if scenario_round_count &gt; 0 and scenario_round_count == TotalCalc.count then
     expandAlias("FinishScenario " .. scenario_name)
     scenario_round_count = -1
   end
   --Limit to 1000 rows or scenario length
-  if TotalCalc.count &gt; 1000 then
+  if TotalCalc.count &gt; 10 then
     if TotalCalc.count &gt; scenario_round_count then
-      local remrnd = TotalCalc.history[1]
-    
-      TotalCalc:Remove(remrnd)
-      TotalCalc.count = TotalCalc.count-1
-    
-      table.remove(TotalCalc.history,1)
+        local tabsize = 1 --table.size(TotalCalc.history)
+        echo("Tablesize" .. tabsize)
+        local remrnd = TotalCalc.history[tabsize]
+        --display(TotalCalc.history[2])
+        --display(TotalCalc.history[tabsize])
+      
+        TotalCalc.Remove(remrnd)
+        TotalCalc.count = TotalCalc.count-1
+
+        table.remove(TotalCalc.history,tabsize)
       
     end
   end
@@ -14919,6 +14962,8 @@ function TotalCalc.Clear()
   TotalCalc.opp.miss=0
   TotalCalc.opp.reflect=0
   TotalCalc.opp.phase=0
+  
+  TotalCalc.history = {}
   
   TotalCalc.count=0
  end
