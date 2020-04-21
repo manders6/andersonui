@@ -42,7 +42,9 @@ expandAlias("seteq")
 
 enableTimer("Party Grab")
 
-expandAlias(xaos.config.reconnectaction)</script>
+expandAlias(xaos.config.reconnectaction)
+
+dataecho("ALERT","Logged in to character")</script>
 					<triggerType>0</triggerType>
 					<conditonLineDelta>0</conditonLineDelta>
 					<mStayOpen>0</mStayOpen>
@@ -4244,7 +4246,7 @@ curpartystatus = {
 --This is to handle if the party leader changes.
 if string.trim(curpartystatus.leader) ~= "Your" and killTarget == "" and auto_hunt then
   if string.trim(followTarget) ~= string.trim(curpartystatus.leader) then
-    expandAlias("fhunt " .. curpartystatus.leader)
+    --expandAlias("fhunt " .. curpartystatus.leader)
   end
 end
 
@@ -4262,10 +4264,12 @@ end</script>
 						<colorTriggerFgColor>#000000</colorTriggerFgColor>
 						<colorTriggerBgColor>#000000</colorTriggerBgColor>
 						<regexCodeList>
-							<string>^(.*) party:</string>
+							<string>^(.*)\'s party:</string>
 							<string>^(Your) Party:</string>
+							<string>^(.*) party:</string>
 						</regexCodeList>
 						<regexCodePropertyList>
+							<integer>1</integer>
 							<integer>1</integer>
 							<integer>1</integer>
 						</regexCodePropertyList>
@@ -5395,6 +5399,368 @@ end</script>
 				</Trigger>
 			</TriggerGroup>
 			<TriggerGroup isActive="yes" isFolder="yes" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+				<name>Damage Calc</name>
+				<script></script>
+				<triggerType>0</triggerType>
+				<conditonLineDelta>0</conditonLineDelta>
+				<mStayOpen>0</mStayOpen>
+				<mCommand></mCommand>
+				<packageName></packageName>
+				<mFgColor>#ff0000</mFgColor>
+				<mBgColor>#ffff00</mBgColor>
+				<mSoundFile></mSoundFile>
+				<colorTriggerFgColor>#000000</colorTriggerFgColor>
+				<colorTriggerBgColor>#000000</colorTriggerBgColor>
+				<regexCodeList />
+				<regexCodePropertyList />
+				<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+					<name>End Round</name>
+					<script>if (RoundCalc.mine.damage&gt;0 or RoundCalc.opp.damage&gt;0) then
+  TotalCalc.Combine(RoundCalc)
+  RoundCalc.Clear()  
+  --TotalCalc.Display()
+end
+--echo(RoundCalc.damage .. " a: " .. string.format("%5.2f",TotalCalc.damage/TotalCalc.count))
+</script>
+					<triggerType>0</triggerType>
+					<conditonLineDelta>0</conditonLineDelta>
+					<mStayOpen>0</mStayOpen>
+					<mCommand></mCommand>
+					<packageName></packageName>
+					<mFgColor>#ff0000</mFgColor>
+					<mBgColor>#ffff00</mBgColor>
+					<mSoundFile></mSoundFile>
+					<colorTriggerFgColor>#000000</colorTriggerFgColor>
+					<colorTriggerBgColor>#000000</colorTriggerBgColor>
+					<regexCodeList>
+						<string>HEALTH\s+(100|\d{1,2})% MANA\s+(100|\d{1,2})% MVM\s+(\d+)% STIL (\w+\s*\w*\s*\w*) XP\s+(\d+)% Directions\s+(\w+)\s+Hungry\s+(\w+)</string>
+					</regexCodeList>
+					<regexCodePropertyList>
+						<integer>1</integer>
+					</regexCodePropertyList>
+				</Trigger>
+				<TriggerGroup isActive="yes" isFolder="yes" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+					<name>Damage</name>
+					<script></script>
+					<triggerType>0</triggerType>
+					<conditonLineDelta>0</conditonLineDelta>
+					<mStayOpen>0</mStayOpen>
+					<mCommand></mCommand>
+					<packageName></packageName>
+					<mFgColor>#ff0000</mFgColor>
+					<mBgColor>#ffff00</mBgColor>
+					<mSoundFile></mSoundFile>
+					<colorTriggerFgColor>#000000</colorTriggerFgColor>
+					<colorTriggerBgColor>#000000</colorTriggerBgColor>
+					<regexCodeList />
+					<regexCodePropertyList />
+					<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+						<name>Parry</name>
+						<script>RoundCalc.mine.parry = RoundCalc.mine.parry + 1</script>
+						<triggerType>0</triggerType>
+						<conditonLineDelta>0</conditonLineDelta>
+						<mStayOpen>0</mStayOpen>
+						<mCommand></mCommand>
+						<packageName></packageName>
+						<mFgColor>#ff0000</mFgColor>
+						<mBgColor>#ffff00</mBgColor>
+						<mSoundFile></mSoundFile>
+						<colorTriggerFgColor>#000000</colorTriggerFgColor>
+						<colorTriggerBgColor>#000000</colorTriggerBgColor>
+						<regexCodeList>
+							<string>You (.*)parry </string>
+						</regexCodeList>
+						<regexCodePropertyList>
+							<integer>1</integer>
+						</regexCodePropertyList>
+					</Trigger>
+					<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+						<name>Dodge</name>
+						<script>RoundCalc.mine.dodge = RoundCalc.mine.dodge + 1</script>
+						<triggerType>0</triggerType>
+						<conditonLineDelta>0</conditonLineDelta>
+						<mStayOpen>0</mStayOpen>
+						<mCommand></mCommand>
+						<packageName></packageName>
+						<mFgColor>#ff0000</mFgColor>
+						<mBgColor>#ffff00</mBgColor>
+						<mSoundFile></mSoundFile>
+						<colorTriggerFgColor>#000000</colorTriggerFgColor>
+						<colorTriggerBgColor>#000000</colorTriggerBgColor>
+						<regexCodeList>
+							<string>You dodge</string>
+						</regexCodeList>
+						<regexCodePropertyList>
+							<integer>0</integer>
+						</regexCodePropertyList>
+					</Trigger>
+					<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+						<name>Misses you</name>
+						<script>RoundCalc.mine.miss = RoundCalc.mine.miss + 1</script>
+						<triggerType>0</triggerType>
+						<conditonLineDelta>0</conditonLineDelta>
+						<mStayOpen>0</mStayOpen>
+						<mCommand></mCommand>
+						<packageName></packageName>
+						<mFgColor>#ff0000</mFgColor>
+						<mBgColor>#ffff00</mBgColor>
+						<mSoundFile></mSoundFile>
+						<colorTriggerFgColor>#000000</colorTriggerFgColor>
+						<colorTriggerBgColor>#000000</colorTriggerBgColor>
+						<regexCodeList>
+							<string>pathetic (.*) misses you</string>
+						</regexCodeList>
+						<regexCodePropertyList>
+							<integer>1</integer>
+						</regexCodePropertyList>
+					</Trigger>
+					<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+						<name>Reflects off you</name>
+						<script>RoundCalc.mine.reflect = RoundCalc.mine.reflect + 1</script>
+						<triggerType>0</triggerType>
+						<conditonLineDelta>0</conditonLineDelta>
+						<mStayOpen>0</mStayOpen>
+						<mCommand></mCommand>
+						<packageName></packageName>
+						<mFgColor>#ff0000</mFgColor>
+						<mBgColor>#ffff00</mBgColor>
+						<mSoundFile></mSoundFile>
+						<colorTriggerFgColor>#000000</colorTriggerFgColor>
+						<colorTriggerBgColor>#000000</colorTriggerBgColor>
+						<regexCodeList>
+							<string>reflects off you</string>
+						</regexCodeList>
+						<regexCodePropertyList>
+							<integer>0</integer>
+						</regexCodePropertyList>
+					</Trigger>
+					<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+						<name>Damage</name>
+						<script>--debugecho(RoundCalc.mine.damage)
+--debugecho(RoundCalc.mine.hit)
+RoundCalc.mine.damage = tonumber(RoundCalc.mine.damage) + tonumber(matches[2])
+RoundCalc.mine.hit = tonumber(RoundCalc.mine.hit) + 1</script>
+						<triggerType>0</triggerType>
+						<conditonLineDelta>0</conditonLineDelta>
+						<mStayOpen>0</mStayOpen>
+						<mCommand></mCommand>
+						<packageName></packageName>
+						<mFgColor>#ff0000</mFgColor>
+						<mBgColor>#ffff00</mBgColor>
+						<mSoundFile></mSoundFile>
+						<colorTriggerFgColor>#000000</colorTriggerFgColor>
+						<colorTriggerBgColor>#000000</colorTriggerBgColor>
+						<regexCodeList>
+							<string>^Your .*\. \((\d+) dam\)$</string>
+						</regexCodeList>
+						<regexCodePropertyList>
+							<integer>1</integer>
+						</regexCodePropertyList>
+					</Trigger>
+					<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+						<name>Phase</name>
+						<script>RoundCalc.mine.phase = RoundCalc.mine.phase + 1</script>
+						<triggerType>0</triggerType>
+						<conditonLineDelta>0</conditonLineDelta>
+						<mStayOpen>0</mStayOpen>
+						<mCommand></mCommand>
+						<packageName></packageName>
+						<mFgColor>#ff0000</mFgColor>
+						<mBgColor>#ffff00</mBgColor>
+						<mSoundFile></mSoundFile>
+						<colorTriggerFgColor>#000000</colorTriggerFgColor>
+						<colorTriggerBgColor>#000000</colorTriggerBgColor>
+						<regexCodeList>
+							<string>You phase to avoid</string>
+						</regexCodeList>
+						<regexCodePropertyList>
+							<integer>0</integer>
+						</regexCodePropertyList>
+					</Trigger>
+					<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+						<name>Block</name>
+						<script>RoundCalc.mine.block = RoundCalc.mine.block + 1</script>
+						<triggerType>0</triggerType>
+						<conditonLineDelta>0</conditonLineDelta>
+						<mStayOpen>0</mStayOpen>
+						<mCommand></mCommand>
+						<packageName></packageName>
+						<mFgColor>#ff0000</mFgColor>
+						<mBgColor>#ffff00</mBgColor>
+						<mSoundFile></mSoundFile>
+						<colorTriggerFgColor>#000000</colorTriggerFgColor>
+						<colorTriggerBgColor>#000000</colorTriggerBgColor>
+						<regexCodeList>
+							<string>You block </string>
+						</regexCodeList>
+						<regexCodePropertyList>
+							<integer>0</integer>
+						</regexCodePropertyList>
+					</Trigger>
+				</TriggerGroup>
+				<TriggerGroup isActive="yes" isFolder="yes" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+					<name>Misses</name>
+					<script></script>
+					<triggerType>0</triggerType>
+					<conditonLineDelta>0</conditonLineDelta>
+					<mStayOpen>0</mStayOpen>
+					<mCommand></mCommand>
+					<packageName></packageName>
+					<mFgColor>#ff0000</mFgColor>
+					<mBgColor>#ffff00</mBgColor>
+					<mSoundFile></mSoundFile>
+					<colorTriggerFgColor>#000000</colorTriggerFgColor>
+					<colorTriggerBgColor>#000000</colorTriggerBgColor>
+					<regexCodeList />
+					<regexCodePropertyList />
+					<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+						<name>Parry</name>
+						<script>RoundCalc.opp.parry = RoundCalc.opp.parry + 1</script>
+						<triggerType>0</triggerType>
+						<conditonLineDelta>0</conditonLineDelta>
+						<mStayOpen>0</mStayOpen>
+						<mCommand></mCommand>
+						<packageName></packageName>
+						<mFgColor>#ff0000</mFgColor>
+						<mBgColor>#ffff00</mBgColor>
+						<mSoundFile></mSoundFile>
+						<colorTriggerFgColor>#000000</colorTriggerFgColor>
+						<colorTriggerBgColor>#000000</colorTriggerBgColor>
+						<regexCodeList>
+							<string>parries your </string>
+						</regexCodeList>
+						<regexCodePropertyList>
+							<integer>0</integer>
+						</regexCodePropertyList>
+					</Trigger>
+					<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+						<name>Dodge</name>
+						<script>RoundCalc.opp.dodge = RoundCalc.opp.dodge + 1</script>
+						<triggerType>0</triggerType>
+						<conditonLineDelta>0</conditonLineDelta>
+						<mStayOpen>0</mStayOpen>
+						<mCommand></mCommand>
+						<packageName></packageName>
+						<mFgColor>#ff0000</mFgColor>
+						<mBgColor>#ffff00</mBgColor>
+						<mSoundFile></mSoundFile>
+						<colorTriggerFgColor>#000000</colorTriggerFgColor>
+						<colorTriggerBgColor>#000000</colorTriggerBgColor>
+						<regexCodeList>
+							<string>dodges your </string>
+						</regexCodeList>
+						<regexCodePropertyList>
+							<integer>0</integer>
+						</regexCodePropertyList>
+					</Trigger>
+					<Trigger isActive="no" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+						<name>Misses you</name>
+						<script>RoundCalc.opp.miss = RoundCalc.opp.miss + 1</script>
+						<triggerType>0</triggerType>
+						<conditonLineDelta>0</conditonLineDelta>
+						<mStayOpen>0</mStayOpen>
+						<mCommand></mCommand>
+						<packageName></packageName>
+						<mFgColor>#ff0000</mFgColor>
+						<mBgColor>#ffff00</mBgColor>
+						<mSoundFile></mSoundFile>
+						<colorTriggerFgColor>#000000</colorTriggerFgColor>
+						<colorTriggerBgColor>#000000</colorTriggerBgColor>
+						<regexCodeList>
+							<string>pathetic (.*) misses you</string>
+						</regexCodeList>
+						<regexCodePropertyList>
+							<integer>1</integer>
+						</regexCodePropertyList>
+					</Trigger>
+					<Trigger isActive="no" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+						<name>Reflects off you</name>
+						<script>RoundCalc.opp.reflect = RoundCalc.opp.reflect + 1</script>
+						<triggerType>0</triggerType>
+						<conditonLineDelta>0</conditonLineDelta>
+						<mStayOpen>0</mStayOpen>
+						<mCommand></mCommand>
+						<packageName></packageName>
+						<mFgColor>#ff0000</mFgColor>
+						<mBgColor>#ffff00</mBgColor>
+						<mSoundFile></mSoundFile>
+						<colorTriggerFgColor>#000000</colorTriggerFgColor>
+						<colorTriggerBgColor>#000000</colorTriggerBgColor>
+						<regexCodeList>
+							<string>reflects off you</string>
+						</regexCodeList>
+						<regexCodePropertyList>
+							<integer>0</integer>
+						</regexCodePropertyList>
+					</Trigger>
+					<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+						<name>Block</name>
+						<script>RoundCalc.opp.block = RoundCalc.opp.block + 1
+</script>
+						<triggerType>0</triggerType>
+						<conditonLineDelta>0</conditonLineDelta>
+						<mStayOpen>0</mStayOpen>
+						<mCommand></mCommand>
+						<packageName></packageName>
+						<mFgColor>#ff0000</mFgColor>
+						<mBgColor>#ffff00</mBgColor>
+						<mSoundFile></mSoundFile>
+						<colorTriggerFgColor>#000000</colorTriggerFgColor>
+						<colorTriggerBgColor>#000000</colorTriggerBgColor>
+						<regexCodeList>
+							<string> blocks your </string>
+						</regexCodeList>
+						<regexCodePropertyList>
+							<integer>0</integer>
+						</regexCodePropertyList>
+					</Trigger>
+					<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+						<name>Incoming Damage</name>
+						<script>RoundCalc.opp.damage = RoundCalc.opp.damage + tonumber(matches[2])
+RoundCalc.opp.hit = RoundCalc.opp.hit + 1</script>
+						<triggerType>0</triggerType>
+						<conditonLineDelta>0</conditonLineDelta>
+						<mStayOpen>0</mStayOpen>
+						<mCommand></mCommand>
+						<packageName></packageName>
+						<mFgColor>#ff0000</mFgColor>
+						<mBgColor>#ffff00</mBgColor>
+						<mSoundFile></mSoundFile>
+						<colorTriggerFgColor>#000000</colorTriggerFgColor>
+						<colorTriggerBgColor>#000000</colorTriggerBgColor>
+						<regexCodeList>
+							<string>^.+ your .+\. \((\d+) dam\)$</string>
+							<string>^.+ you\. \((\d+) dam\)$</string>
+						</regexCodeList>
+						<regexCodePropertyList>
+							<integer>1</integer>
+							<integer>1</integer>
+						</regexCodePropertyList>
+					</Trigger>
+					<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+						<name>Phase</name>
+						<script>-- debugecho("phased")
+RoundCalc.opp.phase = RoundCalc.opp.phase + 1</script>
+						<triggerType>0</triggerType>
+						<conditonLineDelta>0</conditonLineDelta>
+						<mStayOpen>0</mStayOpen>
+						<mCommand></mCommand>
+						<packageName></packageName>
+						<mFgColor>#ff0000</mFgColor>
+						<mBgColor>#ffff00</mBgColor>
+						<mSoundFile></mSoundFile>
+						<colorTriggerFgColor>#000000</colorTriggerFgColor>
+						<colorTriggerBgColor>#000000</colorTriggerBgColor>
+						<regexCodeList>
+							<string>phases to avoid your</string>
+						</regexCodeList>
+						<regexCodePropertyList>
+							<integer>0</integer>
+						</regexCodePropertyList>
+					</Trigger>
+				</TriggerGroup>
+			</TriggerGroup>
+			<TriggerGroup isActive="yes" isFolder="yes" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
 				<name>Sorting</name>
 				<script></script>
 				<triggerType>0</triggerType>
@@ -5681,368 +6047,6 @@ end</script>
 				<colorTriggerBgColor>#000000</colorTriggerBgColor>
 				<regexCodeList />
 				<regexCodePropertyList />
-				<TriggerGroup isActive="yes" isFolder="yes" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
-					<name>Damage Calc</name>
-					<script></script>
-					<triggerType>0</triggerType>
-					<conditonLineDelta>0</conditonLineDelta>
-					<mStayOpen>0</mStayOpen>
-					<mCommand></mCommand>
-					<packageName></packageName>
-					<mFgColor>#ff0000</mFgColor>
-					<mBgColor>#ffff00</mBgColor>
-					<mSoundFile></mSoundFile>
-					<colorTriggerFgColor>#000000</colorTriggerFgColor>
-					<colorTriggerBgColor>#000000</colorTriggerBgColor>
-					<regexCodeList />
-					<regexCodePropertyList />
-					<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
-						<name>End Round</name>
-						<script>if (RoundCalc.mine.damage&gt;0 or RoundCalc.opp.damage&gt;0) then
-  TotalCalc.Combine(RoundCalc)
-  RoundCalc.Clear()  
-  --TotalCalc.Display()
-end
---echo(RoundCalc.damage .. " a: " .. string.format("%5.2f",TotalCalc.damage/TotalCalc.count))
-</script>
-						<triggerType>0</triggerType>
-						<conditonLineDelta>0</conditonLineDelta>
-						<mStayOpen>0</mStayOpen>
-						<mCommand></mCommand>
-						<packageName></packageName>
-						<mFgColor>#ff0000</mFgColor>
-						<mBgColor>#ffff00</mBgColor>
-						<mSoundFile></mSoundFile>
-						<colorTriggerFgColor>#000000</colorTriggerFgColor>
-						<colorTriggerBgColor>#000000</colorTriggerBgColor>
-						<regexCodeList>
-							<string>HEALTH\s+(100|\d{1,2})% MANA\s+(100|\d{1,2})% MVM\s+(\d+)% STIL (\w+\s*\w*\s*\w*) XP\s+(\d+)% Directions\s+(\w+)\s+Hungry\s+(\w+)</string>
-						</regexCodeList>
-						<regexCodePropertyList>
-							<integer>1</integer>
-						</regexCodePropertyList>
-					</Trigger>
-					<TriggerGroup isActive="yes" isFolder="yes" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
-						<name>Damage</name>
-						<script></script>
-						<triggerType>0</triggerType>
-						<conditonLineDelta>0</conditonLineDelta>
-						<mStayOpen>0</mStayOpen>
-						<mCommand></mCommand>
-						<packageName></packageName>
-						<mFgColor>#ff0000</mFgColor>
-						<mBgColor>#ffff00</mBgColor>
-						<mSoundFile></mSoundFile>
-						<colorTriggerFgColor>#000000</colorTriggerFgColor>
-						<colorTriggerBgColor>#000000</colorTriggerBgColor>
-						<regexCodeList />
-						<regexCodePropertyList />
-						<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
-							<name>Parry</name>
-							<script>RoundCalc.mine.parry = RoundCalc.mine.parry + 1</script>
-							<triggerType>0</triggerType>
-							<conditonLineDelta>0</conditonLineDelta>
-							<mStayOpen>0</mStayOpen>
-							<mCommand></mCommand>
-							<packageName></packageName>
-							<mFgColor>#ff0000</mFgColor>
-							<mBgColor>#ffff00</mBgColor>
-							<mSoundFile></mSoundFile>
-							<colorTriggerFgColor>#000000</colorTriggerFgColor>
-							<colorTriggerBgColor>#000000</colorTriggerBgColor>
-							<regexCodeList>
-								<string>You (.*)parry </string>
-							</regexCodeList>
-							<regexCodePropertyList>
-								<integer>1</integer>
-							</regexCodePropertyList>
-						</Trigger>
-						<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
-							<name>Dodge</name>
-							<script>RoundCalc.mine.dodge = RoundCalc.mine.dodge + 1</script>
-							<triggerType>0</triggerType>
-							<conditonLineDelta>0</conditonLineDelta>
-							<mStayOpen>0</mStayOpen>
-							<mCommand></mCommand>
-							<packageName></packageName>
-							<mFgColor>#ff0000</mFgColor>
-							<mBgColor>#ffff00</mBgColor>
-							<mSoundFile></mSoundFile>
-							<colorTriggerFgColor>#000000</colorTriggerFgColor>
-							<colorTriggerBgColor>#000000</colorTriggerBgColor>
-							<regexCodeList>
-								<string>You dodge</string>
-							</regexCodeList>
-							<regexCodePropertyList>
-								<integer>0</integer>
-							</regexCodePropertyList>
-						</Trigger>
-						<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
-							<name>Misses you</name>
-							<script>RoundCalc.mine.miss = RoundCalc.mine.miss + 1</script>
-							<triggerType>0</triggerType>
-							<conditonLineDelta>0</conditonLineDelta>
-							<mStayOpen>0</mStayOpen>
-							<mCommand></mCommand>
-							<packageName></packageName>
-							<mFgColor>#ff0000</mFgColor>
-							<mBgColor>#ffff00</mBgColor>
-							<mSoundFile></mSoundFile>
-							<colorTriggerFgColor>#000000</colorTriggerFgColor>
-							<colorTriggerBgColor>#000000</colorTriggerBgColor>
-							<regexCodeList>
-								<string>pathetic (.*) misses you</string>
-							</regexCodeList>
-							<regexCodePropertyList>
-								<integer>1</integer>
-							</regexCodePropertyList>
-						</Trigger>
-						<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
-							<name>Reflects off you</name>
-							<script>RoundCalc.mine.reflect = RoundCalc.mine.reflect + 1</script>
-							<triggerType>0</triggerType>
-							<conditonLineDelta>0</conditonLineDelta>
-							<mStayOpen>0</mStayOpen>
-							<mCommand></mCommand>
-							<packageName></packageName>
-							<mFgColor>#ff0000</mFgColor>
-							<mBgColor>#ffff00</mBgColor>
-							<mSoundFile></mSoundFile>
-							<colorTriggerFgColor>#000000</colorTriggerFgColor>
-							<colorTriggerBgColor>#000000</colorTriggerBgColor>
-							<regexCodeList>
-								<string>reflects off you</string>
-							</regexCodeList>
-							<regexCodePropertyList>
-								<integer>0</integer>
-							</regexCodePropertyList>
-						</Trigger>
-						<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
-							<name>Damage</name>
-							<script>--debugecho(RoundCalc.mine.damage)
---debugecho(RoundCalc.mine.hit)
-RoundCalc.mine.damage = tonumber(RoundCalc.mine.damage) + tonumber(matches[2])
-RoundCalc.mine.hit = tonumber(RoundCalc.mine.hit) + 1</script>
-							<triggerType>0</triggerType>
-							<conditonLineDelta>0</conditonLineDelta>
-							<mStayOpen>0</mStayOpen>
-							<mCommand></mCommand>
-							<packageName></packageName>
-							<mFgColor>#ff0000</mFgColor>
-							<mBgColor>#ffff00</mBgColor>
-							<mSoundFile></mSoundFile>
-							<colorTriggerFgColor>#000000</colorTriggerFgColor>
-							<colorTriggerBgColor>#000000</colorTriggerBgColor>
-							<regexCodeList>
-								<string>^Your .*\. \((\d+) dam\)$</string>
-							</regexCodeList>
-							<regexCodePropertyList>
-								<integer>1</integer>
-							</regexCodePropertyList>
-						</Trigger>
-						<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
-							<name>Phase</name>
-							<script>RoundCalc.mine.phase = RoundCalc.mine.phase + 1</script>
-							<triggerType>0</triggerType>
-							<conditonLineDelta>0</conditonLineDelta>
-							<mStayOpen>0</mStayOpen>
-							<mCommand></mCommand>
-							<packageName></packageName>
-							<mFgColor>#ff0000</mFgColor>
-							<mBgColor>#ffff00</mBgColor>
-							<mSoundFile></mSoundFile>
-							<colorTriggerFgColor>#000000</colorTriggerFgColor>
-							<colorTriggerBgColor>#000000</colorTriggerBgColor>
-							<regexCodeList>
-								<string>You phase to avoid</string>
-							</regexCodeList>
-							<regexCodePropertyList>
-								<integer>0</integer>
-							</regexCodePropertyList>
-						</Trigger>
-						<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
-							<name>Block</name>
-							<script>RoundCalc.mine.block = RoundCalc.mine.block + 1</script>
-							<triggerType>0</triggerType>
-							<conditonLineDelta>0</conditonLineDelta>
-							<mStayOpen>0</mStayOpen>
-							<mCommand></mCommand>
-							<packageName></packageName>
-							<mFgColor>#ff0000</mFgColor>
-							<mBgColor>#ffff00</mBgColor>
-							<mSoundFile></mSoundFile>
-							<colorTriggerFgColor>#000000</colorTriggerFgColor>
-							<colorTriggerBgColor>#000000</colorTriggerBgColor>
-							<regexCodeList>
-								<string>You block </string>
-							</regexCodeList>
-							<regexCodePropertyList>
-								<integer>0</integer>
-							</regexCodePropertyList>
-						</Trigger>
-					</TriggerGroup>
-					<TriggerGroup isActive="yes" isFolder="yes" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
-						<name>Misses</name>
-						<script></script>
-						<triggerType>0</triggerType>
-						<conditonLineDelta>0</conditonLineDelta>
-						<mStayOpen>0</mStayOpen>
-						<mCommand></mCommand>
-						<packageName></packageName>
-						<mFgColor>#ff0000</mFgColor>
-						<mBgColor>#ffff00</mBgColor>
-						<mSoundFile></mSoundFile>
-						<colorTriggerFgColor>#000000</colorTriggerFgColor>
-						<colorTriggerBgColor>#000000</colorTriggerBgColor>
-						<regexCodeList />
-						<regexCodePropertyList />
-						<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
-							<name>Parry</name>
-							<script>RoundCalc.opp.parry = RoundCalc.opp.parry + 1</script>
-							<triggerType>0</triggerType>
-							<conditonLineDelta>0</conditonLineDelta>
-							<mStayOpen>0</mStayOpen>
-							<mCommand></mCommand>
-							<packageName></packageName>
-							<mFgColor>#ff0000</mFgColor>
-							<mBgColor>#ffff00</mBgColor>
-							<mSoundFile></mSoundFile>
-							<colorTriggerFgColor>#000000</colorTriggerFgColor>
-							<colorTriggerBgColor>#000000</colorTriggerBgColor>
-							<regexCodeList>
-								<string>parries your </string>
-							</regexCodeList>
-							<regexCodePropertyList>
-								<integer>0</integer>
-							</regexCodePropertyList>
-						</Trigger>
-						<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
-							<name>Dodge</name>
-							<script>RoundCalc.opp.dodge = RoundCalc.opp.dodge + 1</script>
-							<triggerType>0</triggerType>
-							<conditonLineDelta>0</conditonLineDelta>
-							<mStayOpen>0</mStayOpen>
-							<mCommand></mCommand>
-							<packageName></packageName>
-							<mFgColor>#ff0000</mFgColor>
-							<mBgColor>#ffff00</mBgColor>
-							<mSoundFile></mSoundFile>
-							<colorTriggerFgColor>#000000</colorTriggerFgColor>
-							<colorTriggerBgColor>#000000</colorTriggerBgColor>
-							<regexCodeList>
-								<string>dodges your </string>
-							</regexCodeList>
-							<regexCodePropertyList>
-								<integer>0</integer>
-							</regexCodePropertyList>
-						</Trigger>
-						<Trigger isActive="no" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
-							<name>Misses you</name>
-							<script>RoundCalc.opp.miss = RoundCalc.opp.miss + 1</script>
-							<triggerType>0</triggerType>
-							<conditonLineDelta>0</conditonLineDelta>
-							<mStayOpen>0</mStayOpen>
-							<mCommand></mCommand>
-							<packageName></packageName>
-							<mFgColor>#ff0000</mFgColor>
-							<mBgColor>#ffff00</mBgColor>
-							<mSoundFile></mSoundFile>
-							<colorTriggerFgColor>#000000</colorTriggerFgColor>
-							<colorTriggerBgColor>#000000</colorTriggerBgColor>
-							<regexCodeList>
-								<string>pathetic (.*) misses you</string>
-							</regexCodeList>
-							<regexCodePropertyList>
-								<integer>1</integer>
-							</regexCodePropertyList>
-						</Trigger>
-						<Trigger isActive="no" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
-							<name>Reflects off you</name>
-							<script>RoundCalc.opp.reflect = RoundCalc.opp.reflect + 1</script>
-							<triggerType>0</triggerType>
-							<conditonLineDelta>0</conditonLineDelta>
-							<mStayOpen>0</mStayOpen>
-							<mCommand></mCommand>
-							<packageName></packageName>
-							<mFgColor>#ff0000</mFgColor>
-							<mBgColor>#ffff00</mBgColor>
-							<mSoundFile></mSoundFile>
-							<colorTriggerFgColor>#000000</colorTriggerFgColor>
-							<colorTriggerBgColor>#000000</colorTriggerBgColor>
-							<regexCodeList>
-								<string>reflects off you</string>
-							</regexCodeList>
-							<regexCodePropertyList>
-								<integer>0</integer>
-							</regexCodePropertyList>
-						</Trigger>
-						<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
-							<name>Block</name>
-							<script>RoundCalc.opp.block = RoundCalc.opp.block + 1
-</script>
-							<triggerType>0</triggerType>
-							<conditonLineDelta>0</conditonLineDelta>
-							<mStayOpen>0</mStayOpen>
-							<mCommand></mCommand>
-							<packageName></packageName>
-							<mFgColor>#ff0000</mFgColor>
-							<mBgColor>#ffff00</mBgColor>
-							<mSoundFile></mSoundFile>
-							<colorTriggerFgColor>#000000</colorTriggerFgColor>
-							<colorTriggerBgColor>#000000</colorTriggerBgColor>
-							<regexCodeList>
-								<string> blocks your </string>
-							</regexCodeList>
-							<regexCodePropertyList>
-								<integer>0</integer>
-							</regexCodePropertyList>
-						</Trigger>
-						<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
-							<name>Incoming Damage</name>
-							<script>RoundCalc.opp.damage = RoundCalc.opp.damage + tonumber(matches[2])
-RoundCalc.opp.hit = RoundCalc.opp.hit + 1</script>
-							<triggerType>0</triggerType>
-							<conditonLineDelta>0</conditonLineDelta>
-							<mStayOpen>0</mStayOpen>
-							<mCommand></mCommand>
-							<packageName></packageName>
-							<mFgColor>#ff0000</mFgColor>
-							<mBgColor>#ffff00</mBgColor>
-							<mSoundFile></mSoundFile>
-							<colorTriggerFgColor>#000000</colorTriggerFgColor>
-							<colorTriggerBgColor>#000000</colorTriggerBgColor>
-							<regexCodeList>
-								<string>^.+ your .+\. \((\d+) dam\)$</string>
-								<string>^.+ you\. \((\d+) dam\)$</string>
-							</regexCodeList>
-							<regexCodePropertyList>
-								<integer>1</integer>
-								<integer>1</integer>
-							</regexCodePropertyList>
-						</Trigger>
-						<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
-							<name>Phase</name>
-							<script>-- debugecho("phased")
-RoundCalc.opp.phase = RoundCalc.opp.phase + 1</script>
-							<triggerType>0</triggerType>
-							<conditonLineDelta>0</conditonLineDelta>
-							<mStayOpen>0</mStayOpen>
-							<mCommand></mCommand>
-							<packageName></packageName>
-							<mFgColor>#ff0000</mFgColor>
-							<mBgColor>#ffff00</mBgColor>
-							<mSoundFile></mSoundFile>
-							<colorTriggerFgColor>#000000</colorTriggerFgColor>
-							<colorTriggerBgColor>#000000</colorTriggerBgColor>
-							<regexCodeList>
-								<string>phases to avoid your</string>
-							</regexCodeList>
-							<regexCodePropertyList>
-								<integer>0</integer>
-							</regexCodePropertyList>
-						</Trigger>
-					</TriggerGroup>
-				</TriggerGroup>
 				<TriggerGroup isActive="yes" isFolder="yes" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
 					<name>New trigger group</name>
 					<script></script>
@@ -6868,6 +6872,18 @@ end</script>
 				<packageName></packageName>
 				<time>00:00:01.000</time>
 			</Timer>
+			<Timer isActive="yes" isFolder="no" isTempTimer="no" isOffsetTimer="no">
+				<name>Update Combat</name>
+				<script>clearWindow("CombatList")
+
+
+cecho("CombatList",damageDisplay(TotalCalc))
+
+</script>
+				<command></command>
+				<packageName></packageName>
+				<time>00:00:01.000</time>
+			</Timer>
 		</TimerGroup>
 	</TimerPackage>
 	<AliasPackage>
@@ -7514,7 +7530,11 @@ if prey ~= nil and prey ~= "" then
   expandAlias("phunt " .. prey)
   
 else
-
+  if huntWait==0 then
+    if xaos.config.scripting.scan_mode then
+      huntWait = 1
+    end
+  end
   if xaos.scripting.area.name ~= nil then
     expandAlias("phunt " .. xaos.scripting.area.keyword)    
   else
@@ -8621,47 +8641,41 @@ end</script>
 					<regex>^rescueall</regex>
 				</Alias>
 			</AliasGroup>
-			<AliasGroup isActive="no" isFolder="yes">
-				<name>Beta</name>
+			<AliasGroup isActive="yes" isFolder="yes">
+				<name>DamageScenario</name>
 				<script></script>
 				<command></command>
 				<packageName></packageName>
 				<regex></regex>
-				<AliasGroup isActive="yes" isFolder="yes">
-					<name>DamageScenario</name>
-					<script></script>
+				<Alias isActive="yes" isFolder="no">
+					<name>^FinishScenario (.*)</name>
+					<script>table.insert(DamageScenarios,{name=matches[2],data=table.deepcopy (TotalCalc)})
+--expandAlias("ClearScenario")</script>
 					<command></command>
 					<packageName></packageName>
-					<regex></regex>
-					<Alias isActive="yes" isFolder="no">
-						<name>^FinishScenario (.*)</name>
-						<script>table.insert(DamageScenarios,{name=matches[2],data=table.deepcopy (TotalCalc)})
---expandAlias("ClearScenario")</script>
-						<command></command>
-						<packageName></packageName>
-						<regex>^FinishScenario (.*)</regex>
-					</Alias>
-					<Alias isActive="yes" isFolder="no">
-						<name>^ClearScenario</name>
-						<script>RoundCalc.Clear()
+					<regex>^FinishScenario (.*)</regex>
+				</Alias>
+				<Alias isActive="yes" isFolder="no">
+					<name>^ClearScenario</name>
+					<script>RoundCalc.Clear()
 TotalCalc.Clear()</script>
-						<command></command>
-						<packageName></packageName>
-						<regex>^ClearScenario</regex>
-					</Alias>
-					<Alias isActive="yes" isFolder="no">
-						<name>^SetScenario (.*)</name>
-						<script>scenario_round_count = tonumber(matches[2])
+					<command></command>
+					<packageName></packageName>
+					<regex>^ClearScenario</regex>
+				</Alias>
+				<Alias isActive="yes" isFolder="no">
+					<name>^SetScenario (.*)</name>
+					<script>scenario_round_count = tonumber(matches[2])
 scenario_name = string.trim(matches[3])
 
 expandAlias("ShowScenario")</script>
-						<command></command>
-						<packageName></packageName>
-						<regex>^SetScenario ([0-9]*) (.*)</regex>
-					</Alias>
-					<Alias isActive="yes" isFolder="no">
-						<name>ShowScenario</name>
-						<script>combatwindow = Geyser.UserWindow:new({
+					<command></command>
+					<packageName></packageName>
+					<regex>^SetScenario ([0-9]*) (.*)</regex>
+				</Alias>
+				<Alias isActive="yes" isFolder="no">
+					<name>ShowScenario</name>
+					<script>combatwindow = Geyser.UserWindow:new({
     name = "combatwindow",
     x="80%",y="0%",height="500",width="300",
   })
@@ -8680,11 +8694,17 @@ combatdisplay = Geyser.MiniConsole:new({
 combatdisplay:resetAutoWrap()
 
 enableScrollBar("combat")</script>
-						<command></command>
-						<packageName></packageName>
-						<regex>^ShowScenario</regex>
-					</Alias>
-				</AliasGroup>
+					<command></command>
+					<packageName></packageName>
+					<regex>^ShowScenario</regex>
+				</Alias>
+			</AliasGroup>
+			<AliasGroup isActive="no" isFolder="yes">
+				<name>Beta</name>
+				<script></script>
+				<command></command>
+				<packageName></packageName>
+				<regex></regex>
 			</AliasGroup>
 		</AliasGroup>
 	</AliasPackage>
@@ -12119,6 +12139,12 @@ end</script>
 -- Note that you can also use external scripts --
 -------------------------------------------------
 
+function dataecho(header,text) 
+  if xaos.config.debugmode then
+    cecho("data","[" .. header .. " " .. getTime(true,"HH.mm") .. "] " ..text .. "\n")
+  end
+end
+
 function debugecho(text) 
   if xaos.config.debugmode then
     cecho("data","[DE " .. getTime(true,"HH.mm.ss") .. "] " ..text .. "\n")
@@ -12259,7 +12285,7 @@ end</script>
 -------------------------------------------------
 if menu == nil then
   menu = menu or {
-    tabs = {"Data","Quests","Score","Variable","XP"},
+    tabs = {"Data","Quests","Score","Variable","XP","Combat"},
     color1 = "rgb(0,0,70)",
     color2 = "rgb(0,0,50)",
     width = "20%",
@@ -12269,7 +12295,7 @@ if menu == nil then
   
   menu.window = Geyser.UserWindow:new({
     name = "menu.back",
-    dock=true
+    x="80%",y="80%",
   })
   
   menu.container = Geyser.Container:new({
@@ -12701,10 +12727,10 @@ xprDisplay:setStyleSheet(
 ]]
 )
 
-xpRateBars = {}
+xpRateBars = xpRateBars or {}
 for k=1,16 do
 
-xpRateBars[k] =
+xpRateBars[k] = xpRateBars[k] or
   Geyser.Gauge:new(
     {name = "xpRateBar" .. k, x = "-" .. (2+(k*6)) .. "%", y = "5%", width = "5%", height = "90%", orientation = "vertical"},
     xprDisplay
@@ -12781,6 +12807,32 @@ partyDisplay2:setStyleSheet([[
 	color: #AACCFF;
   font-family: Courier;
 ]])</script>
+					<eventHandlerList />
+				</Script>
+				<Script isActive="yes" isFolder="no">
+					<name>CombatList</name>
+					<packageName></packageName>
+					<script>-------------------------------------------------
+--         Put your Lua functions here.        --
+--                                             --
+-- Note that you can also use external scripts --
+-------------------------------------------------
+
+combatCon = Geyser.MiniConsole:new({
+  name="CombatList",
+  x="2%", y="2%",
+  wrapAt = chatWrap,
+  width="96%", height="96%",
+  fgColor = "white",
+  color = "black",
+  fontSize=chatFontSize,
+  docked = true,
+  scrollBar = true,
+},menu.Combat)
+combatCon:setColor("black")
+combatCon:setFontSize(mysettings.scorefontsize)
+
+enableScrollBar("CombatList")</script>
 					<eventHandlerList />
 				</Script>
 			</ScriptGroup>
@@ -14715,6 +14767,7 @@ function resetWindows()
     menu[menu.tabs[k]]:show()
     menu[menu.tabs[k]]:hide()
   end
+  
   menu[menu.current]:show()
   
   
@@ -14745,6 +14798,7 @@ if TotalCalc == nil then
   TotalCalc = {count=0,
     mine = {hit=0,damage=0,block=0,dodge=0,parry=0,miss=0,reflect=0,phase=0,},
     opp = {hit=0,damage=0,block=0,dodge=0,parry=0,miss=0,reflect=0,phase=0,},
+    history = {}
   }
 end
 if scenario_round_count == nil then
@@ -14776,12 +14830,12 @@ function damageDisplay(data)
     subreturn = subreturn .. " Reflect: " .. string.format("%5.2f",100*(sub.reflect / totalhit(opp,sub))) .. "%  - " .. sub.reflect .. "\n"
     subreturn = subreturn .. " Miss   : " .. string.format("%5.2f",100*(sub.miss / totalhit(opp,sub))) .. "%  - " .. sub.miss .. "\n"
     subreturn = subreturn .. " Hit    : " .. string.format("%5.2f",100*(opp.hit / totalhit(opp,sub))) .. "%  - " .. opp.hit .. "\n"
-	subreturn = subreturn .. totalhit(opp,sub) .. "\n"
+	  --subreturn = subreturn .. totalhit(opp,sub) .. "\n"
     return subreturn
   end
-  toreturn = toreturn .."\n&lt;white&gt;Defenses Per Round\n"
+  toreturn = toreturn .."\n&lt;white&gt;Defense Per Round - " .. totalhit(data.mine,data.opp) .. "\n"
   toreturn = toreturn ..getDef(data.mine,data.opp)
-  toreturn = toreturn .."&lt;white&gt;Offense Per Round\n"
+  toreturn = toreturn .."&lt;white&gt;Offense Per Round - " .. totalhit(data.opp,data.mine) .. "\n"
   toreturn = toreturn ..getDef(data.opp,data.mine)
   toreturn = toreturn .. "Dam In  /Rd : " ..string.format("%5.3f",(data.opp.damage / data.count)) .. "\n"
   toreturn = toreturn .. "Dam Out /Rd : " ..string.format("%5.3f",(data.mine.damage / data.count)) .. "\n"
@@ -14794,29 +14848,56 @@ function getScenario(name)
 
 end
 
+function TotalCalc.Remove(self,rnd)
+  TotalCalc.SubRemove(self.mine,rnd.mine)
+  TotalCalc.SubRemove(self.opp,rnd.opp)
+end
+
+function TotalCalc.SubRemove(self,rnd)
+  self.hit=self.hit-rnd.hit
+  self.damage=self.damage-rnd.damage
+  self.block=self.block-rnd.block
+  self.dodge=self.dodge-rnd.dodge
+  self.parry=self.parry-rnd.parry
+  self.miss=self.miss-rnd.miss
+  self.reflect=self.reflect-rnd.reflect
+  self.phase=self.phase-rnd.phase
+end
+
+function TotalCalc.SubCombine(self,rnd)
+  self.hit=self.hit+rnd.hit
+  self.damage=self.damage+rnd.damage
+  self.block=self.block+rnd.block
+  self.dodge=self.dodge+rnd.dodge
+  self.parry=self.parry+rnd.parry
+  self.miss=self.miss+rnd.miss
+  self.reflect=self.reflect+rnd.reflect
+  self.phase=self.phase+rnd.phase
+end
+
 function TotalCalc.Combine(rnd)
-  TotalCalc.mine.hit=TotalCalc.mine.hit+rnd.mine.hit
-  TotalCalc.mine.damage=TotalCalc.mine.damage+rnd.mine.damage
-  TotalCalc.mine.block=TotalCalc.mine.block+rnd.mine.block
-  TotalCalc.mine.dodge=TotalCalc.mine.dodge+rnd.mine.dodge
-  TotalCalc.mine.parry=TotalCalc.mine.parry+rnd.mine.parry
-  TotalCalc.mine.miss=TotalCalc.mine.miss+rnd.mine.miss
-  TotalCalc.mine.reflect=TotalCalc.mine.reflect+rnd.mine.reflect
-  TotalCalc.mine.phase=TotalCalc.mine.phase+rnd.mine.phase
-  
-  TotalCalc.opp.hit=TotalCalc.opp.hit+rnd.opp.hit
-  TotalCalc.opp.damage=TotalCalc.opp.damage+rnd.opp.damage
-  TotalCalc.opp.block=TotalCalc.opp.block+rnd.opp.block
-  TotalCalc.opp.dodge=TotalCalc.opp.dodge+rnd.opp.dodge
-  TotalCalc.opp.parry=TotalCalc.opp.parry+rnd.opp.parry
-  TotalCalc.opp.miss=TotalCalc.opp.miss+rnd.opp.miss
-  TotalCalc.opp.reflect=TotalCalc.opp.reflect+rnd.opp.reflect
-  TotalCalc.opp.phase=TotalCalc.opp.phase+rnd.opp.phase
+  TotalCalc.SubCombine(self.mine,rnd.mine)
+  TotalCalc.SubCombine(self.opp,rnd.opp)
   
   TotalCalc.count=TotalCalc.count+1
   
+  table.insert(TotalCalc.History,rnd)
+  
   if scenario_round_count == TotalCalc.count then
     expandAlias("FinishScenario " .. scenario_name)
+    scenario_round_count = -1
+  end
+  --Limit to 1000 rows or scenario length
+  if TotalCalc.count &gt; 1000 then
+    if TotalCalc.count &gt; scenario_round_count then
+      local remrnd = TotalCalc.history[1]
+    
+      TotalCalc:Remove(remrnd)
+      TotalCalc.count = TotalCalc.count-1
+    
+      table.remove(TotalCalc.history,1)
+      
+    end
   end
 end
 
@@ -15135,27 +15216,27 @@ hunting = false</script>
 				<valueType>3</valueType>
 			</Variable>
 			<Variable>
-				<name>291</name>
+				<name>285</name>
 				<keyType>4</keyType>
-				<value>182</value>
+				<value>170</value>
 				<valueType>3</valueType>
 			</Variable>
 			<Variable>
-				<name>290</name>
+				<name>288</name>
 				<keyType>4</keyType>
-				<value>180</value>
+				<value>176</value>
 				<valueType>3</valueType>
 			</Variable>
 			<Variable>
-				<name>289</name>
+				<name>240</name>
 				<keyType>4</keyType>
-				<value>178</value>
+				<value>34</value>
 				<valueType>3</valueType>
 			</Variable>
 			<Variable>
-				<name>280</name>
+				<name>249</name>
 				<keyType>4</keyType>
-				<value>160</value>
+				<value>98</value>
 				<valueType>3</valueType>
 			</Variable>
 			<Variable>
@@ -15171,9 +15252,9 @@ hunting = false</script>
 				<valueType>3</valueType>
 			</Variable>
 			<Variable>
-				<name>288</name>
+				<name>290</name>
 				<keyType>4</keyType>
-				<value>176</value>
+				<value>180</value>
 				<valueType>3</valueType>
 			</Variable>
 			<Variable>
@@ -15183,27 +15264,9 @@ hunting = false</script>
 				<valueType>3</valueType>
 			</Variable>
 			<Variable>
-				<name>240</name>
+				<name>289</name>
 				<keyType>4</keyType>
-				<value>34</value>
-				<valueType>3</valueType>
-			</Variable>
-			<Variable>
-				<name>285</name>
-				<keyType>4</keyType>
-				<value>170</value>
-				<valueType>3</valueType>
-			</Variable>
-			<Variable>
-				<name>284</name>
-				<keyType>4</keyType>
-				<value>168</value>
-				<valueType>3</valueType>
-			</Variable>
-			<Variable>
-				<name>245</name>
-				<keyType>4</keyType>
-				<value>90</value>
+				<value>178</value>
 				<valueType>3</valueType>
 			</Variable>
 			<Variable>
@@ -15213,15 +15276,33 @@ hunting = false</script>
 				<valueType>3</valueType>
 			</Variable>
 			<Variable>
-				<name>249</name>
+				<name>291</name>
 				<keyType>4</keyType>
-				<value>98</value>
+				<value>182</value>
+				<valueType>3</valueType>
+			</Variable>
+			<Variable>
+				<name>245</name>
+				<keyType>4</keyType>
+				<value>90</value>
 				<valueType>3</valueType>
 			</Variable>
 			<Variable>
 				<name>281</name>
 				<keyType>4</keyType>
 				<value>162</value>
+				<valueType>3</valueType>
+			</Variable>
+			<Variable>
+				<name>284</name>
+				<keyType>4</keyType>
+				<value>168</value>
+				<valueType>3</valueType>
+			</Variable>
+			<Variable>
+				<name>280</name>
+				<keyType>4</keyType>
+				<value>160</value>
 				<valueType>3</valueType>
 			</Variable>
 			<Variable>
@@ -15243,11 +15324,239 @@ hunting = false</script>
 			<value>false</value>
 			<valueType>1</valueType>
 		</Variable>
+		<VariableGroup>
+			<name>questmasters</name>
+			<keyType>4</keyType>
+			<value></value>
+			<valueType>5</valueType>
+			<VariableGroup>
+				<name>1</name>
+				<keyType>3</keyType>
+				<value></value>
+				<valueType>5</valueType>
+				<Variable>
+					<name>name</name>
+					<keyType>4</keyType>
+					<value>Sycelurania</value>
+					<valueType>4</valueType>
+				</Variable>
+				<Variable>
+					<name>lookup</name>
+					<keyType>4</keyType>
+					<value>A cute wood nymph is here</value>
+					<valueType>4</valueType>
+				</Variable>
+			</VariableGroup>
+			<VariableGroup>
+				<name>2</name>
+				<keyType>3</keyType>
+				<value></value>
+				<valueType>5</valueType>
+				<Variable>
+					<name>name</name>
+					<keyType>4</keyType>
+					<value>Ivq</value>
+					<valueType>4</valueType>
+				</Variable>
+				<Variable>
+					<name>lookup</name>
+					<keyType>4</keyType>
+					<value>A bigger than normal half </value>
+					<valueType>4</valueType>
+				</Variable>
+			</VariableGroup>
+			<VariableGroup>
+				<name>3</name>
+				<keyType>3</keyType>
+				<value></value>
+				<valueType>5</valueType>
+				<Variable>
+					<name>name</name>
+					<keyType>4</keyType>
+					<value>notapriest</value>
+					<valueType>4</valueType>
+				</Variable>
+				<Variable>
+					<name>lookup</name>
+					<keyType>4</keyType>
+					<value>A faceless priest of Sunder stands here</value>
+					<valueType>4</valueType>
+				</Variable>
+			</VariableGroup>
+			<VariableGroup>
+				<name>4</name>
+				<keyType>3</keyType>
+				<value></value>
+				<valueType>5</valueType>
+				<Variable>
+					<name>name</name>
+					<keyType>4</keyType>
+					<value>notgank</value>
+					<valueType>4</valueType>
+				</Variable>
+				<Variable>
+					<name>lookup</name>
+					<keyType>4</keyType>
+					<value>The host of this display, Gank</value>
+					<valueType>4</valueType>
+				</Variable>
+			</VariableGroup>
+			<VariableGroup>
+				<name>5</name>
+				<keyType>3</keyType>
+				<value></value>
+				<valueType>5</valueType>
+				<Variable>
+					<name>name</name>
+					<keyType>4</keyType>
+					<value>Dahlina the half elf</value>
+					<valueType>4</valueType>
+				</Variable>
+				<Variable>
+					<name>lookup</name>
+					<keyType>4</keyType>
+					<value>Dahlina stands here as a last guard</value>
+					<valueType>4</valueType>
+				</Variable>
+			</VariableGroup>
+			<VariableGroup>
+				<name>6</name>
+				<keyType>3</keyType>
+				<value></value>
+				<valueType>5</valueType>
+				<Variable>
+					<name>name</name>
+					<keyType>4</keyType>
+					<value>a hooded drow magi</value>
+					<valueType>4</valueType>
+				</Variable>
+				<Variable>
+					<name>lookup</name>
+					<keyType>4</keyType>
+					<value>A hooded drow magi is here</value>
+					<valueType>4</valueType>
+				</Variable>
+			</VariableGroup>
+			<VariableGroup>
+				<name>7</name>
+				<keyType>3</keyType>
+				<value></value>
+				<valueType>5</valueType>
+				<Variable>
+					<name>name</name>
+					<keyType>4</keyType>
+					<value>Verioma the pixie</value>
+					<valueType>4</valueType>
+				</Variable>
+				<Variable>
+					<name>lookup</name>
+					<keyType>4</keyType>
+					<value>Verioma the pixie floats</value>
+					<valueType>4</valueType>
+				</Variable>
+			</VariableGroup>
+			<VariableGroup>
+				<name>8</name>
+				<keyType>3</keyType>
+				<value></value>
+				<valueType>5</valueType>
+				<Variable>
+					<name>name</name>
+					<keyType>4</keyType>
+					<value>Marnock Rockflayer</value>
+					<valueType>4</valueType>
+				</Variable>
+				<Variable>
+					<name>lookup</name>
+					<keyType>4</keyType>
+					<value>Marnock Rockflayer is here</value>
+					<valueType>4</valueType>
+				</Variable>
+			</VariableGroup>
+			<VariableGroup>
+				<name>9</name>
+				<keyType>3</keyType>
+				<value></value>
+				<valueType>5</valueType>
+				<Variable>
+					<name>name</name>
+					<keyType>4</keyType>
+					<value>The Dwarven Loremaster Isliaka</value>
+					<valueType>4</valueType>
+				</Variable>
+				<Variable>
+					<name>lookup</name>
+					<keyType>4</keyType>
+					<value>An old dwarf with a long grey beard</value>
+					<valueType>4</valueType>
+				</Variable>
+			</VariableGroup>
+			<VariableGroup>
+				<name>10</name>
+				<keyType>3</keyType>
+				<value></value>
+				<valueType>5</valueType>
+				<Variable>
+					<name>name</name>
+					<keyType>4</keyType>
+					<value>A Xaosian Knight</value>
+					<valueType>4</valueType>
+				</Variable>
+				<Variable>
+					<name>lookup</name>
+					<keyType>4</keyType>
+					<value>A Xaosian knight dressed</value>
+					<valueType>4</valueType>
+				</Variable>
+			</VariableGroup>
+			<VariableGroup>
+				<name>11</name>
+				<keyType>3</keyType>
+				<value></value>
+				<valueType>5</valueType>
+				<Variable>
+					<name>name</name>
+					<keyType>4</keyType>
+					<value>a shady gnome</value>
+					<valueType>4</valueType>
+				</Variable>
+				<Variable>
+					<name>lookup</name>
+					<keyType>4</keyType>
+					<value>A gnome wearing a dark hood</value>
+					<valueType>4</valueType>
+				</Variable>
+			</VariableGroup>
+			<VariableGroup>
+				<name>12</name>
+				<keyType>3</keyType>
+				<value></value>
+				<valueType>5</valueType>
+				<Variable>
+					<name>name</name>
+					<keyType>4</keyType>
+					<value>Piklar</value>
+					<valueType>4</valueType>
+				</Variable>
+				<Variable>
+					<name>lookup</name>
+					<keyType>4</keyType>
+					<value>A very old deep gnome</value>
+					<valueType>4</valueType>
+				</Variable>
+			</VariableGroup>
+		</VariableGroup>
 		<Variable>
 			<name>questmaster</name>
 			<keyType>4</keyType>
 			<value>Dahlina the half elf</value>
 			<valueType>4</valueType>
+		</Variable>
+		<Variable>
+			<name>funfurfragcount</name>
+			<keyType>4</keyType>
+			<value>313</value>
+			<valueType>3</valueType>
 		</Variable>
 		<VariableGroup>
 			<name>xaos</name>
@@ -15800,7 +16109,7 @@ hunting = false</script>
 					<valueType>1</valueType>
 				</Variable>
 				<Variable>
-					<name>autologin</name>
+					<name>show_killed</name>
 					<keyType>4</keyType>
 					<value>false</value>
 					<valueType>1</valueType>
@@ -15812,7 +16121,7 @@ hunting = false</script>
 					<valueType>1</valueType>
 				</Variable>
 				<Variable>
-					<name>show_killed</name>
+					<name>autologin</name>
 					<keyType>4</keyType>
 					<value>false</value>
 					<valueType>1</valueType>
@@ -19024,228 +19333,6 @@ hunting = false</script>
 			</VariableGroup>
 		</VariableGroup>
 		<VariableGroup>
-			<name>questmasters</name>
-			<keyType>4</keyType>
-			<value></value>
-			<valueType>5</valueType>
-			<VariableGroup>
-				<name>1</name>
-				<keyType>3</keyType>
-				<value></value>
-				<valueType>5</valueType>
-				<Variable>
-					<name>name</name>
-					<keyType>4</keyType>
-					<value>Sycelurania</value>
-					<valueType>4</valueType>
-				</Variable>
-				<Variable>
-					<name>lookup</name>
-					<keyType>4</keyType>
-					<value>A cute wood nymph is here</value>
-					<valueType>4</valueType>
-				</Variable>
-			</VariableGroup>
-			<VariableGroup>
-				<name>2</name>
-				<keyType>3</keyType>
-				<value></value>
-				<valueType>5</valueType>
-				<Variable>
-					<name>name</name>
-					<keyType>4</keyType>
-					<value>Ivq</value>
-					<valueType>4</valueType>
-				</Variable>
-				<Variable>
-					<name>lookup</name>
-					<keyType>4</keyType>
-					<value>A bigger than normal half </value>
-					<valueType>4</valueType>
-				</Variable>
-			</VariableGroup>
-			<VariableGroup>
-				<name>3</name>
-				<keyType>3</keyType>
-				<value></value>
-				<valueType>5</valueType>
-				<Variable>
-					<name>name</name>
-					<keyType>4</keyType>
-					<value>notapriest</value>
-					<valueType>4</valueType>
-				</Variable>
-				<Variable>
-					<name>lookup</name>
-					<keyType>4</keyType>
-					<value>A faceless priest of Sunder stands here</value>
-					<valueType>4</valueType>
-				</Variable>
-			</VariableGroup>
-			<VariableGroup>
-				<name>4</name>
-				<keyType>3</keyType>
-				<value></value>
-				<valueType>5</valueType>
-				<Variable>
-					<name>name</name>
-					<keyType>4</keyType>
-					<value>notgank</value>
-					<valueType>4</valueType>
-				</Variable>
-				<Variable>
-					<name>lookup</name>
-					<keyType>4</keyType>
-					<value>The host of this display, Gank</value>
-					<valueType>4</valueType>
-				</Variable>
-			</VariableGroup>
-			<VariableGroup>
-				<name>5</name>
-				<keyType>3</keyType>
-				<value></value>
-				<valueType>5</valueType>
-				<Variable>
-					<name>name</name>
-					<keyType>4</keyType>
-					<value>Dahlina the half elf</value>
-					<valueType>4</valueType>
-				</Variable>
-				<Variable>
-					<name>lookup</name>
-					<keyType>4</keyType>
-					<value>Dahlina stands here as a last guard</value>
-					<valueType>4</valueType>
-				</Variable>
-			</VariableGroup>
-			<VariableGroup>
-				<name>6</name>
-				<keyType>3</keyType>
-				<value></value>
-				<valueType>5</valueType>
-				<Variable>
-					<name>name</name>
-					<keyType>4</keyType>
-					<value>a hooded drow magi</value>
-					<valueType>4</valueType>
-				</Variable>
-				<Variable>
-					<name>lookup</name>
-					<keyType>4</keyType>
-					<value>A hooded drow magi is here</value>
-					<valueType>4</valueType>
-				</Variable>
-			</VariableGroup>
-			<VariableGroup>
-				<name>7</name>
-				<keyType>3</keyType>
-				<value></value>
-				<valueType>5</valueType>
-				<Variable>
-					<name>name</name>
-					<keyType>4</keyType>
-					<value>Verioma the pixie</value>
-					<valueType>4</valueType>
-				</Variable>
-				<Variable>
-					<name>lookup</name>
-					<keyType>4</keyType>
-					<value>Verioma the pixie floats</value>
-					<valueType>4</valueType>
-				</Variable>
-			</VariableGroup>
-			<VariableGroup>
-				<name>8</name>
-				<keyType>3</keyType>
-				<value></value>
-				<valueType>5</valueType>
-				<Variable>
-					<name>name</name>
-					<keyType>4</keyType>
-					<value>Marnock Rockflayer</value>
-					<valueType>4</valueType>
-				</Variable>
-				<Variable>
-					<name>lookup</name>
-					<keyType>4</keyType>
-					<value>Marnock Rockflayer is here</value>
-					<valueType>4</valueType>
-				</Variable>
-			</VariableGroup>
-			<VariableGroup>
-				<name>9</name>
-				<keyType>3</keyType>
-				<value></value>
-				<valueType>5</valueType>
-				<Variable>
-					<name>name</name>
-					<keyType>4</keyType>
-					<value>The Dwarven Loremaster Isliaka</value>
-					<valueType>4</valueType>
-				</Variable>
-				<Variable>
-					<name>lookup</name>
-					<keyType>4</keyType>
-					<value>An old dwarf with a long grey beard</value>
-					<valueType>4</valueType>
-				</Variable>
-			</VariableGroup>
-			<VariableGroup>
-				<name>10</name>
-				<keyType>3</keyType>
-				<value></value>
-				<valueType>5</valueType>
-				<Variable>
-					<name>name</name>
-					<keyType>4</keyType>
-					<value>A Xaosian Knight</value>
-					<valueType>4</valueType>
-				</Variable>
-				<Variable>
-					<name>lookup</name>
-					<keyType>4</keyType>
-					<value>A Xaosian knight dressed</value>
-					<valueType>4</valueType>
-				</Variable>
-			</VariableGroup>
-			<VariableGroup>
-				<name>11</name>
-				<keyType>3</keyType>
-				<value></value>
-				<valueType>5</valueType>
-				<Variable>
-					<name>name</name>
-					<keyType>4</keyType>
-					<value>a shady gnome</value>
-					<valueType>4</valueType>
-				</Variable>
-				<Variable>
-					<name>lookup</name>
-					<keyType>4</keyType>
-					<value>A gnome wearing a dark hood</value>
-					<valueType>4</valueType>
-				</Variable>
-			</VariableGroup>
-			<VariableGroup>
-				<name>12</name>
-				<keyType>3</keyType>
-				<value></value>
-				<valueType>5</valueType>
-				<Variable>
-					<name>name</name>
-					<keyType>4</keyType>
-					<value>Piklar</value>
-					<valueType>4</valueType>
-				</Variable>
-				<Variable>
-					<name>lookup</name>
-					<keyType>4</keyType>
-					<value>A very old deep gnome</value>
-					<valueType>4</valueType>
-				</Variable>
-			</VariableGroup>
-		</VariableGroup>
-		<VariableGroup>
 			<name>overnight</name>
 			<keyType>4</keyType>
 			<value></value>
@@ -19282,18 +19369,6 @@ hunting = false</script>
 			</Variable>
 		</VariableGroup>
 		<Variable>
-			<name>funfurfragcount</name>
-			<keyType>4</keyType>
-			<value>313</value>
-			<valueType>3</valueType>
-		</Variable>
-		<Variable>
-			<name>funfurcount</name>
-			<keyType>4</keyType>
-			<value>106</value>
-			<valueType>3</valueType>
-		</Variable>
-		<Variable>
 			<name>currentlyEnchanting</name>
 			<keyType>4</keyType>
 			<value>false</value>
@@ -19304,6 +19379,12 @@ hunting = false</script>
 			<keyType>4</keyType>
 			<value>95</value>
 			<valueType>4</valueType>
+		</Variable>
+		<Variable>
+			<name>funfurcount</name>
+			<keyType>4</keyType>
+			<value>106</value>
+			<valueType>3</valueType>
 		</Variable>
 		<Variable>
 			<name>funfursoulcount</name>
@@ -19338,18 +19419,6 @@ hunting = false</script>
 						<value></value>
 						<valueType>5</valueType>
 						<Variable>
-							<name>hit</name>
-							<keyType>4</keyType>
-							<value>167</value>
-							<valueType>3</valueType>
-						</Variable>
-						<Variable>
-							<name>miss</name>
-							<keyType>4</keyType>
-							<value>0</value>
-							<valueType>3</valueType>
-						</Variable>
-						<Variable>
 							<name>parry</name>
 							<keyType>4</keyType>
 							<value>208</value>
@@ -19359,6 +19428,18 @@ hunting = false</script>
 							<name>dodge</name>
 							<keyType>4</keyType>
 							<value>134</value>
+							<valueType>3</valueType>
+						</Variable>
+						<Variable>
+							<name>hit</name>
+							<keyType>4</keyType>
+							<value>167</value>
+							<valueType>3</valueType>
+						</Variable>
+						<Variable>
+							<name>miss</name>
+							<keyType>4</keyType>
+							<value>0</value>
 							<valueType>3</valueType>
 						</Variable>
 						<Variable>
@@ -19392,18 +19473,6 @@ hunting = false</script>
 						<value></value>
 						<valueType>5</valueType>
 						<Variable>
-							<name>hit</name>
-							<keyType>4</keyType>
-							<value>306</value>
-							<valueType>3</valueType>
-						</Variable>
-						<Variable>
-							<name>miss</name>
-							<keyType>4</keyType>
-							<value>3</value>
-							<valueType>3</valueType>
-						</Variable>
-						<Variable>
 							<name>parry</name>
 							<keyType>4</keyType>
 							<value>111</value>
@@ -19413,6 +19482,18 @@ hunting = false</script>
 							<name>dodge</name>
 							<keyType>4</keyType>
 							<value>101</value>
+							<valueType>3</valueType>
+						</Variable>
+						<Variable>
+							<name>hit</name>
+							<keyType>4</keyType>
+							<value>306</value>
+							<valueType>3</valueType>
+						</Variable>
+						<Variable>
+							<name>miss</name>
+							<keyType>4</keyType>
+							<value>3</value>
 							<valueType>3</valueType>
 						</Variable>
 						<Variable>
@@ -19470,18 +19551,6 @@ hunting = false</script>
 						<value></value>
 						<valueType>5</valueType>
 						<Variable>
-							<name>hit</name>
-							<keyType>4</keyType>
-							<value>174</value>
-							<valueType>3</valueType>
-						</Variable>
-						<Variable>
-							<name>miss</name>
-							<keyType>4</keyType>
-							<value>0</value>
-							<valueType>3</valueType>
-						</Variable>
-						<Variable>
 							<name>parry</name>
 							<keyType>4</keyType>
 							<value>197</value>
@@ -19491,6 +19560,18 @@ hunting = false</script>
 							<name>dodge</name>
 							<keyType>4</keyType>
 							<value>112</value>
+							<valueType>3</valueType>
+						</Variable>
+						<Variable>
+							<name>hit</name>
+							<keyType>4</keyType>
+							<value>174</value>
+							<valueType>3</valueType>
+						</Variable>
+						<Variable>
+							<name>miss</name>
+							<keyType>4</keyType>
+							<value>0</value>
 							<valueType>3</valueType>
 						</Variable>
 						<Variable>
@@ -19524,18 +19605,6 @@ hunting = false</script>
 						<value></value>
 						<valueType>5</valueType>
 						<Variable>
-							<name>hit</name>
-							<keyType>4</keyType>
-							<value>249</value>
-							<valueType>3</valueType>
-						</Variable>
-						<Variable>
-							<name>miss</name>
-							<keyType>4</keyType>
-							<value>0</value>
-							<valueType>3</valueType>
-						</Variable>
-						<Variable>
 							<name>parry</name>
 							<keyType>4</keyType>
 							<value>122</value>
@@ -19545,6 +19614,18 @@ hunting = false</script>
 							<name>dodge</name>
 							<keyType>4</keyType>
 							<value>78</value>
+							<valueType>3</valueType>
+						</Variable>
+						<Variable>
+							<name>hit</name>
+							<keyType>4</keyType>
+							<value>249</value>
+							<valueType>3</valueType>
+						</Variable>
+						<Variable>
+							<name>miss</name>
+							<keyType>4</keyType>
+							<value>0</value>
 							<valueType>3</valueType>
 						</Variable>
 						<Variable>
@@ -19602,18 +19683,6 @@ hunting = false</script>
 						<value></value>
 						<valueType>5</valueType>
 						<Variable>
-							<name>hit</name>
-							<keyType>4</keyType>
-							<value>180</value>
-							<valueType>3</valueType>
-						</Variable>
-						<Variable>
-							<name>miss</name>
-							<keyType>4</keyType>
-							<value>0</value>
-							<valueType>3</valueType>
-						</Variable>
-						<Variable>
 							<name>parry</name>
 							<keyType>4</keyType>
 							<value>111</value>
@@ -19623,6 +19692,18 @@ hunting = false</script>
 							<name>dodge</name>
 							<keyType>4</keyType>
 							<value>82</value>
+							<valueType>3</valueType>
+						</Variable>
+						<Variable>
+							<name>hit</name>
+							<keyType>4</keyType>
+							<value>180</value>
+							<valueType>3</valueType>
+						</Variable>
+						<Variable>
+							<name>miss</name>
+							<keyType>4</keyType>
+							<value>0</value>
 							<valueType>3</valueType>
 						</Variable>
 						<Variable>
@@ -19656,18 +19737,6 @@ hunting = false</script>
 						<value></value>
 						<valueType>5</valueType>
 						<Variable>
-							<name>hit</name>
-							<keyType>4</keyType>
-							<value>234</value>
-							<valueType>3</valueType>
-						</Variable>
-						<Variable>
-							<name>miss</name>
-							<keyType>4</keyType>
-							<value>0</value>
-							<valueType>3</valueType>
-						</Variable>
-						<Variable>
 							<name>parry</name>
 							<keyType>4</keyType>
 							<value>82</value>
@@ -19677,6 +19746,18 @@ hunting = false</script>
 							<name>dodge</name>
 							<keyType>4</keyType>
 							<value>80</value>
+							<valueType>3</valueType>
+						</Variable>
+						<Variable>
+							<name>hit</name>
+							<keyType>4</keyType>
+							<value>234</value>
+							<valueType>3</valueType>
+						</Variable>
+						<Variable>
+							<name>miss</name>
+							<keyType>4</keyType>
+							<value>0</value>
 							<valueType>3</valueType>
 						</Variable>
 						<Variable>
