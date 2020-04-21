@@ -14927,7 +14927,7 @@ function TotalCalc.Combine(rnd)
     scenario_round_count = -1
   end
   --Limit to 1000 rows or scenario length
-  if TotalCalc.count &gt; 10 then
+  if TotalCalc.count &gt; 1000 then
     if TotalCalc.count &gt; scenario_round_count then
         local tabsize = 1 --table.size(TotalCalc.history)
         echo("Tablesize" .. tabsize)
