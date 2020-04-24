@@ -2097,15 +2097,9 @@ end
 
 xpCollection1 = (xpCollection1 + xpDiff)
 
-if last_killedID and xaos.config.show_killed then
-cecho("data","&lt;medium_turquoise&gt;[ Kill ] "..last_killedID..": "..xpDiff.."%\n")
+if killedID and xaos.config.show_killed then
+cecho("data","&lt;medium_turquoise&gt;[Kill " .. getTime(true,"HH.mm") .. "] "..killedID..": "..xpDiff.."%\n")
 end
-
-
-
-
-
-
 
 last_xp = current_xp
 last_killedID = killedID
@@ -2127,20 +2121,23 @@ last_xpDiff = xpDiff</script>
 											<integer>1</integer>
 										</regexCodePropertyList>
 									</Trigger>
-									<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+									<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="yes" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
 										<name>Enemy Condition</name>
-										<script>-- xuicom("Acknowledging a status")
-combat=true
-targetFound=false
-if xaos.config.scripting.scan_mode then
-  disableTimer("scan listener")
-end
-if conditionXUI then
-  cecho("conditionDisplay",matches[1])
-  deleteLine()
-end</script>
+										<script>--&lt;worn on finger&gt;  [large   ] (Artifact) the Stone of Roaak
+-- xuicom("Acknowledging a status")
+--echo(multimatches[2][1])
+--if not rex.match(multimatches[2][1],[[^([ ]+[&lt;])]]) then
+  combat=true
+  targetFound=false
+  if xaos.config.scripting.scan_mode then
+    disableTimer("scan listener")
+  end
+  if xaos.config.debugmode then debugwrite("--grabbed") end
+--end
+
+--^.* is in awful condition.*\.$|^.* has quite a few wounds.*\.$|^.* looks pretty hurt.*\.$|^.* has some small wounds and bruises .*\.$|^.* is in excellent.*\.$|^.* has some big nasty wounds and scratches,.*\.$|^.* has a few scratches .*\.$</script>
 										<triggerType>0</triggerType>
-										<conditonLineDelta>0</conditonLineDelta>
+										<conditonLineDelta>1</conditonLineDelta>
 										<mStayOpen>0</mStayOpen>
 										<mCommand></mCommand>
 										<packageName></packageName>
@@ -2150,20 +2147,10 @@ end</script>
 										<colorTriggerFgColor>#000000</colorTriggerFgColor>
 										<colorTriggerBgColor>#000000</colorTriggerBgColor>
 										<regexCodeList>
-											<string>^.* is in awful condition.*\.$</string>
-											<string>^.* has quite a few wounds.*\.$</string>
-											<string>^.* looks pretty hurt.*\.$</string>
-											<string>^.* has some small wounds and bruises .*\.$</string>
-											<string>^.* is in excellent.*\.$</string>
-											<string>^.* has some big nasty wounds and scratches,.*\.$</string>
-											<string>^.* has a few scratches .*\.$</string>
+											<string>^(.* is in awful condition.*\.$|^.* has quite a few wounds.*\.$|^.* looks pretty hurt.*\.$|^.* has some small wounds and bruises .*\.$|^.* is in excellent.*\.$|^.* has some big nasty wounds and scratches,.*\.$|^.* has a few scratches .*\.$)</string>
+											<string>^(?![ ]+[&lt;]|^.* is in awful condition.*\.$|^.* has quite a few wounds.*\.$|^.* looks pretty hurt.*\.$|^.* has some small wounds and bruises .*\.$|^.* is in excellent.*\.$|^.* has some big nasty wounds and scratches,.*\.$|^.* has a few scratches .*\.$)</string>
 										</regexCodeList>
 										<regexCodePropertyList>
-											<integer>1</integer>
-											<integer>1</integer>
-											<integer>1</integer>
-											<integer>1</integer>
-											<integer>1</integer>
 											<integer>1</integer>
 											<integer>1</integer>
 										</regexCodePropertyList>
@@ -6829,7 +6816,7 @@ deleteLine()</script>
 
 local lbltext = "" --"Party&lt;br/&gt;"
 local lbltext2 = ""
-local maxsize = 5
+local maxsize = 6
 
 local lblentries = {}
 table.insert(lblentries,"")
@@ -6845,7 +6832,8 @@ for k,v in pairs(xaos.party.members) do
   lblhp = string.sub(lblhp,string.len(lblhp)-2,string.len(lblhp))
   lblhp = string.gsub(lblhp," ","&amp;nbsp;")
   
-  local tmplbl = string.sub(v.name,1,3) .. " : " .. lblhp 
+  local tmplbl = string.sub(v.name.."      ",1,7) .. "   " .. lblhp 
+  tmplbl = string.gsub(tmplbl," ","&amp;nbsp;")
   --tmplbl = tmplbl .. "&lt;br/&gt;"
   tmplbl = tmplbl .. "&lt;br/&gt;"
   
@@ -7343,6 +7331,7 @@ huntTarget = tostring(matches[2])
 killTarget = tostring(matches[2])
 auto_hunt = true
 statusFollowing=false
+statusLeader=false
 followTarget = ""
 
 if not xaos.config.scripting.scan_mode then
@@ -7394,6 +7383,7 @@ killTarget = ""
 auto_hunt = true
 
 statusFollowing=true
+statusLeader=false
 
 enableTimer("hunt listener")
 disableTimer("scan listener")
@@ -7401,7 +7391,7 @@ disableTimer("scan listener")
 --send("auto ")
 auto_hunt = true
 xuicom(
-  "You will attempt to automatically hunt something. Current settings indicate you're going to hunt " ..
+  "You will attempt to stay with: " ..
   huntTarget
 )
 xuicom("Currently, tracking "..wielded.." as your wielded weapon.")
@@ -7410,8 +7400,8 @@ if statusFollowing then
   obsessionMode = true
   huntTarget = followTarget
   location = nil
-  xuicom("You are following " .. followTarget .. " and this script will attempt to hunt them.")
-  xuicom("Obsession mode is on by default. Use &lt;white&gt;obsessionoff&lt;light_blue&gt; to turn it off.\n")
+  --xuicom("You are following " .. followTarget .. " and this script will attempt to hunt them.")
+  --xuicom("Obsession mode is on by default. Use &lt;white&gt;obsessionoff&lt;light_blue&gt; to turn it off.\n")
   cechoLink(
     "[ XUI ] &lt;light_blue&gt;Click here for more info on obsession mode.\n",
     [[xuicom("Obsession mode inputs hunt aggressively in an attempt to keep up with the party leader.\n")]],
@@ -7530,6 +7520,7 @@ if prey ~= nil and prey ~= "" then
   expandAlias("phunt " .. prey)
   
 else
+  xaos.config.scripting.scan_mode = xaos.scripting.area.scanmode
   if huntWait==0 then
     if xaos.config.scripting.scan_mode then
       huntWait = 1
@@ -7545,6 +7536,99 @@ end</script>
 					<command></command>
 					<packageName></packageName>
 					<regex>startscripting(?: )?(.*)</regex>
+				</Alias>
+				<Alias isActive="yes" isFolder="no">
+					<name>lookfor</name>
+					<script>followTarget=tostring(matches[2])
+
+huntTarget = tostring(matches[2])
+killTarget = ""
+auto_hunt = true
+
+statusFollowing=false
+
+enableTimer("hunt listener")
+disableTimer("scan listener")
+
+xaos.config.scripting.scan_mode = false
+
+--send("auto ")
+auto_hunt = true
+xuicom(
+  "You will attempt to automatically hunt something. Current settings indicate you're going to hunt " ..
+  huntTarget
+)
+xuicom("Currently, tracking "..wielded.." as your wielded weapon.")
+if statusFollowing then
+  --This bit handles the "What do I do if I'm following someone?" question
+  obsessionMode = true
+  huntTarget = followTarget
+  location = nil
+  xuicom("You are following " .. followTarget .. " and this script will attempt to hunt them.")
+  xuicom("Obsession mode is on by default. Use &lt;white&gt;obsessionoff&lt;light_blue&gt; to turn it off.\n")
+  cechoLink(
+    "[ XUI ] &lt;light_blue&gt;Click here for more info on obsession mode.\n",
+    [[xuicom("Obsession mode inputs hunt aggressively in an attempt to keep up with the party leader.\n")]],
+    "obsession mode info",
+    true
+  )
+  if huntTarget then
+  else
+    variableCheck(huntTarget, "hunt location")
+    auto_hunt = false
+  end
+end
+combat = false
+hunting = false</script>
+					<command></command>
+					<packageName></packageName>
+					<regex>^lookfor (.*)</regex>
+				</Alias>
+				<Alias isActive="yes" isFolder="no">
+					<name>^followleader</name>
+					<script>followTarget=tostring(matches[2])
+
+huntTarget = tostring(matches[2])
+killTarget = ""
+auto_hunt = true
+
+statusFollowing=true
+statusLeader=true
+
+enableTimer("hunt listener")
+disableTimer("scan listener")
+
+--send("auto ")
+auto_hunt = true
+xuicom(
+  "You will now try and hunt your leader.  This will auto switch if the leader changes. " ..
+  huntTarget
+)
+xuicom("Currently, tracking "..wielded.." as your wielded weapon.")
+if statusFollowing then
+  --This bit handles the "What do I do if I'm following someone?" question
+  obsessionMode = true
+  huntTarget = followTarget
+  location = nil
+  xuicom("You are following " .. followTarget .. " and this script will attempt to hunt them.")
+  xuicom("Obsession mode is on by default. Use &lt;white&gt;obsessionoff&lt;light_blue&gt; to turn it off.\n")
+  cechoLink(
+    "[ XUI ] &lt;light_blue&gt;Click here for more info on obsession mode.\n",
+    [[xuicom("Obsession mode inputs hunt aggressively in an attempt to keep up with the party leader.\n")]],
+    "obsession mode info",
+    true
+  )
+  if huntTarget then
+  else
+    variableCheck(huntTarget, "hunt location")
+    auto_hunt = false
+  end
+end
+combat = false
+hunting = false</script>
+					<command></command>
+					<packageName></packageName>
+					<regex>^followleader</regex>
 				</Alias>
 			</AliasGroup>
 			<AliasGroup isActive="yes" isFolder="yes">
@@ -8619,6 +8703,15 @@ end</script>
 					<command></command>
 					<packageName></packageName>
 					<regex>^xconfig(?: )?(\w*)(?: )?(.*)</regex>
+				</Alias>
+				<Alias isActive="yes" isFolder="no">
+					<name>Debug Mode</name>
+					<script>xaos.config.debugmode = not xaos.config.debugmode
+
+echo("\n\n Debug Mode: " .. tostring(xaos.config.debugmode) .. "\n\n")</script>
+					<command></command>
+					<packageName></packageName>
+					<regex>^debugmode</regex>
 				</Alias>
 			</AliasGroup>
 			<AliasGroup isActive="yes" isFolder="yes">
@@ -11796,7 +11889,7 @@ if xaos.config.scripting == nil then xaos.config.scripting = {} end
 if xaos.config.scripting.findmode == nil then xaos.config.scripting.findmode = false end
 if xaos.config.scripting.scan_mode == nil then xaos.config.scripting.scan_mode = false end
 if xaos.config.show_killed == nil then xaos.config.show_killed = false end
-
+if xaos.config.betamode == nil then xaos.config.betamode = false end
 if xaos.config.autologin == nil then xaos.config.autologin = false end
 if xaos.config.autologinaction == nil then xaos.config.autologinaction = "" end
 if xaos.config.reconnectaction == nil then xaos.config.reconnectaction = "" end
@@ -11811,13 +11904,15 @@ if xaos.party == nil then xaos.party = {
 
 if overnight == nil then overnight = {} end
 
+if statusLeader == nil then statusLeader = false end
+
 xaos.areas= {
   {
     name = "twistedforest",
     keyword = "twistedfae",
     keywordoverride = true,
     scanmode = true,
-    killarray = {"Angry Pixie","quickling ranger","abandoned lesh","gnarled brownie","wicked sprite","wandering wailing lesh"},
+    killarray = {"Angry Pixie","quickling ranger","abandoned lesh","gnarled brownie","wicked sprite","wandering wailing lesh","Twisted Treant"},
   },
 }
 xaos.questmasters={
@@ -12150,6 +12245,11 @@ function debugecho(text)
     cecho("data","[DE " .. getTime(true,"HH.mm.ss") .. "] " ..text .. "\n")
   end
 end
+function debugwrite(text) 
+  if xaos.config.debugmode then
+    cecho("main","[DE " .. getTime(true,"HH.mm.ss") .. "] " ..text .. "\n")
+  end
+end
 
 function calcAscendTime(lvl,lvlpercent) 
   lvl = lvl % 100
@@ -12168,28 +12268,34 @@ function calcAscendTime(lvl,lvlpercent)
 	end
 	if firstindex == lastindex then return "unknown" end
 	local total = 0
+  local cnter=0
 	for k=firstindex,lastindex,-1 do
 		total = total + xpcollector[k].xp
+    cnter=cnter+1
 	end
+  debugecho("Counter: " .. (cnter))
 	--Average
-	total = total / (firstindex - lastindex)
-  --debugecho(total)
+  debugecho("Devisor: " .. (firstindex - lastindex))
+	total = total / (cnter)
+  local avg = total
+  debugecho("Average: " .. total)
 	--Down to minute chunks
 	total = total / 5
-	--debugecho(total)
+	debugecho("Min Avg: " .. total)
 	total = leftdings/total
 	--debugecho(total)
   
   totalstring = ""
   --if (total/1440) &gt; 0 then
-    totalstring = totalstring .. math.floor(total/1440) .. " days, "
-    total = total % 1440
+  totalstring = totalstring .. math.floor(total/1440) .. " days, "
+  total = total % 1440
   --end
   --if (total/60) &gt; 0 then
-    totalstring = totalstring .. math.floor(total/60) .. " hours, "
-    total = total % 60
+  totalstring = totalstring .. math.floor(total/60) .. " hours, "
+  total = total % 60
   --end
   totalstring = totalstring .. string.format("%4.2f",total) .. " minutes."
+  totalstring = totalstring .. " (Avg: " .. string.format("%4.2f",avg) .. ")"
   return totalstring
 end
 
@@ -12284,8 +12390,13 @@ end</script>
 -- Note that you can also use external scripts --
 -------------------------------------------------
 if menu == nil then
+
+local windowWidth, windowHeight = getMainWindowSize()
+if contWidth == nil then contWidth = 650 end
+
+
   menu = menu or {
-    tabs = {"Data","Quests","Score","Variable","XP","Combat"},
+    tabs = {"Score","Quests","Variable","Combat","XP"},
     color1 = "rgb(0,0,70)",
     color2 = "rgb(0,0,50)",
     width = "20%",
@@ -12295,14 +12406,16 @@ if menu == nil then
   
   menu.window = Geyser.UserWindow:new({
     name = "menu.back",
-    x="80%",y="80%",
+    docked=true,
+    dockPosition = "right",
+    width="600px"
   })
   
   menu.container = Geyser.Container:new({
     name = "menu.backcontainer",
-    x = "0%", y = "0%",
+    x = "0%", y = "50%",
     width = "100%",
-    height = "100%",
+    height = "50%",
   },menu.window)
   
   menu.header = Geyser.HBox:new({
@@ -12357,7 +12470,7 @@ if menu == nil then
       name = "menu."..v,
       x = 0, y = 0,
       width = "100%",
-      height = "100%",
+      height = "80%",
     },menu.footer)
     
     menu[v .. "back"] = Geyser.Label:new({
@@ -12377,9 +12490,15 @@ if menu == nil then
   end
 end
 function menu.click(tab)
+  dataBackCon:move("0%","80%")
+  dataBackCon:resize("100%","20%")
+  dataConOverlay:show()
+  
   menu[menu.current]:hide()
   menu.current = tab
   menu[menu.current]:show()
+  
+
 end
 </script>
 						<eventHandlerList />
@@ -12478,36 +12597,100 @@ enableScrollBar("VariableList")</script>
 
 -- first, determine the size of your screen
 
-function createChatConsole() 
+--function createChatConsole() 
 local windowWidth, windowHeight = getMainWindowSize()
 if chatFontSize == nil then chatFontSize = 8 end
 if chatWidth == nil then chatWidth = 650 end
 if chatWrap == nil then chatWrap = 80 end
----- create the miniconsole
---createMiniConsole("OOC", windowWidth-(chatWidth),0,chatWidth,(windowHeight/2))
---setBackgroundColor("OOC",0,0,0,0)
---setMiniConsoleFontSize("OOC", chatFontSize)
--- wrap lines in window "OOC" at 80 characters per line - somewhere halfway, as an example
 
---setWindowWrap("OOC", chatWrap)
 
-OOCCon = Geyser.UserWindow:new({
+
+OOCCon = Geyser.MiniConsole:new({
   name="OOC",
-  x=windowWidth-(chatWidth), y=0,
+  x=0, y=0,
   autoWrap = true,
-  width=chatWidth, height=(windowHeight/2),
+  width="100%",
+  height="50%",
   fgColor = "white",
-  color = "black",
-  docked = true,
-  scrollBar = false,
-})
+  color = "red",
+
+},menu.window)
 OOCCon:setColor("black")
 OOCCon:setFontSize(mysettings.oocchatsize)
 enableScrollBar("OOC")
 OOCCon:resetAutoWrap()
-end
 
-createChatConsole()</script>
+--
+-- Create the small drag label within the window.
+-- The y position is set to "-15px" to align it to
+-- the bottom of the main label.
+mOOCVDrag = Geyser.Label:new({
+  name = "mOOCVDrag",
+  x = "47%", y = "-5px",
+  width = "6%", height = 5,
+  fgColor = "black",
+  color = "white",
+}, OOCCon)
+mOOCVDrag:setStyleSheet([[
+  border-radius: 6;
+  background-color: white;
+]])
+ 
+MIN_HEIGHT = 100
+ 
+--
+-- Callback functions.
+--
+function onOOCVDragTimer()
+  -- Get mouse position
+  local x, y = getMousePosition()
+  local windowWidth, windowHeight = getUserWindowSize("menu.back")
+  
+  local height
+  
+  -- Substract the top of the label  to get the new height.
+  height = y
+  if height &lt; MIN_HEIGHT then
+    -- Height is too small.
+    height = MIN_HEIGHT
+  end
+ --debugecho(height.."px")
+  -- Set the new size and restart timer.
+  OOCCon:resize(windowWidth.."px", height.."px")
+  OOCCon:reposition()
+
+  menu.container:set_constraints({x="0px",y=height.."px",width=windowWidth.."px", height=(windowHeight-height).."px"})
+
+  
+end
+ 
+function onOOCVDragClick()
+  -- The user clicked the drag label.
+  -- Start a temp timer to update the size of the label.
+  if  exists("voocdragtimer", "timer") == 0 then
+    vdragtimer = permTimer("voocdragtimer", "", .016, [[onOOCVDragTimer()]])
+    echo("timer created")
+  end
+
+  enableTimer("voocdragtimer")
+  debugecho("timer enabled")
+end
+ 
+function onOOCVDragRelease()
+  -- Button is release so stop timer and updates.
+  disableTimer("voocdragtimer")
+  debugecho("released")
+end
+ 
+--
+-- Set mouse event callbacks.
+--
+setLabelClickCallback("mOOCVDrag", "onOOCVDragClick")
+setLabelReleaseCallback("mOOCVDrag", "onOOCVDragRelease")
+
+--end
+
+--createChatConsole()</script>
 					<eventHandlerList />
 				</Script>
 				<Script isActive="yes" isFolder="no">
@@ -12519,15 +12702,39 @@ createChatConsole()</script>
 -- Note that you can also use external Scripts --
 -------------------------------------------------
 
-
+dataBackCon = Geyser.Label:new({
+  name="dataBackCon",
+  x="0%", y="80%",
+  color="black",
+  width="100%", height="20%",
+},menu.footer)
+dataBackCon:setColor(50,50,50,255)
 dataCon = Geyser.MiniConsole:new({
   name="data",
-  x="0%", y="0%",
-  wrapAt = 100,
-  width="100%", height="100%"
-},menu.Data)
-dataCon:setColor("black")
+  x="4%", y="0%",
+  width="94%", height="100%",
+    wrapAt = 100,
+},dataBackCon)
+dataCon:setColor(50,50,50,255)
+dataCon:setTextFormat (255, 255, 255, 50, 50, 50, 0,0,0)
 dataCon:setFontSize(mysettings.datafontsize)
+
+dataConOverlay = Geyser.Label:new({
+  name = "dataConOverlay",
+  x = 0, y = 0,
+  x="0%", y="80%",
+  width="100%", height="20%",
+},menu.footer)
+dataConOverlay:setStyleSheet([[
+  background-color: rgba(0,0,0,25%);
+]])
+
+dataConOverlay:setClickCallback("dataCon_click",dataCon)
+function dataCon_click(tab)
+  dataBackCon:move("0%","10%")
+  dataBackCon:resize("100%","90%")
+  dataConOverlay:hide()
+end
 
 enableScrollBar("data")
 --createMiniConsole("tab1Center", "data", 1, 1, 500, 500)</script>
@@ -15273,9 +15480,9 @@ hunting = false</script>
 				<valueType>3</valueType>
 			</Variable>
 			<Variable>
-				<name>240</name>
+				<name>244</name>
 				<keyType>4</keyType>
-				<value>34</value>
+				<value>88</value>
 				<valueType>3</valueType>
 			</Variable>
 			<Variable>
@@ -15285,9 +15492,9 @@ hunting = false</script>
 				<valueType>3</valueType>
 			</Variable>
 			<Variable>
-				<name>244</name>
+				<name>290</name>
 				<keyType>4</keyType>
-				<value>88</value>
+				<value>180</value>
 				<valueType>3</valueType>
 			</Variable>
 			<Variable>
@@ -15297,9 +15504,9 @@ hunting = false</script>
 				<valueType>3</valueType>
 			</Variable>
 			<Variable>
-				<name>290</name>
+				<name>289</name>
 				<keyType>4</keyType>
-				<value>180</value>
+				<value>178</value>
 				<valueType>3</valueType>
 			</Variable>
 			<Variable>
@@ -15309,9 +15516,9 @@ hunting = false</script>
 				<valueType>3</valueType>
 			</Variable>
 			<Variable>
-				<name>289</name>
+				<name>240</name>
 				<keyType>4</keyType>
-				<value>178</value>
+				<value>34</value>
 				<valueType>3</valueType>
 			</Variable>
 			<Variable>
@@ -15339,15 +15546,15 @@ hunting = false</script>
 				<valueType>3</valueType>
 			</Variable>
 			<Variable>
-				<name>284</name>
-				<keyType>4</keyType>
-				<value>168</value>
-				<valueType>3</valueType>
-			</Variable>
-			<Variable>
 				<name>280</name>
 				<keyType>4</keyType>
 				<value>160</value>
+				<valueType>3</valueType>
+			</Variable>
+			<Variable>
+				<name>284</name>
+				<keyType>4</keyType>
+				<value>168</value>
 				<valueType>3</valueType>
 			</Variable>
 			<Variable>
@@ -15370,226 +15577,40 @@ hunting = false</script>
 			<valueType>1</valueType>
 		</Variable>
 		<VariableGroup>
-			<name>questmasters</name>
+			<name>overnight</name>
 			<keyType>4</keyType>
 			<value></value>
 			<valueType>5</valueType>
-			<VariableGroup>
-				<name>1</name>
-				<keyType>3</keyType>
-				<value></value>
-				<valueType>5</valueType>
-				<Variable>
-					<name>name</name>
-					<keyType>4</keyType>
-					<value>Sycelurania</value>
-					<valueType>4</valueType>
-				</Variable>
-				<Variable>
-					<name>lookup</name>
-					<keyType>4</keyType>
-					<value>A cute wood nymph is here</value>
-					<valueType>4</valueType>
-				</Variable>
-			</VariableGroup>
-			<VariableGroup>
-				<name>2</name>
-				<keyType>3</keyType>
-				<value></value>
-				<valueType>5</valueType>
-				<Variable>
-					<name>name</name>
-					<keyType>4</keyType>
-					<value>Ivq</value>
-					<valueType>4</valueType>
-				</Variable>
-				<Variable>
-					<name>lookup</name>
-					<keyType>4</keyType>
-					<value>A bigger than normal half </value>
-					<valueType>4</valueType>
-				</Variable>
-			</VariableGroup>
-			<VariableGroup>
-				<name>3</name>
-				<keyType>3</keyType>
-				<value></value>
-				<valueType>5</valueType>
-				<Variable>
-					<name>name</name>
-					<keyType>4</keyType>
-					<value>notapriest</value>
-					<valueType>4</valueType>
-				</Variable>
-				<Variable>
-					<name>lookup</name>
-					<keyType>4</keyType>
-					<value>A faceless priest of Sunder stands here</value>
-					<valueType>4</valueType>
-				</Variable>
-			</VariableGroup>
-			<VariableGroup>
-				<name>4</name>
-				<keyType>3</keyType>
-				<value></value>
-				<valueType>5</valueType>
-				<Variable>
-					<name>name</name>
-					<keyType>4</keyType>
-					<value>notgank</value>
-					<valueType>4</valueType>
-				</Variable>
-				<Variable>
-					<name>lookup</name>
-					<keyType>4</keyType>
-					<value>The host of this display, Gank</value>
-					<valueType>4</valueType>
-				</Variable>
-			</VariableGroup>
-			<VariableGroup>
-				<name>5</name>
-				<keyType>3</keyType>
-				<value></value>
-				<valueType>5</valueType>
-				<Variable>
-					<name>name</name>
-					<keyType>4</keyType>
-					<value>Dahlina the half elf</value>
-					<valueType>4</valueType>
-				</Variable>
-				<Variable>
-					<name>lookup</name>
-					<keyType>4</keyType>
-					<value>Dahlina stands here as a last guard</value>
-					<valueType>4</valueType>
-				</Variable>
-			</VariableGroup>
-			<VariableGroup>
-				<name>6</name>
-				<keyType>3</keyType>
-				<value></value>
-				<valueType>5</valueType>
-				<Variable>
-					<name>name</name>
-					<keyType>4</keyType>
-					<value>a hooded drow magi</value>
-					<valueType>4</valueType>
-				</Variable>
-				<Variable>
-					<name>lookup</name>
-					<keyType>4</keyType>
-					<value>A hooded drow magi is here</value>
-					<valueType>4</valueType>
-				</Variable>
-			</VariableGroup>
-			<VariableGroup>
-				<name>7</name>
-				<keyType>3</keyType>
-				<value></value>
-				<valueType>5</valueType>
-				<Variable>
-					<name>name</name>
-					<keyType>4</keyType>
-					<value>Verioma the pixie</value>
-					<valueType>4</valueType>
-				</Variable>
-				<Variable>
-					<name>lookup</name>
-					<keyType>4</keyType>
-					<value>Verioma the pixie floats</value>
-					<valueType>4</valueType>
-				</Variable>
-			</VariableGroup>
-			<VariableGroup>
-				<name>8</name>
-				<keyType>3</keyType>
-				<value></value>
-				<valueType>5</valueType>
-				<Variable>
-					<name>name</name>
-					<keyType>4</keyType>
-					<value>Marnock Rockflayer</value>
-					<valueType>4</valueType>
-				</Variable>
-				<Variable>
-					<name>lookup</name>
-					<keyType>4</keyType>
-					<value>Marnock Rockflayer is here</value>
-					<valueType>4</valueType>
-				</Variable>
-			</VariableGroup>
-			<VariableGroup>
-				<name>9</name>
-				<keyType>3</keyType>
-				<value></value>
-				<valueType>5</valueType>
-				<Variable>
-					<name>name</name>
-					<keyType>4</keyType>
-					<value>The Dwarven Loremaster Isliaka</value>
-					<valueType>4</valueType>
-				</Variable>
-				<Variable>
-					<name>lookup</name>
-					<keyType>4</keyType>
-					<value>An old dwarf with a long grey beard</value>
-					<valueType>4</valueType>
-				</Variable>
-			</VariableGroup>
-			<VariableGroup>
-				<name>10</name>
-				<keyType>3</keyType>
-				<value></value>
-				<valueType>5</valueType>
-				<Variable>
-					<name>name</name>
-					<keyType>4</keyType>
-					<value>A Xaosian Knight</value>
-					<valueType>4</valueType>
-				</Variable>
-				<Variable>
-					<name>lookup</name>
-					<keyType>4</keyType>
-					<value>A Xaosian knight dressed</value>
-					<valueType>4</valueType>
-				</Variable>
-			</VariableGroup>
-			<VariableGroup>
-				<name>11</name>
-				<keyType>3</keyType>
-				<value></value>
-				<valueType>5</valueType>
-				<Variable>
-					<name>name</name>
-					<keyType>4</keyType>
-					<value>a shady gnome</value>
-					<valueType>4</valueType>
-				</Variable>
-				<Variable>
-					<name>lookup</name>
-					<keyType>4</keyType>
-					<value>A gnome wearing a dark hood</value>
-					<valueType>4</valueType>
-				</Variable>
-			</VariableGroup>
-			<VariableGroup>
-				<name>12</name>
-				<keyType>3</keyType>
-				<value></value>
-				<valueType>5</valueType>
-				<Variable>
-					<name>name</name>
-					<keyType>4</keyType>
-					<value>Piklar</value>
-					<valueType>4</valueType>
-				</Variable>
-				<Variable>
-					<name>lookup</name>
-					<keyType>4</keyType>
-					<value>A very old deep gnome</value>
-					<valueType>4</valueType>
-				</Variable>
-			</VariableGroup>
+			<Variable>
+				<name>currentFrags</name>
+				<keyType>4</keyType>
+				<value>649</value>
+				<valueType>4</valueType>
+			</Variable>
+			<Variable>
+				<name>showKills</name>
+				<keyType>4</keyType>
+				<value>false</value>
+				<valueType>1</valueType>
+			</Variable>
+			<Variable>
+				<name>autoQuestTurnIn</name>
+				<keyType>4</keyType>
+				<value>true</value>
+				<valueType>1</valueType>
+			</Variable>
+			<Variable>
+				<name>currentLevel</name>
+				<keyType>4</keyType>
+				<value>347</value>
+				<valueType>4</valueType>
+			</Variable>
+			<Variable>
+				<name>currentLevelPercent</name>
+				<keyType>4</keyType>
+				<value>13</value>
+				<valueType>4</valueType>
+			</Variable>
 		</VariableGroup>
 		<Variable>
 			<name>questmaster</name>
@@ -15598,10 +15619,22 @@ hunting = false</script>
 			<valueType>4</valueType>
 		</Variable>
 		<Variable>
-			<name>funfurfragcount</name>
+			<name>funfurcount</name>
 			<keyType>4</keyType>
-			<value>313</value>
+			<value>106</value>
 			<valueType>3</valueType>
+		</Variable>
+		<Variable>
+			<name>currentlyEnchanting</name>
+			<keyType>4</keyType>
+			<value>false</value>
+			<valueType>1</valueType>
+		</Variable>
+		<Variable>
+			<name>currentLevelPercent</name>
+			<keyType>4</keyType>
+			<value>95</value>
+			<valueType>4</valueType>
 		</Variable>
 		<VariableGroup>
 			<name>xaos</name>
@@ -16154,7 +16187,7 @@ hunting = false</script>
 					<valueType>1</valueType>
 				</Variable>
 				<Variable>
-					<name>show_killed</name>
+					<name>autologin</name>
 					<keyType>4</keyType>
 					<value>false</value>
 					<valueType>1</valueType>
@@ -16166,7 +16199,7 @@ hunting = false</script>
 					<valueType>1</valueType>
 				</Variable>
 				<Variable>
-					<name>autologin</name>
+					<name>show_killed</name>
 					<keyType>4</keyType>
 					<value>false</value>
 					<valueType>1</valueType>
@@ -19377,60 +19410,234 @@ hunting = false</script>
 				</VariableGroup>
 			</VariableGroup>
 		</VariableGroup>
+		<Variable>
+			<name>funfurfragcount</name>
+			<keyType>4</keyType>
+			<value>313</value>
+			<valueType>3</valueType>
+		</Variable>
 		<VariableGroup>
-			<name>overnight</name>
+			<name>questmasters</name>
 			<keyType>4</keyType>
 			<value></value>
 			<valueType>5</valueType>
-			<Variable>
-				<name>currentFrags</name>
-				<keyType>4</keyType>
-				<value>649</value>
-				<valueType>4</valueType>
-			</Variable>
-			<Variable>
-				<name>showKills</name>
-				<keyType>4</keyType>
-				<value>false</value>
-				<valueType>1</valueType>
-			</Variable>
-			<Variable>
-				<name>autoQuestTurnIn</name>
-				<keyType>4</keyType>
-				<value>true</value>
-				<valueType>1</valueType>
-			</Variable>
-			<Variable>
-				<name>currentLevel</name>
-				<keyType>4</keyType>
-				<value>347</value>
-				<valueType>4</valueType>
-			</Variable>
-			<Variable>
-				<name>currentLevelPercent</name>
-				<keyType>4</keyType>
-				<value>13</value>
-				<valueType>4</valueType>
-			</Variable>
+			<VariableGroup>
+				<name>1</name>
+				<keyType>3</keyType>
+				<value></value>
+				<valueType>5</valueType>
+				<Variable>
+					<name>name</name>
+					<keyType>4</keyType>
+					<value>Sycelurania</value>
+					<valueType>4</valueType>
+				</Variable>
+				<Variable>
+					<name>lookup</name>
+					<keyType>4</keyType>
+					<value>A cute wood nymph is here</value>
+					<valueType>4</valueType>
+				</Variable>
+			</VariableGroup>
+			<VariableGroup>
+				<name>2</name>
+				<keyType>3</keyType>
+				<value></value>
+				<valueType>5</valueType>
+				<Variable>
+					<name>name</name>
+					<keyType>4</keyType>
+					<value>Ivq</value>
+					<valueType>4</valueType>
+				</Variable>
+				<Variable>
+					<name>lookup</name>
+					<keyType>4</keyType>
+					<value>A bigger than normal half </value>
+					<valueType>4</valueType>
+				</Variable>
+			</VariableGroup>
+			<VariableGroup>
+				<name>3</name>
+				<keyType>3</keyType>
+				<value></value>
+				<valueType>5</valueType>
+				<Variable>
+					<name>name</name>
+					<keyType>4</keyType>
+					<value>notapriest</value>
+					<valueType>4</valueType>
+				</Variable>
+				<Variable>
+					<name>lookup</name>
+					<keyType>4</keyType>
+					<value>A faceless priest of Sunder stands here</value>
+					<valueType>4</valueType>
+				</Variable>
+			</VariableGroup>
+			<VariableGroup>
+				<name>4</name>
+				<keyType>3</keyType>
+				<value></value>
+				<valueType>5</valueType>
+				<Variable>
+					<name>name</name>
+					<keyType>4</keyType>
+					<value>notgank</value>
+					<valueType>4</valueType>
+				</Variable>
+				<Variable>
+					<name>lookup</name>
+					<keyType>4</keyType>
+					<value>The host of this display, Gank</value>
+					<valueType>4</valueType>
+				</Variable>
+			</VariableGroup>
+			<VariableGroup>
+				<name>5</name>
+				<keyType>3</keyType>
+				<value></value>
+				<valueType>5</valueType>
+				<Variable>
+					<name>name</name>
+					<keyType>4</keyType>
+					<value>Dahlina the half elf</value>
+					<valueType>4</valueType>
+				</Variable>
+				<Variable>
+					<name>lookup</name>
+					<keyType>4</keyType>
+					<value>Dahlina stands here as a last guard</value>
+					<valueType>4</valueType>
+				</Variable>
+			</VariableGroup>
+			<VariableGroup>
+				<name>6</name>
+				<keyType>3</keyType>
+				<value></value>
+				<valueType>5</valueType>
+				<Variable>
+					<name>name</name>
+					<keyType>4</keyType>
+					<value>a hooded drow magi</value>
+					<valueType>4</valueType>
+				</Variable>
+				<Variable>
+					<name>lookup</name>
+					<keyType>4</keyType>
+					<value>A hooded drow magi is here</value>
+					<valueType>4</valueType>
+				</Variable>
+			</VariableGroup>
+			<VariableGroup>
+				<name>7</name>
+				<keyType>3</keyType>
+				<value></value>
+				<valueType>5</valueType>
+				<Variable>
+					<name>name</name>
+					<keyType>4</keyType>
+					<value>Verioma the pixie</value>
+					<valueType>4</valueType>
+				</Variable>
+				<Variable>
+					<name>lookup</name>
+					<keyType>4</keyType>
+					<value>Verioma the pixie floats</value>
+					<valueType>4</valueType>
+				</Variable>
+			</VariableGroup>
+			<VariableGroup>
+				<name>8</name>
+				<keyType>3</keyType>
+				<value></value>
+				<valueType>5</valueType>
+				<Variable>
+					<name>name</name>
+					<keyType>4</keyType>
+					<value>Marnock Rockflayer</value>
+					<valueType>4</valueType>
+				</Variable>
+				<Variable>
+					<name>lookup</name>
+					<keyType>4</keyType>
+					<value>Marnock Rockflayer is here</value>
+					<valueType>4</valueType>
+				</Variable>
+			</VariableGroup>
+			<VariableGroup>
+				<name>9</name>
+				<keyType>3</keyType>
+				<value></value>
+				<valueType>5</valueType>
+				<Variable>
+					<name>name</name>
+					<keyType>4</keyType>
+					<value>The Dwarven Loremaster Isliaka</value>
+					<valueType>4</valueType>
+				</Variable>
+				<Variable>
+					<name>lookup</name>
+					<keyType>4</keyType>
+					<value>An old dwarf with a long grey beard</value>
+					<valueType>4</valueType>
+				</Variable>
+			</VariableGroup>
+			<VariableGroup>
+				<name>10</name>
+				<keyType>3</keyType>
+				<value></value>
+				<valueType>5</valueType>
+				<Variable>
+					<name>name</name>
+					<keyType>4</keyType>
+					<value>A Xaosian Knight</value>
+					<valueType>4</valueType>
+				</Variable>
+				<Variable>
+					<name>lookup</name>
+					<keyType>4</keyType>
+					<value>A Xaosian knight dressed</value>
+					<valueType>4</valueType>
+				</Variable>
+			</VariableGroup>
+			<VariableGroup>
+				<name>11</name>
+				<keyType>3</keyType>
+				<value></value>
+				<valueType>5</valueType>
+				<Variable>
+					<name>name</name>
+					<keyType>4</keyType>
+					<value>a shady gnome</value>
+					<valueType>4</valueType>
+				</Variable>
+				<Variable>
+					<name>lookup</name>
+					<keyType>4</keyType>
+					<value>A gnome wearing a dark hood</value>
+					<valueType>4</valueType>
+				</Variable>
+			</VariableGroup>
+			<VariableGroup>
+				<name>12</name>
+				<keyType>3</keyType>
+				<value></value>
+				<valueType>5</valueType>
+				<Variable>
+					<name>name</name>
+					<keyType>4</keyType>
+					<value>Piklar</value>
+					<valueType>4</valueType>
+				</Variable>
+				<Variable>
+					<name>lookup</name>
+					<keyType>4</keyType>
+					<value>A very old deep gnome</value>
+					<valueType>4</valueType>
+				</Variable>
+			</VariableGroup>
 		</VariableGroup>
-		<Variable>
-			<name>currentlyEnchanting</name>
-			<keyType>4</keyType>
-			<value>false</value>
-			<valueType>1</valueType>
-		</Variable>
-		<Variable>
-			<name>currentLevelPercent</name>
-			<keyType>4</keyType>
-			<value>95</value>
-			<valueType>4</valueType>
-		</Variable>
-		<Variable>
-			<name>funfurcount</name>
-			<keyType>4</keyType>
-			<value>106</value>
-			<valueType>3</valueType>
-		</Variable>
 		<Variable>
 			<name>funfursoulcount</name>
 			<keyType>4</keyType>
