@@ -456,7 +456,9 @@ tempTimer(1,function() send("scan") end)</script>
 							<name>Arrived</name>
 							<script>local mob = string.trim(matches[2])
 if not combat then
-
+  if status.resting then
+    send("wake")
+  end
   if table.contains(xaos.scripting.area.killarray,mob) then
     if xaos.scripting.area.keywordoverride then
       send("kill " .. xaos.scripting.area.keyword)
@@ -476,7 +478,7 @@ end</script>
 							<colorTriggerFgColor>#000000</colorTriggerFgColor>
 							<colorTriggerBgColor>#000000</colorTriggerBgColor>
 							<regexCodeList>
-								<string>(?:[aA] |[tT]he |[aA]n )(.*) arrives from</string>
+								<string>(?:[aA] |[tT]he |[aA]n )(.*) (arrives|swims|crawls|sneaks|flies) from</string>
 							</regexCodeList>
 							<regexCodePropertyList>
 								<integer>1</integer>
@@ -761,19 +763,33 @@ if auto_skin then
 end
 
 if auto_hunt then
-	send("get isarti")
+	--send("get isarti")
 end
 
 if xaos.config.scripting.scan_mode and not statusFollowing then
-  
-  tempTimer((endcombatWait+.1), 
-  function ()
-      if not combat and (getEpoch()-lastkilltime) &gt;= endcombatWait then 
-        send("scan")
-      else
-        debugecho(getEpoch()-lastkilltime)
+  if xaos.config.scripting.minmana &gt; tonumber(xPrompt.mana) or xaos.config.scripting.minhp &gt; tonumber(xPrompt.hp) then
+    tempTimer(2,
+      function ()
+        if not combat then
+          send("rest")
+          status.resting=true
+        end
       end
-    end)
+    ) 
+  else
+  
+    tempTimer((endcombatWait+.1), 
+      function ()
+        if not combat and (getEpoch()-lastkilltime) &gt;= endcombatWait then 
+          send("scan")
+        else
+          debugecho(getEpoch()-lastkilltime)
+        end
+      end
+    )
+  
+  end
+  
 end
 
 -- Counter
@@ -1023,6 +1039,71 @@ end
 							</regexCodePropertyList>
 						</Trigger>
 					</TriggerGroup>
+					<TriggerGroup isActive="yes" isFolder="yes" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+						<name>Resting</name>
+						<script></script>
+						<triggerType>0</triggerType>
+						<conditonLineDelta>0</conditonLineDelta>
+						<mStayOpen>0</mStayOpen>
+						<mCommand></mCommand>
+						<packageName></packageName>
+						<mFgColor>#ff0000</mFgColor>
+						<mBgColor>#ffff00</mBgColor>
+						<mSoundFile></mSoundFile>
+						<colorTriggerFgColor>#000000</colorTriggerFgColor>
+						<colorTriggerBgColor>#000000</colorTriggerBgColor>
+						<regexCodeList />
+						<regexCodePropertyList />
+						<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+							<name>End Rest</name>
+							<script>
+if status.resting and 
+  (tonumber(xPrompt.mana) &gt;= tonumber(xaos.config.scripting.minmana) or tonumber(xPrompt.hp) &gt;= tonumber(xaos.config.scripting.minhp) 
+  ) then
+  
+  send("wake")
+  send("stand")
+  send("scan")
+  status.resting=false
+end</script>
+							<triggerType>0</triggerType>
+							<conditonLineDelta>0</conditonLineDelta>
+							<mStayOpen>0</mStayOpen>
+							<mCommand></mCommand>
+							<packageName></packageName>
+							<mFgColor>#ff0000</mFgColor>
+							<mBgColor>#ffff00</mBgColor>
+							<mSoundFile></mSoundFile>
+							<colorTriggerFgColor>#000000</colorTriggerFgColor>
+							<colorTriggerBgColor>#000000</colorTriggerBgColor>
+							<regexCodeList>
+								<string>return isXaosPrompt()</string>
+							</regexCodeList>
+							<regexCodePropertyList>
+								<integer>4</integer>
+							</regexCodePropertyList>
+						</Trigger>
+						<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+							<name>Start Rest</name>
+							<script>status.resting=true</script>
+							<triggerType>0</triggerType>
+							<conditonLineDelta>0</conditonLineDelta>
+							<mStayOpen>0</mStayOpen>
+							<mCommand></mCommand>
+							<packageName></packageName>
+							<mFgColor>#ff0000</mFgColor>
+							<mBgColor>#ffff00</mBgColor>
+							<mSoundFile></mSoundFile>
+							<colorTriggerFgColor>#000000</colorTriggerFgColor>
+							<colorTriggerBgColor>#000000</colorTriggerBgColor>
+							<regexCodeList>
+								<string>You rest.</string>
+							</regexCodeList>
+							<regexCodePropertyList>
+								<integer>0</integer>
+							</regexCodePropertyList>
+						</Trigger>
+					</TriggerGroup>
 				</TriggerGroup>
 				<TriggerGroup isActive="yes" isFolder="yes" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
 					<name>General combat</name>
@@ -1250,7 +1331,30 @@ send("wield "..wielded)
 					<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
 						<name>Bugout stop</name>
 						<script>cecho("data","[ALERT " .. getTime(true,"HH.mm") .. "] Bugout Called\n")
-auto_hunt=false</script>
+
+if auto_hunt and followTarget ~= ""  and xaos.scripting.area.name ~= nil and xaos.scripting.area.name ~= "" then
+  
+  send("c 'resan'")
+  if bugoutcount == nil then  
+    bugoutcount = 0
+  end
+  if bugoutcount &lt; 10 then
+    bugoutcount = bugoutcount + 1
+    tempTimer(100,
+      function() 
+        send("c 'resan'")
+        send("tele " .. xaos.scripting.area.name)
+        send("startscripting")
+      end
+    )
+  else
+    send("quit")
+  end
+  
+end
+
+auto_hunt=false
+  </script>
 						<triggerType>0</triggerType>
 						<conditonLineDelta>0</conditonLineDelta>
 						<mStayOpen>0</mStayOpen>
@@ -1545,366 +1649,6 @@ end</script>
 						</Trigger>
 					</TriggerGroup>
 				</TriggerGroup>
-			</TriggerGroup>
-			<TriggerGroup isActive="yes" isFolder="yes" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
-				<name>Status + Variable States</name>
-				<script></script>
-				<triggerType>0</triggerType>
-				<conditonLineDelta>0</conditonLineDelta>
-				<mStayOpen>0</mStayOpen>
-				<mCommand></mCommand>
-				<packageName></packageName>
-				<mFgColor>#ff0000</mFgColor>
-				<mBgColor>#ffff00</mBgColor>
-				<mSoundFile></mSoundFile>
-				<colorTriggerFgColor>#000000</colorTriggerFgColor>
-				<colorTriggerBgColor>#000000</colorTriggerBgColor>
-				<regexCodeList />
-				<regexCodePropertyList />
-				<TriggerGroup isActive="yes" isFolder="yes" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
-					<name>Buffs</name>
-					<script></script>
-					<triggerType>0</triggerType>
-					<conditonLineDelta>0</conditonLineDelta>
-					<mStayOpen>0</mStayOpen>
-					<mCommand></mCommand>
-					<packageName></packageName>
-					<mFgColor>#ff0000</mFgColor>
-					<mBgColor>#ffff00</mBgColor>
-					<mSoundFile></mSoundFile>
-					<colorTriggerFgColor>#000000</colorTriggerFgColor>
-					<colorTriggerBgColor>#000000</colorTriggerBgColor>
-					<regexCodeList />
-					<regexCodePropertyList />
-					<TriggerGroup isActive="yes" isFolder="yes" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
-						<name>Mentalist</name>
-						<script></script>
-						<triggerType>0</triggerType>
-						<conditonLineDelta>0</conditonLineDelta>
-						<mStayOpen>0</mStayOpen>
-						<mCommand></mCommand>
-						<packageName></packageName>
-						<mFgColor>#ff0000</mFgColor>
-						<mBgColor>#ffff00</mBgColor>
-						<mSoundFile></mSoundFile>
-						<colorTriggerFgColor>#000000</colorTriggerFgColor>
-						<colorTriggerBgColor>#000000</colorTriggerBgColor>
-						<regexCodeList />
-						<regexCodePropertyList />
-						<TriggerGroup isActive="yes" isFolder="yes" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
-							<name>Combat Ease</name>
-							<script></script>
-							<triggerType>0</triggerType>
-							<conditonLineDelta>0</conditonLineDelta>
-							<mStayOpen>0</mStayOpen>
-							<mCommand></mCommand>
-							<packageName></packageName>
-							<mFgColor>#ff0000</mFgColor>
-							<mBgColor>#ffff00</mBgColor>
-							<mSoundFile></mSoundFile>
-							<colorTriggerFgColor>#000000</colorTriggerFgColor>
-							<colorTriggerBgColor>#000000</colorTriggerBgColor>
-							<regexCodeList />
-							<regexCodePropertyList />
-							<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
-								<name>divided will tracking</name>
-								<script>divided = true
-
-autoMode = "mentalist debuff"</script>
-								<triggerType>0</triggerType>
-								<conditonLineDelta>0</conditonLineDelta>
-								<mStayOpen>0</mStayOpen>
-								<mCommand></mCommand>
-								<packageName></packageName>
-								<mFgColor>#ff0000</mFgColor>
-								<mBgColor>#ffff00</mBgColor>
-								<mSoundFile></mSoundFile>
-								<colorTriggerFgColor>#000000</colorTriggerFgColor>
-								<colorTriggerBgColor>#000000</colorTriggerBgColor>
-								<regexCodeList>
-									<string>You have divided the will</string>
-									<string>will appears to already be divided.</string>
-								</regexCodeList>
-								<regexCodePropertyList>
-									<integer>0</integer>
-									<integer>0</integer>
-								</regexCodePropertyList>
-							</Trigger>
-							<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
-								<name>Reset on death</name>
-								<script>divided = false</script>
-								<triggerType>0</triggerType>
-								<conditonLineDelta>0</conditonLineDelta>
-								<mStayOpen>0</mStayOpen>
-								<mCommand></mCommand>
-								<packageName></packageName>
-								<mFgColor>#ff0000</mFgColor>
-								<mBgColor>#ffff00</mBgColor>
-								<mSoundFile></mSoundFile>
-								<colorTriggerFgColor>#000000</colorTriggerFgColor>
-								<colorTriggerBgColor>#000000</colorTriggerBgColor>
-								<regexCodeList>
-									<string>has been defeated</string>
-								</regexCodeList>
-								<regexCodePropertyList>
-									<integer>1</integer>
-								</regexCodePropertyList>
-							</Trigger>
-						</TriggerGroup>
-						<TriggerGroup isActive="yes" isFolder="yes" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
-							<name>Critical</name>
-							<script></script>
-							<triggerType>0</triggerType>
-							<conditonLineDelta>0</conditonLineDelta>
-							<mStayOpen>0</mStayOpen>
-							<mCommand></mCommand>
-							<packageName></packageName>
-							<mFgColor>#ff0000</mFgColor>
-							<mBgColor>#ffff00</mBgColor>
-							<mSoundFile></mSoundFile>
-							<colorTriggerFgColor>#000000</colorTriggerFgColor>
-							<colorTriggerBgColor>#000000</colorTriggerBgColor>
-							<regexCodeList />
-							<regexCodePropertyList />
-							<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
-								<name>Third Eye False</name>
-								<script>buffThirdEye = false</script>
-								<triggerType>0</triggerType>
-								<conditonLineDelta>0</conditonLineDelta>
-								<mStayOpen>0</mStayOpen>
-								<mCommand></mCommand>
-								<packageName></packageName>
-								<mFgColor>#ff0000</mFgColor>
-								<mBgColor>#ffff00</mBgColor>
-								<mSoundFile></mSoundFile>
-								<colorTriggerFgColor>#000000</colorTriggerFgColor>
-								<colorTriggerBgColor>#000000</colorTriggerBgColor>
-								<regexCodeList>
-									<string>Your third eye closes.</string>
-								</regexCodeList>
-								<regexCodePropertyList>
-									<integer>3</integer>
-								</regexCodePropertyList>
-							</Trigger>
-							<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
-								<name>Third Eye True</name>
-								<script>buffThirdEye = true</script>
-								<triggerType>0</triggerType>
-								<conditonLineDelta>0</conditonLineDelta>
-								<mStayOpen>0</mStayOpen>
-								<mCommand></mCommand>
-								<packageName></packageName>
-								<mFgColor>#ff0000</mFgColor>
-								<mBgColor>#ffff00</mBgColor>
-								<mSoundFile></mSoundFile>
-								<colorTriggerFgColor>#000000</colorTriggerFgColor>
-								<colorTriggerBgColor>#000000</colorTriggerBgColor>
-								<regexCodeList>
-									<string>You are already under that power.</string>
-									<string>The third eye opens and your sight extends!</string>
-								</regexCodeList>
-								<regexCodePropertyList>
-									<integer>3</integer>
-									<integer>3</integer>
-								</regexCodePropertyList>
-							</Trigger>
-						</TriggerGroup>
-					</TriggerGroup>
-					<TriggerGroup isActive="yes" isFolder="yes" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
-						<name>Thief</name>
-						<script></script>
-						<triggerType>0</triggerType>
-						<conditonLineDelta>0</conditonLineDelta>
-						<mStayOpen>0</mStayOpen>
-						<mCommand></mCommand>
-						<packageName></packageName>
-						<mFgColor>#ff0000</mFgColor>
-						<mBgColor>#ffff00</mBgColor>
-						<mSoundFile></mSoundFile>
-						<colorTriggerFgColor>#000000</colorTriggerFgColor>
-						<colorTriggerBgColor>#000000</colorTriggerBgColor>
-						<regexCodeList />
-						<regexCodePropertyList />
-					</TriggerGroup>
-					<TriggerGroup isActive="yes" isFolder="yes" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
-						<name>pledges</name>
-						<script></script>
-						<triggerType>0</triggerType>
-						<conditonLineDelta>0</conditonLineDelta>
-						<mStayOpen>0</mStayOpen>
-						<mCommand></mCommand>
-						<packageName></packageName>
-						<mFgColor>#ff0000</mFgColor>
-						<mBgColor>#ffff00</mBgColor>
-						<mSoundFile></mSoundFile>
-						<colorTriggerFgColor>#000000</colorTriggerFgColor>
-						<colorTriggerBgColor>#000000</colorTriggerBgColor>
-						<regexCodeList />
-						<regexCodePropertyList />
-						<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
-							<name>Renovi Used</name>
-							<script>renoviAvailable = false</script>
-							<triggerType>0</triggerType>
-							<conditonLineDelta>0</conditonLineDelta>
-							<mStayOpen>0</mStayOpen>
-							<mCommand></mCommand>
-							<packageName></packageName>
-							<mFgColor>#ff0000</mFgColor>
-							<mBgColor>#ffff00</mBgColor>
-							<mSoundFile></mSoundFile>
-							<colorTriggerFgColor>#000000</colorTriggerFgColor>
-							<colorTriggerBgColor>#000000</colorTriggerBgColor>
-							<regexCodeList>
-								<string>You are restored by Order!</string>
-								<string>You can not invoke Order yet.</string>
-							</regexCodeList>
-							<regexCodePropertyList>
-								<integer>0</integer>
-								<integer>0</integer>
-							</regexCodePropertyList>
-						</Trigger>
-						<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
-							<name>Renovi Available</name>
-							<script>renoviAvailable = true</script>
-							<triggerType>0</triggerType>
-							<conditonLineDelta>0</conditonLineDelta>
-							<mStayOpen>0</mStayOpen>
-							<mCommand></mCommand>
-							<packageName></packageName>
-							<mFgColor>#ff0000</mFgColor>
-							<mBgColor>#ffff00</mBgColor>
-							<mSoundFile></mSoundFile>
-							<colorTriggerFgColor>#000000</colorTriggerFgColor>
-							<colorTriggerBgColor>#000000</colorTriggerBgColor>
-							<regexCodeList>
-								<string>You are able to invoke the powers of the universe again.</string>
-							</regexCodeList>
-							<regexCodePropertyList>
-								<integer>0</integer>
-							</regexCodePropertyList>
-						</Trigger>
-					</TriggerGroup>
-					<TriggerGroup isActive="yes" isFolder="yes" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
-						<name>Warrior stuff</name>
-						<script></script>
-						<triggerType>0</triggerType>
-						<conditonLineDelta>0</conditonLineDelta>
-						<mStayOpen>0</mStayOpen>
-						<mCommand></mCommand>
-						<packageName></packageName>
-						<mFgColor>#ff0000</mFgColor>
-						<mBgColor>#ffff00</mBgColor>
-						<mSoundFile></mSoundFile>
-						<colorTriggerFgColor>#000000</colorTriggerFgColor>
-						<colorTriggerBgColor>#000000</colorTriggerBgColor>
-						<regexCodeList />
-						<regexCodePropertyList />
-						<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
-							<name>Warcry true</name>
-							<script></script>
-							<triggerType>0</triggerType>
-							<conditonLineDelta>0</conditonLineDelta>
-							<mStayOpen>0</mStayOpen>
-							<mCommand></mCommand>
-							<packageName></packageName>
-							<mFgColor>#ff0000</mFgColor>
-							<mBgColor>#ffff00</mBgColor>
-							<mSoundFile></mSoundFile>
-							<colorTriggerFgColor>#000000</colorTriggerFgColor>
-							<colorTriggerBgColor>#000000</colorTriggerBgColor>
-							<regexCodeList>
-								<string>You yell out a glorious warcry!</string>
-							</regexCodeList>
-							<regexCodePropertyList>
-								<integer>0</integer>
-							</regexCodePropertyList>
-						</Trigger>
-						<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
-							<name>Determination on</name>
-							<script>determ = true
-determValue = matches[2]</script>
-							<triggerType>0</triggerType>
-							<conditonLineDelta>0</conditonLineDelta>
-							<mStayOpen>0</mStayOpen>
-							<mCommand></mCommand>
-							<packageName></packageName>
-							<mFgColor>#ff0000</mFgColor>
-							<mBgColor>#ffff00</mBgColor>
-							<mSoundFile></mSoundFile>
-							<colorTriggerFgColor>#000000</colorTriggerFgColor>
-							<colorTriggerBgColor>#000000</colorTriggerBgColor>
-							<regexCodeList>
-								<string>You will absorb damage as long as you have (\d+) mana or more.</string>
-							</regexCodeList>
-							<regexCodePropertyList>
-								<integer>1</integer>
-							</regexCodePropertyList>
-						</Trigger>
-						<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
-							<name>Determination false</name>
-							<script>determ = false
-determValue = 0</script>
-							<triggerType>0</triggerType>
-							<conditonLineDelta>0</conditonLineDelta>
-							<mStayOpen>0</mStayOpen>
-							<mCommand></mCommand>
-							<packageName></packageName>
-							<mFgColor>#ff0000</mFgColor>
-							<mBgColor>#ffff00</mBgColor>
-							<mSoundFile></mSoundFile>
-							<colorTriggerFgColor>#000000</colorTriggerFgColor>
-							<colorTriggerBgColor>#000000</colorTriggerBgColor>
-							<regexCodeList>
-								<string>Determination turned off.</string>
-							</regexCodeList>
-							<regexCodePropertyList>
-								<integer>0</integer>
-							</regexCodePropertyList>
-						</Trigger>
-						<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
-							<name>You are centered</name>
-							<script>statusCenter = true</script>
-							<triggerType>0</triggerType>
-							<conditonLineDelta>0</conditonLineDelta>
-							<mStayOpen>0</mStayOpen>
-							<mCommand></mCommand>
-							<packageName></packageName>
-							<mFgColor>#ff0000</mFgColor>
-							<mBgColor>#ffff00</mBgColor>
-							<mSoundFile></mSoundFile>
-							<colorTriggerFgColor>#000000</colorTriggerFgColor>
-							<colorTriggerBgColor>#000000</colorTriggerBgColor>
-							<regexCodeList>
-								<string>Your senses sharpen and time slows.</string>
-								<string>You are as focused as you can be.</string>
-							</regexCodeList>
-							<regexCodePropertyList>
-								<integer>0</integer>
-								<integer>0</integer>
-							</regexCodePropertyList>
-						</Trigger>
-						<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
-							<name>Not centered</name>
-							<script>statusCenter = false</script>
-							<triggerType>0</triggerType>
-							<conditonLineDelta>0</conditonLineDelta>
-							<mStayOpen>0</mStayOpen>
-							<mCommand></mCommand>
-							<packageName></packageName>
-							<mFgColor>#ff0000</mFgColor>
-							<mBgColor>#ffff00</mBgColor>
-							<mSoundFile></mSoundFile>
-							<colorTriggerFgColor>#000000</colorTriggerFgColor>
-							<colorTriggerBgColor>#000000</colorTriggerBgColor>
-							<regexCodeList>
-								<string>You lose your focus.</string>
-							</regexCodeList>
-							<regexCodePropertyList>
-								<integer>0</integer>
-							</regexCodePropertyList>
-						</Trigger>
-					</TriggerGroup>
-				</TriggerGroup>
 				<TriggerGroup isActive="yes" isFolder="yes" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
 					<name>Script States</name>
 					<script></script>
@@ -2001,6 +1745,22 @@ hunting = false</script>
 						</regexCodePropertyList>
 					</Trigger>
 				</TriggerGroup>
+			</TriggerGroup>
+			<TriggerGroup isActive="yes" isFolder="yes" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+				<name>Status + Variable States</name>
+				<script></script>
+				<triggerType>0</triggerType>
+				<conditonLineDelta>0</conditonLineDelta>
+				<mStayOpen>0</mStayOpen>
+				<mCommand></mCommand>
+				<packageName></packageName>
+				<mFgColor>#ff0000</mFgColor>
+				<mBgColor>#ffff00</mBgColor>
+				<mSoundFile></mSoundFile>
+				<colorTriggerFgColor>#000000</colorTriggerFgColor>
+				<colorTriggerBgColor>#000000</colorTriggerBgColor>
+				<regexCodeList />
+				<regexCodePropertyList />
 				<TriggerGroup isActive="yes" isFolder="yes" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
 					<name>Pulling information</name>
 					<script></script>
@@ -2031,7 +1791,7 @@ hunting = false</script>
   mvmbar.front:echo(multimatches[1][4] .. "%", nil, "c")
   
   current_xp = tonumber(multimatches[1][6])
-   xaos.fightingstyle = multimatches[1][5]
+  xaos.fightingstyle = multimatches[1][5]
   deleteLine()
 
   
@@ -2071,8 +1831,28 @@ hunting = false</script>
 					<colorTriggerBgColor>#000000</colorTriggerBgColor>
 					<regexCodeList />
 					<regexCodePropertyList />
-					<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="yes" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+					<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
 						<name>Death</name>
+						<script>killedID = matches[2]</script>
+						<triggerType>0</triggerType>
+						<conditonLineDelta>0</conditonLineDelta>
+						<mStayOpen>0</mStayOpen>
+						<mCommand></mCommand>
+						<packageName></packageName>
+						<mFgColor>#ff0000</mFgColor>
+						<mBgColor>#ffff00</mBgColor>
+						<mSoundFile></mSoundFile>
+						<colorTriggerFgColor>#000000</colorTriggerFgColor>
+						<colorTriggerBgColor>#000000</colorTriggerBgColor>
+						<regexCodeList>
+							<string>^(.*) has been defeated!!</string>
+						</regexCodeList>
+						<regexCodePropertyList>
+							<integer>1</integer>
+						</regexCodePropertyList>
+					</Trigger>
+					<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="yes" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+						<name>Death and XP</name>
 						<script>--You have gained 16205 experience.
 
 last_xp = last_xp or 0
@@ -2206,23 +1986,16 @@ last_xpDiff = xpDiff</script>
 					<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="yes" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
 						<name>Enemy Condition</name>
 						<script>
+combat=true
+targetFound=false
+status.resting=false
 
---&lt;worn on finger&gt;  [large   ] (Artifact) the Stone of Roaak
--- xuicom("Acknowledging a status")
---echo(multimatches[2][1])
---if not rex.match(multimatches[2][1],[[^([ ]+[&lt;])]]) then
-  combat=true
-  targetFound=false
-  
-  lastcombattime = getEpoch()
-  
-  if xaos.config.scripting.scan_mode then
-    disableTimer("scan listener")
-  end
-  --debugwrite("--grabbed")
---end
+lastcombattime = getEpoch()
 
---^.* is in awful condition.*\.$|^.* has quite a few wounds.*\.$|^.* looks pretty hurt.*\.$|^.* has some small wounds and bruises .*\.$|^.* is in excellent.*\.$|^.* has some big nasty wounds and scratches,.*\.$|^.* has a few scratches .*\.$</script>
+if xaos.config.scripting.scan_mode and auto_hunt then
+  disableTimer("scan listener")
+end
+</script>
 						<triggerType>0</triggerType>
 						<conditonLineDelta>1</conditonLineDelta>
 						<mStayOpen>0</mStayOpen>
@@ -2240,26 +2013,6 @@ last_xpDiff = xpDiff</script>
 						<regexCodePropertyList>
 							<integer>1</integer>
 							<integer>1</integer>
-						</regexCodePropertyList>
-					</Trigger>
-					<Trigger isActive="no" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
-						<name>has been slain</name>
-						<script>cecho("conditionDisplay","")</script>
-						<triggerType>0</triggerType>
-						<conditonLineDelta>0</conditonLineDelta>
-						<mStayOpen>0</mStayOpen>
-						<mCommand></mCommand>
-						<packageName></packageName>
-						<mFgColor>#ff0000</mFgColor>
-						<mBgColor>#ffff00</mBgColor>
-						<mSoundFile></mSoundFile>
-						<colorTriggerFgColor>#000000</colorTriggerFgColor>
-						<colorTriggerBgColor>#000000</colorTriggerBgColor>
-						<regexCodeList>
-							<string>has been defeated</string>
-						</regexCodeList>
-						<regexCodePropertyList>
-							<integer>0</integer>
 						</regexCodePropertyList>
 					</Trigger>
 					<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="yes" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
@@ -2310,7 +2063,7 @@ end
 					<regexCodePropertyList />
 					<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
 						<name>Silenced</name>
-						<script>statusSilence = true</script>
+						<script>status.silence = true</script>
 						<triggerType>0</triggerType>
 						<conditonLineDelta>0</conditonLineDelta>
 						<mStayOpen>0</mStayOpen>
@@ -2330,7 +2083,7 @@ end
 					</Trigger>
 					<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
 						<name>Not silenced</name>
-						<script>statusSilence = false</script>
+						<script>status.silence = false</script>
 						<triggerType>0</triggerType>
 						<conditonLineDelta>0</conditonLineDelta>
 						<mStayOpen>0</mStayOpen>
@@ -2343,6 +2096,64 @@ end
 						<colorTriggerBgColor>#000000</colorTriggerBgColor>
 						<regexCodeList>
 							<string>Your voice returns to you.</string>
+						</regexCodeList>
+						<regexCodePropertyList>
+							<integer>0</integer>
+						</regexCodePropertyList>
+					</Trigger>
+				</TriggerGroup>
+				<TriggerGroup isActive="yes" isFolder="yes" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+					<name>pledges</name>
+					<script></script>
+					<triggerType>0</triggerType>
+					<conditonLineDelta>0</conditonLineDelta>
+					<mStayOpen>0</mStayOpen>
+					<mCommand></mCommand>
+					<packageName></packageName>
+					<mFgColor>#ff0000</mFgColor>
+					<mBgColor>#ffff00</mBgColor>
+					<mSoundFile></mSoundFile>
+					<colorTriggerFgColor>#000000</colorTriggerFgColor>
+					<colorTriggerBgColor>#000000</colorTriggerBgColor>
+					<regexCodeList />
+					<regexCodePropertyList />
+					<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+						<name>Renovi Used</name>
+						<script>renoviAvailable = false</script>
+						<triggerType>0</triggerType>
+						<conditonLineDelta>0</conditonLineDelta>
+						<mStayOpen>0</mStayOpen>
+						<mCommand></mCommand>
+						<packageName></packageName>
+						<mFgColor>#ff0000</mFgColor>
+						<mBgColor>#ffff00</mBgColor>
+						<mSoundFile></mSoundFile>
+						<colorTriggerFgColor>#000000</colorTriggerFgColor>
+						<colorTriggerBgColor>#000000</colorTriggerBgColor>
+						<regexCodeList>
+							<string>You are restored by Order!</string>
+							<string>You can not invoke Order yet.</string>
+						</regexCodeList>
+						<regexCodePropertyList>
+							<integer>0</integer>
+							<integer>0</integer>
+						</regexCodePropertyList>
+					</Trigger>
+					<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+						<name>Renovi Available</name>
+						<script>renoviAvailable = true</script>
+						<triggerType>0</triggerType>
+						<conditonLineDelta>0</conditonLineDelta>
+						<mStayOpen>0</mStayOpen>
+						<mCommand></mCommand>
+						<packageName></packageName>
+						<mFgColor>#ff0000</mFgColor>
+						<mBgColor>#ffff00</mBgColor>
+						<mSoundFile></mSoundFile>
+						<colorTriggerFgColor>#000000</colorTriggerFgColor>
+						<colorTriggerBgColor>#000000</colorTriggerBgColor>
+						<regexCodeList>
+							<string>You are able to invoke the powers of the universe again.</string>
 						</regexCodeList>
 						<regexCodePropertyList>
 							<integer>0</integer>
@@ -2451,7 +2262,7 @@ tellTimer = tempTimer(600, [[ tellCoolDown = false ]])
 						<integer>1</integer>
 					</regexCodePropertyList>
 				</Trigger>
-				<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="yes" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="yes" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+				<Trigger isActive="no" isFolder="no" isTempTrigger="no" isMultiline="yes" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="yes" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
 					<name>Beep when not focused</name>
 					<script>
 -- Initialized in scripts
@@ -2480,35 +2291,6 @@ tellTimer = tempTimer(600, [[ tellCoolDown = false ]])</script>
 					<regexCodePropertyList>
 						<integer>1</integer>
 						<integer>4</integer>
-					</regexCodePropertyList>
-				</Trigger>
-				<Trigger isActive="no" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
-					<name>Fcuking wizi imms</name>
-					<script>
-
-
-captureOOC("&lt;cadet_blue&gt;","OOC","&lt;gray&gt;","Wizi Imm", "&lt;cadet_blue&gt;", matches[2])
-
-
-if gagging then
-	deleteLine()
-end
---createChatConsole()</script>
-					<triggerType>0</triggerType>
-					<conditonLineDelta>0</conditonLineDelta>
-					<mStayOpen>0</mStayOpen>
-					<mCommand></mCommand>
-					<packageName></packageName>
-					<mFgColor>#ff0000</mFgColor>
-					<mBgColor>#ffff00</mBgColor>
-					<mSoundFile></mSoundFile>
-					<colorTriggerFgColor>#000000</colorTriggerFgColor>
-					<colorTriggerBgColor>#000000</colorTriggerBgColor>
-					<regexCodeList>
-						<string>An immortal oocs '(.+)'$</string>
-					</regexCodeList>
-					<regexCodePropertyList>
-						<integer>1</integer>
 					</regexCodePropertyList>
 				</Trigger>
 				<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
@@ -2691,46 +2473,6 @@ recentGold = recentGold + matches[2] </script>
 						<integer>1</integer>
 					</regexCodePropertyList>
 				</Trigger>
-				<TriggerGroup isActive="yes" isFolder="yes" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
-					<name>Temporary</name>
-					<script></script>
-					<triggerType>0</triggerType>
-					<conditonLineDelta>0</conditonLineDelta>
-					<mStayOpen>0</mStayOpen>
-					<mCommand></mCommand>
-					<packageName></packageName>
-					<mFgColor>#ff0000</mFgColor>
-					<mBgColor>#ffff00</mBgColor>
-					<mSoundFile></mSoundFile>
-					<colorTriggerFgColor>#000000</colorTriggerFgColor>
-					<colorTriggerBgColor>#000000</colorTriggerBgColor>
-					<regexCodeList />
-					<regexCodePropertyList />
-					<Trigger isActive="no" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
-						<name>Scrollspam</name>
-						<script>if scrollSpam then
-  send("buy giant;rec giant")
-end</script>
-						<triggerType>0</triggerType>
-						<conditonLineDelta>0</conditonLineDelta>
-						<mStayOpen>0</mStayOpen>
-						<mCommand></mCommand>
-						<packageName></packageName>
-						<mFgColor>#ff0000</mFgColor>
-						<mBgColor>#ffff00</mBgColor>
-						<mSoundFile></mSoundFile>
-						<colorTriggerFgColor>#000000</colorTriggerFgColor>
-						<colorTriggerBgColor>#000000</colorTriggerBgColor>
-						<regexCodeList>
-							<string>You are already mighty as a titan!</string>
-							<string>You mispronounce a syllable.</string>
-						</regexCodeList>
-						<regexCodePropertyList>
-							<integer>0</integer>
-							<integer>0</integer>
-						</regexCodePropertyList>
-					</Trigger>
-				</TriggerGroup>
 				<TriggerGroup isActive="yes" isFolder="yes" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
 					<name>Spams</name>
 					<script></script>
@@ -3024,7 +2766,7 @@ end</script>
 					</TriggerGroup>
 				</TriggerGroup>
 			</TriggerGroup>
-			<TriggerGroup isActive="yes" isFolder="yes" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+			<TriggerGroup isActive="no" isFolder="yes" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
 				<name>gostEnchanting</name>
 				<script></script>
 				<triggerType>0</triggerType>
@@ -3058,9 +2800,7 @@ end</script>
 						<name>doneEnchant</name>
 						<script>enchCount=enchCount+1
 currentlyEnchanting = false
-send("show")
-
-</script>
+send("show")</script>
 						<triggerType>0</triggerType>
 						<conditonLineDelta>0</conditonLineDelta>
 						<mStayOpen>0</mStayOpen>
@@ -3138,19 +2878,19 @@ if (not currentlyEnchanting) then
    end
    
   else
-     currentlyEnchanting=true
-     if(enchCount&lt;tableEnchantNum[tostring(switchCount)])then
+    currentlyEnchanting=true
+    if(enchCount&lt;tableEnchant[tostring(switchCount)].count)then
       if not enchanting.manual then
   	   tempTimer(.5,[[send("pro")]])
       end
       --enchCount=enchCount+1
     else
   	  switchCount=switchCount+1
-  		while(tableEnchantNum[tostring(switchCount)]==0)do
+  		while(tableEnchant[tostring(switchCount)].count==0)do
   	    switchCount=switchCount+1
   		end
   	  if(tableEnchant[tostring(switchCount)])then
-  			send("enchant "..tableEnchant[tostring(switchCount)])
+  			send("enchant "..tableEnchant[tostring(switchCount)].enchant)
         echo("\n" .. "Ready to Continue." .. "\n")
         enchCount=0
   	    if not enchanting.manual then
@@ -3158,7 +2898,6 @@ if (not currentlyEnchanting) then
         end
         --enchCount=1
   		else
-  		  --disableTrigger("gostEnchanting")
   			send("show")
   			send("done")
         cecho("&lt;green&gt;  Complete")
@@ -3191,47 +2930,6 @@ end</script>
 						<regexCodePropertyList>
 							<integer>1</integer>
 							<integer>1</integer>
-						</regexCodePropertyList>
-					</Trigger>
-					<Trigger isActive="no" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
-						<name>DE Loot</name>
-						<script>--send("put '" .. matches[3] .."' mantle")
-send("disenchant " .. matches[3] .."")</script>
-						<triggerType>0</triggerType>
-						<conditonLineDelta>0</conditonLineDelta>
-						<mStayOpen>0</mStayOpen>
-						<mCommand></mCommand>
-						<packageName></packageName>
-						<mFgColor>#ff0000</mFgColor>
-						<mBgColor>#ffff00</mBgColor>
-						<mSoundFile></mSoundFile>
-						<colorTriggerFgColor>#000000</colorTriggerFgColor>
-						<colorTriggerBgColor>#000000</colorTriggerBgColor>
-						<regexCodeList>
-							<string>You get (the|a) (.*) from the corpse of a</string>
-						</regexCodeList>
-						<regexCodePropertyList>
-							<integer>1</integer>
-						</regexCodePropertyList>
-					</Trigger>
-					<Trigger isActive="no" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
-						<name>Stab Successful</name>
-						<script></script>
-						<triggerType>0</triggerType>
-						<conditonLineDelta>0</conditonLineDelta>
-						<mStayOpen>0</mStayOpen>
-						<mCommand></mCommand>
-						<packageName></packageName>
-						<mFgColor>#ff0000</mFgColor>
-						<mBgColor>#ffff00</mBgColor>
-						<mSoundFile></mSoundFile>
-						<colorTriggerFgColor>#000000</colorTriggerFgColor>
-						<colorTriggerBgColor>#000000</colorTriggerBgColor>
-						<regexCodeList>
-							<string>emits a dull hum.</string>
-						</regexCodeList>
-						<regexCodePropertyList>
-							<integer>0</integer>
 						</regexCodePropertyList>
 					</Trigger>
 					<Trigger isActive="no" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
@@ -3350,6 +3048,142 @@ end</script>
 				<colorTriggerBgColor>#000000</colorTriggerBgColor>
 				<regexCodeList />
 				<regexCodePropertyList />
+				<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+					<name>Start Quest Grab</name>
+					<script>startquestgrab=true
+if xaos.questextras == nil then
+  xaos.questextras = {}
+end</script>
+					<triggerType>0</triggerType>
+					<conditonLineDelta>0</conditonLineDelta>
+					<mStayOpen>0</mStayOpen>
+					<mCommand></mCommand>
+					<packageName></packageName>
+					<mFgColor>#ff0000</mFgColor>
+					<mBgColor>#ffff00</mBgColor>
+					<mSoundFile></mSoundFile>
+					<colorTriggerFgColor>#000000</colorTriggerFgColor>
+					<colorTriggerBgColor>#000000</colorTriggerBgColor>
+					<regexCodeList>
+						<string>offers the following quests:</string>
+					</regexCodeList>
+					<regexCodePropertyList>
+						<integer>0</integer>
+					</regexCodePropertyList>
+				</Trigger>
+				<TriggerGroup isActive="yes" isFolder="yes" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+					<name>Quest Grab</name>
+					<script></script>
+					<triggerType>0</triggerType>
+					<conditonLineDelta>0</conditonLineDelta>
+					<mStayOpen>0</mStayOpen>
+					<mCommand></mCommand>
+					<packageName></packageName>
+					<mFgColor>#ff0000</mFgColor>
+					<mBgColor>#ffff00</mBgColor>
+					<mSoundFile></mSoundFile>
+					<colorTriggerFgColor>#000000</colorTriggerFgColor>
+					<colorTriggerBgColor>#000000</colorTriggerBgColor>
+					<regexCodeList>
+						<string>return startquestgrab</string>
+					</regexCodeList>
+					<regexCodePropertyList>
+						<integer>4</integer>
+					</regexCodePropertyList>
+					<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="yes" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="yes" isColorTriggerFg="no" isColorTriggerBg="no">
+						<name>Get Name</name>
+						<script>
+if not string.find(multimatches[2][2],"(Unavailable:") then
+  questextraname=string.trim(multimatches[2][2])
+end</script>
+						<triggerType>0</triggerType>
+						<conditonLineDelta>0</conditonLineDelta>
+						<mStayOpen>0</mStayOpen>
+						<mCommand></mCommand>
+						<packageName></packageName>
+						<mFgColor>#ff0000</mFgColor>
+						<mBgColor>#ffff00</mBgColor>
+						<mSoundFile></mSoundFile>
+						<colorTriggerFgColor>#ffff00</colorTriggerFgColor>
+						<colorTriggerBgColor>#000000</colorTriggerBgColor>
+						<regexCodeList>
+							<string>ANSI_COLORS_F{011}_B{IGNORE}</string>
+							<string>(.*)</string>
+						</regexCodeList>
+						<regexCodePropertyList>
+							<integer>6</integer>
+							<integer>1</integer>
+						</regexCodePropertyList>
+					</Trigger>
+					<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+						<name>Get Exp</name>
+						<script>questextraxp=tonumber(matches[2])</script>
+						<triggerType>0</triggerType>
+						<conditonLineDelta>0</conditonLineDelta>
+						<mStayOpen>0</mStayOpen>
+						<mCommand></mCommand>
+						<packageName></packageName>
+						<mFgColor>#ff0000</mFgColor>
+						<mBgColor>#ffff00</mBgColor>
+						<mSoundFile></mSoundFile>
+						<colorTriggerFgColor>#000000</colorTriggerFgColor>
+						<colorTriggerBgColor>#000000</colorTriggerBgColor>
+						<regexCodeList>
+							<string>Exp: ([0-9]+)</string>
+						</regexCodeList>
+						<regexCodePropertyList>
+							<integer>1</integer>
+						</regexCodePropertyList>
+					</Trigger>
+					<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+						<name>Get Objs</name>
+						<script>questextraobjs=string.trim(matches[2])</script>
+						<triggerType>0</triggerType>
+						<conditonLineDelta>0</conditonLineDelta>
+						<mStayOpen>0</mStayOpen>
+						<mCommand></mCommand>
+						<packageName></packageName>
+						<mFgColor>#ff0000</mFgColor>
+						<mBgColor>#ffff00</mBgColor>
+						<mSoundFile></mSoundFile>
+						<colorTriggerFgColor>#000000</colorTriggerFgColor>
+						<colorTriggerBgColor>#000000</colorTriggerBgColor>
+						<regexCodeList>
+							<string>Objs: (.*)</string>
+						</regexCodeList>
+						<regexCodePropertyList>
+							<integer>1</integer>
+						</regexCodePropertyList>
+					</Trigger>
+					<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+						<name>Prompt Script</name>
+						<script>if questextraname~="" then
+  if table.size(table.n_filter(xaos.questextras, function (oitem) return oitem.name == questextraname end)) == 0 then
+    table.insert(xaos.questextras,{name=questextraname,exp=questextraxp,objs=questextraobjs})
+  end
+end
+
+
+startquestgrab=false
+questextraname=""</script>
+						<triggerType>0</triggerType>
+						<conditonLineDelta>0</conditonLineDelta>
+						<mStayOpen>0</mStayOpen>
+						<mCommand></mCommand>
+						<packageName></packageName>
+						<mFgColor>#ff0000</mFgColor>
+						<mBgColor>#ffff00</mBgColor>
+						<mSoundFile></mSoundFile>
+						<colorTriggerFgColor>#000000</colorTriggerFgColor>
+						<colorTriggerBgColor>#000000</colorTriggerBgColor>
+						<regexCodeList>
+							<string>return isXaosPrompt()</string>
+						</regexCodeList>
+						<regexCodePropertyList>
+							<integer>4</integer>
+						</regexCodePropertyList>
+					</Trigger>
+				</TriggerGroup>
 				<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
 					<name>Questmaster find</name>
 					<script>
@@ -3533,10 +3367,10 @@ cecho("data","[ XP " .. getTime(true,"HH.mm") .. "] Gain: " .. string.format("%4
 
 
 if killedID == "Someone" then
-    expandAlias("questeat")
-  else
-    quest_updateobjective(killedID,1)
-  end</script>
+  expandAlias("questeat")
+else
+  quest_updateobjective(killedID,1)
+end</script>
 						<triggerType>0</triggerType>
 						<conditonLineDelta>0</conditonLineDelta>
 						<mStayOpen>0</mStayOpen>
@@ -3558,12 +3392,12 @@ if killedID == "Someone" then
 						<name>Quest Goal Done</name>
 						<script>feedManager("[ Quest ] " .. killedID .. ": Complete")
 
-quest_updateobjective(killedID,1)
-quest_completeobjective(killedID)
+--quest_updateobjective(killedID,1)
+--quest_completeobjective(killedID)
 
 expandAlias("questeat")
 
-echo("\ngetting next target\n")
+--echo("\ngetting next target\n")
 if xaos.autoquest.autoquest_currentquest ~="" then
   if killedID == "Someone" then
     tempTimer(3,function () autoquest_go() end)
@@ -4473,8 +4307,12 @@ startequipmentgrab=false</script>
 local loot = string.trim(matches[3])
 
 if not string.match(loot," coins") then
-  --cecho("data","[LO " .. getTime(true,"HH.mm") .. "] " .. person .. "-" .. loot .. "\n")
-  feedManager("&lt;white&gt;[LOOT] " .. person .. "-" .. loot )
+  local notimp = {"fragment of the fallen","unaligned soul"}
+  if table.contains(notimp,loot) then
+    feedManager("&lt;white&gt;[LOOT] " .. person .. "-" .. loot)
+  else
+    feedManager("&lt;DodgerBlue&gt;[LOOT] " .. person .. "-" .. loot)
+  end
 end
 
 --a fragment of the fallen</script>
@@ -4503,7 +4341,16 @@ local loot = string.trim(matches[2])
 
 if not string.match(loot," coins") then
   --cecho("data","&lt;white&gt;[LO " .. getTime(true,"HH.mm") .. "] " .. loot .. "\n")
-  feedManager("&lt;white&gt;[LOOT] " .. loot)
+  
+  local notimp = {"fragment of the fallen","unaligned soul"}
+  if table.contains(notimp,loot) then
+    feedManager("&lt;white&gt;[LOOT] " .. loot)
+    --send("put '" .. loot .. "' '" .. xaos.backpack)
+  else
+    feedManager("&lt;DodgerBlue&gt;[LOOT] " .. loot)
+  end
+  
+  
   
   table.insert(lootcollector,{time=getTime(true,"HH.mm"),loot=loot})
   
@@ -4534,67 +4381,9 @@ end
 						<integer>1</integer>
 					</regexCodePropertyList>
 				</Trigger>
-				<Trigger isActive="no" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
-					<name>level collection</name>
-					<script>
-
---if leveltotals[xaos.Level] == nil then
---  leveltotals[xaos.Level] = 0
---else
---  leveltotals[xaos.Level] = leveltotals[xaos.Level] + 1
---end
-
---local currentmax = tonumber(xaos.Level)*2
---if (tonumber(leveltotals[xaos.Level]) &gt;= tonumber(currentmax)) then
---  cecho("data","[ Alert ] You gained a level! - " .. xaos.Level .. " - " .. xaos.LevelPercent .."\n")
---end
-expandAlias("scoreeat")
-</script>
-					<triggerType>0</triggerType>
-					<conditonLineDelta>0</conditonLineDelta>
-					<mStayOpen>0</mStayOpen>
-					<mCommand></mCommand>
-					<packageName></packageName>
-					<mFgColor>#ff0000</mFgColor>
-					<mBgColor>#ffff00</mBgColor>
-					<mSoundFile></mSoundFile>
-					<colorTriggerFgColor>#000000</colorTriggerFgColor>
-					<colorTriggerBgColor>#000000</colorTriggerBgColor>
-					<regexCodeList>
-						<string>You gained a level!</string>
-					</regexCodeList>
-					<regexCodePropertyList>
-						<integer>0</integer>
-					</regexCodePropertyList>
-				</Trigger>
-				<Trigger isActive="no" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
-					<name>Highest damage collection</name>
-					<script>--echo(tonumber(matches[2]))
-if highestdam == nil then
-  highestdam = tonumber(matches[2])
-elseif tonumber(matches[2]) &gt; tonumber(highestdam) then
-  highestdam = tonumber(matches[2])
-end</script>
-					<triggerType>0</triggerType>
-					<conditonLineDelta>0</conditonLineDelta>
-					<mStayOpen>0</mStayOpen>
-					<mCommand></mCommand>
-					<packageName></packageName>
-					<mFgColor>#ff0000</mFgColor>
-					<mBgColor>#ffff00</mBgColor>
-					<mSoundFile></mSoundFile>
-					<colorTriggerFgColor>#000000</colorTriggerFgColor>
-					<colorTriggerBgColor>#000000</colorTriggerBgColor>
-					<regexCodeList>
-						<string>^Your .*\. \((\d+) dam\)$</string>
-					</regexCodeList>
-					<regexCodePropertyList>
-						<integer>1</integer>
-					</regexCodePropertyList>
-				</Trigger>
 				<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
 					<name>Artifact Drop</name>
-					<script>feedManager("&lt;yellow&gt;[LO " .. getTime(true,"HH.mm") .. "] Artifact!")</script>
+					<script>feedManager("&lt;yellow&gt;[LOOT] Artifact!")</script>
 					<triggerType>0</triggerType>
 					<conditonLineDelta>0</conditonLineDelta>
 					<mStayOpen>0</mStayOpen>
@@ -4963,7 +4752,7 @@ if isInParty(becktarget) then
     expandAlias("followleader")
   else
     send("follow " .. becktarget)
-    expandAlias("fhunt " .. becktarget)
+    expandAlias("overrideleader " .. becktarget)
   end
   send("tell " .. becktarget .. " Following you")
 end</script>
@@ -4984,6 +4773,225 @@ end</script>
 							<integer>1</integer>
 						</regexCodePropertyList>
 					</Trigger>
+				</TriggerGroup>
+				<TriggerGroup isActive="yes" isFolder="yes" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+					<name>Reldi QOL</name>
+					<script></script>
+					<triggerType>0</triggerType>
+					<conditonLineDelta>0</conditonLineDelta>
+					<mStayOpen>0</mStayOpen>
+					<mCommand></mCommand>
+					<packageName></packageName>
+					<mFgColor>#ff0000</mFgColor>
+					<mBgColor>#ffff00</mBgColor>
+					<mSoundFile></mSoundFile>
+					<colorTriggerFgColor>#000000</colorTriggerFgColor>
+					<colorTriggerBgColor>#000000</colorTriggerBgColor>
+					<regexCodeList />
+					<regexCodePropertyList />
+					<TriggerGroup isActive="yes" isFolder="yes" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+						<name>party</name>
+						<script></script>
+						<triggerType>0</triggerType>
+						<conditonLineDelta>0</conditonLineDelta>
+						<mStayOpen>0</mStayOpen>
+						<mCommand></mCommand>
+						<packageName></packageName>
+						<mFgColor>#ff0000</mFgColor>
+						<mBgColor>#ffff00</mBgColor>
+						<mSoundFile></mSoundFile>
+						<colorTriggerFgColor>#000000</colorTriggerFgColor>
+						<colorTriggerBgColor>#000000</colorTriggerBgColor>
+						<regexCodeList />
+						<regexCodePropertyList />
+						<TriggerGroup isActive="yes" isFolder="yes" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+							<name>partyguard</name>
+							<script></script>
+							<triggerType>0</triggerType>
+							<conditonLineDelta>0</conditonLineDelta>
+							<mStayOpen>0</mStayOpen>
+							<mCommand></mCommand>
+							<packageName></packageName>
+							<mFgColor>#ff0000</mFgColor>
+							<mBgColor>#ffff00</mBgColor>
+							<mSoundFile></mSoundFile>
+							<colorTriggerFgColor>#000000</colorTriggerFgColor>
+							<colorTriggerBgColor>#000000</colorTriggerBgColor>
+							<regexCodeList />
+							<regexCodePropertyList />
+							<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+								<name>Guard Success</name>
+								<script>local text = matches[1]
+feedManager(text)
+send("gtell ^W[UI]^R:^G".. tostring(matches[2]).. " has been GUARDED.^^")</script>
+								<triggerType>0</triggerType>
+								<conditonLineDelta>0</conditonLineDelta>
+								<mStayOpen>0</mStayOpen>
+								<mCommand></mCommand>
+								<packageName></packageName>
+								<mFgColor>#ff0000</mFgColor>
+								<mBgColor>#ffff00</mBgColor>
+								<mSoundFile></mSoundFile>
+								<colorTriggerFgColor>#000000</colorTriggerFgColor>
+								<colorTriggerBgColor>#000000</colorTriggerBgColor>
+								<regexCodeList>
+									<string>^\s{0,1}You will now guard (.*) from attackers.$</string>
+								</regexCodeList>
+								<regexCodePropertyList>
+									<integer>1</integer>
+								</regexCodePropertyList>
+							</Trigger>
+							<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+								<name>Unguard Success</name>
+								<script>local text = matches[1]
+feedManager(text)
+send("gtell ^W[UI]^R:^G".. tostring(matches[2]).. " has been UNGUARDED.^^")</script>
+								<triggerType>0</triggerType>
+								<conditonLineDelta>0</conditonLineDelta>
+								<mStayOpen>0</mStayOpen>
+								<mCommand></mCommand>
+								<packageName></packageName>
+								<mFgColor>#ff0000</mFgColor>
+								<mBgColor>#ffff00</mBgColor>
+								<mSoundFile></mSoundFile>
+								<colorTriggerFgColor>#000000</colorTriggerFgColor>
+								<colorTriggerBgColor>#000000</colorTriggerBgColor>
+								<regexCodeList>
+									<string>^\s{0,1}You will stop guarding (.*).$</string>
+								</regexCodeList>
+								<regexCodePropertyList>
+									<integer>1</integer>
+								</regexCodePropertyList>
+							</Trigger>
+							<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="yes" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+								<name>Asked for Guard</name>
+								<script>if yourParty() then
+  local target = matches[2]
+  local theText = "guard " .. target
+  send (theText)
+end</script>
+								<triggerType>0</triggerType>
+								<conditonLineDelta>0</conditonLineDelta>
+								<mStayOpen>0</mStayOpen>
+								<mCommand></mCommand>
+								<packageName></packageName>
+								<mFgColor>#0000ff</mFgColor>
+								<mBgColor>#000000</mBgColor>
+								<mSoundFile></mSoundFile>
+								<colorTriggerFgColor>#000000</colorTriggerFgColor>
+								<colorTriggerBgColor>#000000</colorTriggerBgColor>
+								<regexCodeList>
+									<string>^\s{0,1}(.*) tells the group '(G|g)(U|u)(A|a)(R|r)(D|d)'$</string>
+								</regexCodeList>
+								<regexCodePropertyList>
+									<integer>1</integer>
+								</regexCodePropertyList>
+							</Trigger>
+						</TriggerGroup>
+						<TriggerGroup isActive="yes" isFolder="yes" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+							<name>partyheal</name>
+							<script></script>
+							<triggerType>0</triggerType>
+							<conditonLineDelta>0</conditonLineDelta>
+							<mStayOpen>0</mStayOpen>
+							<mCommand></mCommand>
+							<packageName></packageName>
+							<mFgColor>#ff0000</mFgColor>
+							<mBgColor>#ffff00</mBgColor>
+							<mSoundFile></mSoundFile>
+							<colorTriggerFgColor>#000000</colorTriggerFgColor>
+							<colorTriggerBgColor>#000000</colorTriggerBgColor>
+							<regexCodeList />
+							<regexCodePropertyList />
+							<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="yes" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+								<name>Asked for Heal</name>
+								<script>--You can change the healVar with the alias.
+			local target = matches[2]
+			local healVar = qolWithReldi.healword or "heal"
+			local theText = "C " .. healVar .." " .. target
+			send (theText)</script>
+								<triggerType>0</triggerType>
+								<conditonLineDelta>0</conditonLineDelta>
+								<mStayOpen>0</mStayOpen>
+								<mCommand></mCommand>
+								<packageName></packageName>
+								<mFgColor>#00aaff</mFgColor>
+								<mBgColor>#000000</mBgColor>
+								<mSoundFile></mSoundFile>
+								<colorTriggerFgColor>#000000</colorTriggerFgColor>
+								<colorTriggerBgColor>#000000</colorTriggerBgColor>
+								<regexCodeList>
+									<string>^\s{0,1}(.*) tells the group '(H|h)(E|e)(A|a)(L|l)'$</string>
+								</regexCodeList>
+								<regexCodePropertyList>
+									<integer>1</integer>
+								</regexCodePropertyList>
+							</Trigger>
+						</TriggerGroup>
+						<TriggerGroup isActive="yes" isFolder="yes" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+							<name>partyrescue</name>
+							<script></script>
+							<triggerType>0</triggerType>
+							<conditonLineDelta>0</conditonLineDelta>
+							<mStayOpen>0</mStayOpen>
+							<mCommand></mCommand>
+							<packageName></packageName>
+							<mFgColor>#ff0000</mFgColor>
+							<mBgColor>#ffff00</mBgColor>
+							<mSoundFile></mSoundFile>
+							<colorTriggerFgColor>#000000</colorTriggerFgColor>
+							<colorTriggerBgColor>#000000</colorTriggerBgColor>
+							<regexCodeList />
+							<regexCodePropertyList />
+							<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+								<name>Rescue Success</name>
+								<script>local text = matches[1]
+			feedManager(text)
+			local theText = "gtell ^W[UI]^R:^G".. tostring(matches[2]).. " has been successfully rescued.^^"
+			send (theText)</script>
+								<triggerType>0</triggerType>
+								<conditonLineDelta>0</conditonLineDelta>
+								<mStayOpen>0</mStayOpen>
+								<mCommand></mCommand>
+								<packageName></packageName>
+								<mFgColor>#ff0000</mFgColor>
+								<mBgColor>#ffff00</mBgColor>
+								<mSoundFile></mSoundFile>
+								<colorTriggerFgColor>#000000</colorTriggerFgColor>
+								<colorTriggerBgColor>#000000</colorTriggerBgColor>
+								<regexCodeList>
+									<string>^\s{0,1}You rescue (.*)!$</string>
+								</regexCodeList>
+								<regexCodePropertyList>
+									<integer>1</integer>
+								</regexCodePropertyList>
+							</Trigger>
+							<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="yes" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+								<name>Asked for Rescue</name>
+								<script>if yourParty() then
+  local target = matches[2]
+  local theText = "rescue " .. target
+  send (theText)
+end</script>
+								<triggerType>0</triggerType>
+								<conditonLineDelta>0</conditonLineDelta>
+								<mStayOpen>0</mStayOpen>
+								<mCommand></mCommand>
+								<packageName></packageName>
+								<mFgColor>#00aaff</mFgColor>
+								<mBgColor>#000000</mBgColor>
+								<mSoundFile></mSoundFile>
+								<colorTriggerFgColor>#000000</colorTriggerFgColor>
+								<colorTriggerBgColor>#000000</colorTriggerBgColor>
+								<regexCodeList>
+									<string>^\s{0,1}(.*) tells the group '(R|r)(E|e)(S|s)(C|c)(U|u)(E|e)'$</string>
+								</regexCodeList>
+								<regexCodePropertyList>
+									<integer>1</integer>
+								</regexCodePropertyList>
+							</Trigger>
+						</TriggerGroup>
+					</TriggerGroup>
 				</TriggerGroup>
 			</TriggerGroup>
 			<TriggerGroup isActive="yes" isFolder="yes" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
@@ -5181,7 +5189,7 @@ end
 						<colorTriggerFgColor>#000000</colorTriggerFgColor>
 						<colorTriggerBgColor>#000000</colorTriggerBgColor>
 						<regexCodeList>
-							<string>^ (?:Skill:|Spell:| misc:) (.*) (modifies|grants|makes|adds|gives)</string>
+							<string>^(?:\s*)(?:Skill:|Spell:| misc:|Effect:) (.*) (modifies|grants|makes|adds|gives|will)</string>
 						</regexCodeList>
 						<regexCodePropertyList>
 							<integer>1</integer>
@@ -5222,9 +5230,11 @@ end</script>
 							<colorTriggerFgColor>#000000</colorTriggerFgColor>
 							<colorTriggerBgColor>#000000</colorTriggerBgColor>
 							<regexCodeList>
-								<string>(modifies|grants|makes|adds|gives)</string>
+								<string>(?:Skill:|Spell:| misc:|Effect:)</string>
+								<string>(modifies)</string>
 							</regexCodeList>
 							<regexCodePropertyList>
+								<integer>1</integer>
 								<integer>1</integer>
 							</regexCodePropertyList>
 						</Trigger>
@@ -5978,113 +5988,6 @@ end</script>
 				<regexCodePropertyList>
 					<integer>4</integer>
 				</regexCodePropertyList>
-				<TriggerGroup isActive="yes" isFolder="yes" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
-					<name>Data</name>
-					<script></script>
-					<triggerType>0</triggerType>
-					<conditonLineDelta>0</conditonLineDelta>
-					<mStayOpen>0</mStayOpen>
-					<mCommand></mCommand>
-					<packageName></packageName>
-					<mFgColor>#ff0000</mFgColor>
-					<mBgColor>#ffff00</mBgColor>
-					<mSoundFile></mSoundFile>
-					<colorTriggerFgColor>#000000</colorTriggerFgColor>
-					<colorTriggerBgColor>#000000</colorTriggerBgColor>
-					<regexCodeList />
-					<regexCodePropertyList />
-					<TriggerGroup isActive="yes" isFolder="yes" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
-						<name>counting</name>
-						<script>enemyCount = enemyCount + 1</script>
-						<triggerType>0</triggerType>
-						<conditonLineDelta>0</conditonLineDelta>
-						<mStayOpen>0</mStayOpen>
-						<mCommand></mCommand>
-						<packageName></packageName>
-						<mFgColor>#ff0000</mFgColor>
-						<mBgColor>#ffff00</mBgColor>
-						<mSoundFile></mSoundFile>
-						<colorTriggerFgColor>#000000</colorTriggerFgColor>
-						<colorTriggerBgColor>#000000</colorTriggerBgColor>
-						<regexCodeList />
-						<regexCodePropertyList />
-						<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
-							<name>CountUp</name>
-							<script>enemyCount = enemyCount or 0
-enemyCount = enemyCount + 1
-
-
-debugc("EnemyCount iterated, currently at "..enemyCount)</script>
-							<triggerType>0</triggerType>
-							<conditonLineDelta>0</conditonLineDelta>
-							<mStayOpen>0</mStayOpen>
-							<mCommand></mCommand>
-							<packageName></packageName>
-							<mFgColor>#ff0000</mFgColor>
-							<mBgColor>#ffff00</mBgColor>
-							<mSoundFile></mSoundFile>
-							<colorTriggerFgColor>#000000</colorTriggerFgColor>
-							<colorTriggerBgColor>#000000</colorTriggerBgColor>
-							<regexCodeList>
-								<string>\[\s+\w+\s\w+\s+\] </string>
-								<string>\[\s+\w+\s+\] </string>
-								<string>\[\s+\w+\s\w+\s+\w+\s\] </string>
-							</regexCodeList>
-							<regexCodePropertyList>
-								<integer>1</integer>
-								<integer>1</integer>
-								<integer>1</integer>
-							</regexCodePropertyList>
-						</Trigger>
-						<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
-							<name>CountDown</name>
-							<script>enemyCount = enemyCount or 0
-enemyCount = enemyCount -1
-
-
-debugc("EnemyCount iterated, currently at "..enemyCount)</script>
-							<triggerType>0</triggerType>
-							<conditonLineDelta>0</conditonLineDelta>
-							<mStayOpen>0</mStayOpen>
-							<mCommand></mCommand>
-							<packageName></packageName>
-							<mFgColor>#ff0000</mFgColor>
-							<mBgColor>#ffff00</mBgColor>
-							<mSoundFile></mSoundFile>
-							<colorTriggerFgColor>#000000</colorTriggerFgColor>
-							<colorTriggerBgColor>#000000</colorTriggerBgColor>
-							<regexCodeList>
-								<string>has been defeated</string>
-							</regexCodeList>
-							<regexCodePropertyList>
-								<integer>0</integer>
-							</regexCodePropertyList>
-						</Trigger>
-						<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
-							<name>Count Reset</name>
-							<script>enemyCount = 0
-
-
-debugc("EnemyCount iterated, currently at "..enemyCount)</script>
-							<triggerType>0</triggerType>
-							<conditonLineDelta>0</conditonLineDelta>
-							<mStayOpen>0</mStayOpen>
-							<mCommand></mCommand>
-							<packageName></packageName>
-							<mFgColor>#ff0000</mFgColor>
-							<mBgColor>#ffff00</mBgColor>
-							<mSoundFile></mSoundFile>
-							<colorTriggerFgColor>#000000</colorTriggerFgColor>
-							<colorTriggerBgColor>#000000</colorTriggerBgColor>
-							<regexCodeList>
-								<string>^\[Exits\: \w+ \] </string>
-							</regexCodeList>
-							<regexCodePropertyList>
-								<integer>1</integer>
-							</regexCodePropertyList>
-						</Trigger>
-					</TriggerGroup>
-				</TriggerGroup>
 				<TriggerGroup isActive="yes" isFolder="yes" isTempTrigger="no" isMultiline="yes" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
 					<name>Sorting</name>
 					<script></script>
@@ -13658,223 +13561,8 @@ end</script>
 					</regexCodePropertyList>
 				</Trigger>
 			</TriggerGroup>
-			<TriggerGroup isActive="yes" isFolder="yes" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
-				<name>Reldi QOL</name>
-				<script></script>
-				<triggerType>0</triggerType>
-				<conditonLineDelta>0</conditonLineDelta>
-				<mStayOpen>0</mStayOpen>
-				<mCommand></mCommand>
-				<packageName></packageName>
-				<mFgColor>#ff0000</mFgColor>
-				<mBgColor>#ffff00</mBgColor>
-				<mSoundFile></mSoundFile>
-				<colorTriggerFgColor>#000000</colorTriggerFgColor>
-				<colorTriggerBgColor>#000000</colorTriggerBgColor>
-				<regexCodeList />
-				<regexCodePropertyList />
-				<TriggerGroup isActive="yes" isFolder="yes" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
-					<name>party</name>
-					<script></script>
-					<triggerType>0</triggerType>
-					<conditonLineDelta>0</conditonLineDelta>
-					<mStayOpen>0</mStayOpen>
-					<mCommand></mCommand>
-					<packageName></packageName>
-					<mFgColor>#ff0000</mFgColor>
-					<mBgColor>#ffff00</mBgColor>
-					<mSoundFile></mSoundFile>
-					<colorTriggerFgColor>#000000</colorTriggerFgColor>
-					<colorTriggerBgColor>#000000</colorTriggerBgColor>
-					<regexCodeList />
-					<regexCodePropertyList />
-					<TriggerGroup isActive="no" isFolder="yes" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
-						<name>partyguard</name>
-						<script></script>
-						<triggerType>0</triggerType>
-						<conditonLineDelta>0</conditonLineDelta>
-						<mStayOpen>0</mStayOpen>
-						<mCommand></mCommand>
-						<packageName></packageName>
-						<mFgColor>#ff0000</mFgColor>
-						<mBgColor>#ffff00</mBgColor>
-						<mSoundFile></mSoundFile>
-						<colorTriggerFgColor>#000000</colorTriggerFgColor>
-						<colorTriggerBgColor>#000000</colorTriggerBgColor>
-						<regexCodeList />
-						<regexCodePropertyList />
-						<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
-							<name>Guard Success</name>
-							<script>local text = matches[1]
-			feedManager(text)
-			send("gtell ^W[UI]^R:^G".. tostring(matches[2]).. " has been GUARDED.^^")</script>
-							<triggerType>0</triggerType>
-							<conditonLineDelta>0</conditonLineDelta>
-							<mStayOpen>0</mStayOpen>
-							<mCommand></mCommand>
-							<packageName></packageName>
-							<mFgColor>#ff0000</mFgColor>
-							<mBgColor>#ffff00</mBgColor>
-							<mSoundFile></mSoundFile>
-							<colorTriggerFgColor>#000000</colorTriggerFgColor>
-							<colorTriggerBgColor>#000000</colorTriggerBgColor>
-							<regexCodeList>
-								<string>^\s{0,1}You will now guard (.*) from attackers.$</string>
-							</regexCodeList>
-							<regexCodePropertyList>
-								<integer>1</integer>
-							</regexCodePropertyList>
-						</Trigger>
-						<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
-							<name>Unguard Success</name>
-							<script>local text = matches[1]
-			feedManager(text)
-			send("gtell ^W[UI]^R:^G".. tostring(matches[2]).. " has been UNGUARDED.^^")</script>
-							<triggerType>0</triggerType>
-							<conditonLineDelta>0</conditonLineDelta>
-							<mStayOpen>0</mStayOpen>
-							<mCommand></mCommand>
-							<packageName></packageName>
-							<mFgColor>#ff0000</mFgColor>
-							<mBgColor>#ffff00</mBgColor>
-							<mSoundFile></mSoundFile>
-							<colorTriggerFgColor>#000000</colorTriggerFgColor>
-							<colorTriggerBgColor>#000000</colorTriggerBgColor>
-							<regexCodeList>
-								<string>^\s{0,1}You will stop guarding (.*).$</string>
-							</regexCodeList>
-							<regexCodePropertyList>
-								<integer>1</integer>
-							</regexCodePropertyList>
-						</Trigger>
-						<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="yes" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
-							<name>Asked for Guard</name>
-							<script>local target = matches[2]
-			local theText = "guard " .. target
-			send (theText)</script>
-							<triggerType>0</triggerType>
-							<conditonLineDelta>0</conditonLineDelta>
-							<mStayOpen>0</mStayOpen>
-							<mCommand></mCommand>
-							<packageName></packageName>
-							<mFgColor>#0000ff</mFgColor>
-							<mBgColor>#000000</mBgColor>
-							<mSoundFile></mSoundFile>
-							<colorTriggerFgColor>#000000</colorTriggerFgColor>
-							<colorTriggerBgColor>#000000</colorTriggerBgColor>
-							<regexCodeList>
-								<string>^\s{0,1}(.*) tells the group '(G|g)(U|u)(A|a)(R|r)(D|d)'$</string>
-							</regexCodeList>
-							<regexCodePropertyList>
-								<integer>1</integer>
-							</regexCodePropertyList>
-						</Trigger>
-					</TriggerGroup>
-					<TriggerGroup isActive="no" isFolder="yes" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
-						<name>partyheal</name>
-						<script></script>
-						<triggerType>0</triggerType>
-						<conditonLineDelta>0</conditonLineDelta>
-						<mStayOpen>0</mStayOpen>
-						<mCommand></mCommand>
-						<packageName></packageName>
-						<mFgColor>#ff0000</mFgColor>
-						<mBgColor>#ffff00</mBgColor>
-						<mSoundFile></mSoundFile>
-						<colorTriggerFgColor>#000000</colorTriggerFgColor>
-						<colorTriggerBgColor>#000000</colorTriggerBgColor>
-						<regexCodeList />
-						<regexCodePropertyList />
-						<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="yes" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
-							<name>Asked for Heal</name>
-							<script>--You can change the healVar with the alias.
-			local target = matches[2]
-			local healVar = qolWithReldi.healword or "heal"
-			local theText = "C " .. healVar .." " .. target
-			send (theText)</script>
-							<triggerType>0</triggerType>
-							<conditonLineDelta>0</conditonLineDelta>
-							<mStayOpen>0</mStayOpen>
-							<mCommand></mCommand>
-							<packageName></packageName>
-							<mFgColor>#00aaff</mFgColor>
-							<mBgColor>#000000</mBgColor>
-							<mSoundFile></mSoundFile>
-							<colorTriggerFgColor>#000000</colorTriggerFgColor>
-							<colorTriggerBgColor>#000000</colorTriggerBgColor>
-							<regexCodeList>
-								<string>^\s{0,1}(.*) tells the group '(H|h)(E|e)(A|a)(L|l)'$</string>
-							</regexCodeList>
-							<regexCodePropertyList>
-								<integer>1</integer>
-							</regexCodePropertyList>
-						</Trigger>
-					</TriggerGroup>
-					<TriggerGroup isActive="no" isFolder="yes" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
-						<name>partyrescue</name>
-						<script></script>
-						<triggerType>0</triggerType>
-						<conditonLineDelta>0</conditonLineDelta>
-						<mStayOpen>0</mStayOpen>
-						<mCommand></mCommand>
-						<packageName></packageName>
-						<mFgColor>#ff0000</mFgColor>
-						<mBgColor>#ffff00</mBgColor>
-						<mSoundFile></mSoundFile>
-						<colorTriggerFgColor>#000000</colorTriggerFgColor>
-						<colorTriggerBgColor>#000000</colorTriggerBgColor>
-						<regexCodeList />
-						<regexCodePropertyList />
-						<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
-							<name>Rescue Success</name>
-							<script>local text = matches[1]
-			feedManager(text)
-			local theText = "gtell ^W[UI]^R:^G".. tostring(matches[2]).. " has been successfully rescued.^^"
-			send (theText)</script>
-							<triggerType>0</triggerType>
-							<conditonLineDelta>0</conditonLineDelta>
-							<mStayOpen>0</mStayOpen>
-							<mCommand></mCommand>
-							<packageName></packageName>
-							<mFgColor>#ff0000</mFgColor>
-							<mBgColor>#ffff00</mBgColor>
-							<mSoundFile></mSoundFile>
-							<colorTriggerFgColor>#000000</colorTriggerFgColor>
-							<colorTriggerBgColor>#000000</colorTriggerBgColor>
-							<regexCodeList>
-								<string>^\s{0,1}You rescue (.*)!$</string>
-							</regexCodeList>
-							<regexCodePropertyList>
-								<integer>1</integer>
-							</regexCodePropertyList>
-						</Trigger>
-						<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="yes" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
-							<name>Asked for Rescue</name>
-							<script>local target = matches[2]
-			local theText = "rescue " .. target
-			send (theText)</script>
-							<triggerType>0</triggerType>
-							<conditonLineDelta>0</conditonLineDelta>
-							<mStayOpen>0</mStayOpen>
-							<mCommand></mCommand>
-							<packageName></packageName>
-							<mFgColor>#00aaff</mFgColor>
-							<mBgColor>#000000</mBgColor>
-							<mSoundFile></mSoundFile>
-							<colorTriggerFgColor>#000000</colorTriggerFgColor>
-							<colorTriggerBgColor>#000000</colorTriggerBgColor>
-							<regexCodeList>
-								<string>^\s{0,1}(.*) tells the group '(R|r)(E|e)(S|s)(C|c)(U|u)(E|e)'$</string>
-							</regexCodeList>
-							<regexCodePropertyList>
-								<integer>1</integer>
-							</regexCodePropertyList>
-						</Trigger>
-					</TriggerGroup>
-				</TriggerGroup>
-			</TriggerGroup>
 		</TriggerGroup>
-		<TriggerGroup isActive="yes" isFolder="yes" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+		<TriggerGroup isActive="no" isFolder="yes" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
 			<name>Specific Loot</name>
 			<script></script>
 			<triggerType>0</triggerType>
@@ -13911,26 +13599,6 @@ end</script>
 				<regexCodePropertyList>
 					<integer>1</integer>
 					<integer>1</integer>
-				</regexCodePropertyList>
-			</Trigger>
-			<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="yes" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
-				<name>Prompt reset</name>
-				<script>corpsedigging=false</script>
-				<triggerType>0</triggerType>
-				<conditonLineDelta>0</conditonLineDelta>
-				<mStayOpen>0</mStayOpen>
-				<mCommand></mCommand>
-				<packageName></packageName>
-				<mFgColor>#ff0000</mFgColor>
-				<mBgColor>#ffff00</mBgColor>
-				<mSoundFile></mSoundFile>
-				<colorTriggerFgColor>#000000</colorTriggerFgColor>
-				<colorTriggerBgColor>#000000</colorTriggerBgColor>
-				<regexCodeList>
-					<string>return isXaosPrompt()</string>
-				</regexCodeList>
-				<regexCodePropertyList>
-					<integer>4</integer>
 				</regexCodePropertyList>
 			</Trigger>
 			<Trigger isActive="no" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
@@ -14003,6 +13671,645 @@ end</script>
 					<integer>0</integer>
 				</regexCodePropertyList>
 			</Trigger>
+		</TriggerGroup>
+		<TriggerGroup isActive="no" isFolder="yes" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="yes" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+			<name>Gains</name>
+			<script></script>
+			<triggerType>0</triggerType>
+			<conditonLineDelta>0</conditonLineDelta>
+			<mStayOpen>0</mStayOpen>
+			<mCommand></mCommand>
+			<packageName></packageName>
+			<mFgColor>#ff0000</mFgColor>
+			<mBgColor>#ffff00</mBgColor>
+			<mSoundFile></mSoundFile>
+			<colorTriggerFgColor>#000000</colorTriggerFgColor>
+			<colorTriggerBgColor>#000000</colorTriggerBgColor>
+			<regexCodeList />
+			<regexCodePropertyList />
+			<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+				<name>Spells Start</name>
+				<script>gainmode = "spells"</script>
+				<triggerType>0</triggerType>
+				<conditonLineDelta>0</conditonLineDelta>
+				<mStayOpen>0</mStayOpen>
+				<mCommand></mCommand>
+				<packageName></packageName>
+				<mFgColor>#ff0000</mFgColor>
+				<mBgColor>#ffff00</mBgColor>
+				<mSoundFile></mSoundFile>
+				<colorTriggerFgColor>#000000</colorTriggerFgColor>
+				<colorTriggerBgColor>#000000</colorTriggerBgColor>
+				<regexCodeList>
+					<string>Spell gains:</string>
+				</regexCodeList>
+				<regexCodePropertyList>
+					<integer>0</integer>
+				</regexCodePropertyList>
+			</Trigger>
+			<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+				<name>New trigger</name>
+				<script>gainmode="uncategorized"</script>
+				<triggerType>0</triggerType>
+				<conditonLineDelta>0</conditonLineDelta>
+				<mStayOpen>0</mStayOpen>
+				<mCommand></mCommand>
+				<packageName></packageName>
+				<mFgColor>#ff0000</mFgColor>
+				<mBgColor>#ffff00</mBgColor>
+				<mSoundFile></mSoundFile>
+				<colorTriggerFgColor>#000000</colorTriggerFgColor>
+				<colorTriggerBgColor>#000000</colorTriggerBgColor>
+				<regexCodeList>
+					<string>-------------------------------------- Uncategorized skills --------------------------------------</string>
+				</regexCodeList>
+				<regexCodePropertyList>
+					<integer>0</integer>
+				</regexCodePropertyList>
+			</Trigger>
+			<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="yes" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+				<name>Prompt reset</name>
+				<script>gainmode=""</script>
+				<triggerType>0</triggerType>
+				<conditonLineDelta>0</conditonLineDelta>
+				<mStayOpen>0</mStayOpen>
+				<mCommand></mCommand>
+				<packageName></packageName>
+				<mFgColor>#ff0000</mFgColor>
+				<mBgColor>#ffff00</mBgColor>
+				<mSoundFile></mSoundFile>
+				<colorTriggerFgColor>#000000</colorTriggerFgColor>
+				<colorTriggerBgColor>#000000</colorTriggerBgColor>
+				<regexCodeList>
+					<string>return isXaosPrompt()</string>
+				</regexCodeList>
+				<regexCodePropertyList>
+					<integer>4</integer>
+				</regexCodePropertyList>
+			</Trigger>
+			<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="yes" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+				<name>All</name>
+				<script>
+if gainmode=="spells" then
+  for i=2,12,3 do
+    --echo(string.trim(matches[i]))
+    send("gain " .. string.trim(matches[i]))
+  end
+  
+end</script>
+				<triggerType>0</triggerType>
+				<conditonLineDelta>0</conditonLineDelta>
+				<mStayOpen>0</mStayOpen>
+				<mCommand></mCommand>
+				<packageName></packageName>
+				<mFgColor>#ff0000</mFgColor>
+				<mBgColor>#ffff00</mBgColor>
+				<mSoundFile></mSoundFile>
+				<colorTriggerFgColor>#000000</colorTriggerFgColor>
+				<colorTriggerBgColor>#000000</colorTriggerBgColor>
+				<regexCodeList>
+					<string>([^0-9]+)([0-9]+)</string>
+				</regexCodeList>
+				<regexCodePropertyList>
+					<integer>1</integer>
+				</regexCodePropertyList>
+			</Trigger>
+		</TriggerGroup>
+		<TriggerGroup isActive="no" isFolder="yes" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+			<name>Archive, for future use</name>
+			<script></script>
+			<triggerType>0</triggerType>
+			<conditonLineDelta>0</conditonLineDelta>
+			<mStayOpen>0</mStayOpen>
+			<mCommand></mCommand>
+			<packageName></packageName>
+			<mFgColor>#ff0000</mFgColor>
+			<mBgColor>#ffff00</mBgColor>
+			<mSoundFile></mSoundFile>
+			<colorTriggerFgColor>#000000</colorTriggerFgColor>
+			<colorTriggerBgColor>#000000</colorTriggerBgColor>
+			<regexCodeList />
+			<regexCodePropertyList />
+			<TriggerGroup isActive="yes" isFolder="yes" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+				<name>Data</name>
+				<script></script>
+				<triggerType>0</triggerType>
+				<conditonLineDelta>0</conditonLineDelta>
+				<mStayOpen>0</mStayOpen>
+				<mCommand></mCommand>
+				<packageName></packageName>
+				<mFgColor>#ff0000</mFgColor>
+				<mBgColor>#ffff00</mBgColor>
+				<mSoundFile></mSoundFile>
+				<colorTriggerFgColor>#000000</colorTriggerFgColor>
+				<colorTriggerBgColor>#000000</colorTriggerBgColor>
+				<regexCodeList />
+				<regexCodePropertyList />
+				<TriggerGroup isActive="yes" isFolder="yes" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+					<name>counting</name>
+					<script>enemyCount = enemyCount + 1</script>
+					<triggerType>0</triggerType>
+					<conditonLineDelta>0</conditonLineDelta>
+					<mStayOpen>0</mStayOpen>
+					<mCommand></mCommand>
+					<packageName></packageName>
+					<mFgColor>#ff0000</mFgColor>
+					<mBgColor>#ffff00</mBgColor>
+					<mSoundFile></mSoundFile>
+					<colorTriggerFgColor>#000000</colorTriggerFgColor>
+					<colorTriggerBgColor>#000000</colorTriggerBgColor>
+					<regexCodeList />
+					<regexCodePropertyList />
+					<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+						<name>CountUp</name>
+						<script>enemyCount = enemyCount or 0
+enemyCount = enemyCount + 1
+
+
+debugc("EnemyCount iterated, currently at "..enemyCount)</script>
+						<triggerType>0</triggerType>
+						<conditonLineDelta>0</conditonLineDelta>
+						<mStayOpen>0</mStayOpen>
+						<mCommand></mCommand>
+						<packageName></packageName>
+						<mFgColor>#ff0000</mFgColor>
+						<mBgColor>#ffff00</mBgColor>
+						<mSoundFile></mSoundFile>
+						<colorTriggerFgColor>#000000</colorTriggerFgColor>
+						<colorTriggerBgColor>#000000</colorTriggerBgColor>
+						<regexCodeList>
+							<string>\[\s+\w+\s\w+\s+\] </string>
+							<string>\[\s+\w+\s+\] </string>
+							<string>\[\s+\w+\s\w+\s+\w+\s\] </string>
+						</regexCodeList>
+						<regexCodePropertyList>
+							<integer>1</integer>
+							<integer>1</integer>
+							<integer>1</integer>
+						</regexCodePropertyList>
+					</Trigger>
+					<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+						<name>CountDown</name>
+						<script>enemyCount = enemyCount or 0
+enemyCount = enemyCount -1
+
+
+debugc("EnemyCount iterated, currently at "..enemyCount)</script>
+						<triggerType>0</triggerType>
+						<conditonLineDelta>0</conditonLineDelta>
+						<mStayOpen>0</mStayOpen>
+						<mCommand></mCommand>
+						<packageName></packageName>
+						<mFgColor>#ff0000</mFgColor>
+						<mBgColor>#ffff00</mBgColor>
+						<mSoundFile></mSoundFile>
+						<colorTriggerFgColor>#000000</colorTriggerFgColor>
+						<colorTriggerBgColor>#000000</colorTriggerBgColor>
+						<regexCodeList>
+							<string>has been defeated</string>
+						</regexCodeList>
+						<regexCodePropertyList>
+							<integer>0</integer>
+						</regexCodePropertyList>
+					</Trigger>
+					<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+						<name>Count Reset</name>
+						<script>enemyCount = 0
+
+
+debugc("EnemyCount iterated, currently at "..enemyCount)</script>
+						<triggerType>0</triggerType>
+						<conditonLineDelta>0</conditonLineDelta>
+						<mStayOpen>0</mStayOpen>
+						<mCommand></mCommand>
+						<packageName></packageName>
+						<mFgColor>#ff0000</mFgColor>
+						<mBgColor>#ffff00</mBgColor>
+						<mSoundFile></mSoundFile>
+						<colorTriggerFgColor>#000000</colorTriggerFgColor>
+						<colorTriggerBgColor>#000000</colorTriggerBgColor>
+						<regexCodeList>
+							<string>^\[Exits\: \w+ \] </string>
+						</regexCodeList>
+						<regexCodePropertyList>
+							<integer>1</integer>
+						</regexCodePropertyList>
+					</Trigger>
+				</TriggerGroup>
+			</TriggerGroup>
+			<Trigger isActive="no" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+				<name>level collection</name>
+				<script>
+
+--if leveltotals[xaos.Level] == nil then
+--  leveltotals[xaos.Level] = 0
+--else
+--  leveltotals[xaos.Level] = leveltotals[xaos.Level] + 1
+--end
+
+--local currentmax = tonumber(xaos.Level)*2
+--if (tonumber(leveltotals[xaos.Level]) &gt;= tonumber(currentmax)) then
+--  cecho("data","[ Alert ] You gained a level! - " .. xaos.Level .. " - " .. xaos.LevelPercent .."\n")
+--end
+expandAlias("scoreeat")
+</script>
+				<triggerType>0</triggerType>
+				<conditonLineDelta>0</conditonLineDelta>
+				<mStayOpen>0</mStayOpen>
+				<mCommand></mCommand>
+				<packageName></packageName>
+				<mFgColor>#ff0000</mFgColor>
+				<mBgColor>#ffff00</mBgColor>
+				<mSoundFile></mSoundFile>
+				<colorTriggerFgColor>#000000</colorTriggerFgColor>
+				<colorTriggerBgColor>#000000</colorTriggerBgColor>
+				<regexCodeList>
+					<string>You gained a level!</string>
+				</regexCodeList>
+				<regexCodePropertyList>
+					<integer>0</integer>
+				</regexCodePropertyList>
+			</Trigger>
+			<Trigger isActive="no" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+				<name>Highest damage collection</name>
+				<script>--echo(tonumber(matches[2]))
+if highestdam == nil then
+  highestdam = tonumber(matches[2])
+elseif tonumber(matches[2]) &gt; tonumber(highestdam) then
+  highestdam = tonumber(matches[2])
+end</script>
+				<triggerType>0</triggerType>
+				<conditonLineDelta>0</conditonLineDelta>
+				<mStayOpen>0</mStayOpen>
+				<mCommand></mCommand>
+				<packageName></packageName>
+				<mFgColor>#ff0000</mFgColor>
+				<mBgColor>#ffff00</mBgColor>
+				<mSoundFile></mSoundFile>
+				<colorTriggerFgColor>#000000</colorTriggerFgColor>
+				<colorTriggerBgColor>#000000</colorTriggerBgColor>
+				<regexCodeList>
+					<string>^Your .*\. \((\d+) dam\)$</string>
+				</regexCodeList>
+				<regexCodePropertyList>
+					<integer>1</integer>
+				</regexCodePropertyList>
+			</Trigger>
+			<TriggerGroup isActive="yes" isFolder="yes" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+				<name>Temporary</name>
+				<script></script>
+				<triggerType>0</triggerType>
+				<conditonLineDelta>0</conditonLineDelta>
+				<mStayOpen>0</mStayOpen>
+				<mCommand></mCommand>
+				<packageName></packageName>
+				<mFgColor>#ff0000</mFgColor>
+				<mBgColor>#ffff00</mBgColor>
+				<mSoundFile></mSoundFile>
+				<colorTriggerFgColor>#000000</colorTriggerFgColor>
+				<colorTriggerBgColor>#000000</colorTriggerBgColor>
+				<regexCodeList />
+				<regexCodePropertyList />
+				<Trigger isActive="no" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+					<name>Scrollspam</name>
+					<script>if scrollSpam then
+  send("buy giant;rec giant")
+end</script>
+					<triggerType>0</triggerType>
+					<conditonLineDelta>0</conditonLineDelta>
+					<mStayOpen>0</mStayOpen>
+					<mCommand></mCommand>
+					<packageName></packageName>
+					<mFgColor>#ff0000</mFgColor>
+					<mBgColor>#ffff00</mBgColor>
+					<mSoundFile></mSoundFile>
+					<colorTriggerFgColor>#000000</colorTriggerFgColor>
+					<colorTriggerBgColor>#000000</colorTriggerBgColor>
+					<regexCodeList>
+						<string>You are already mighty as a titan!</string>
+						<string>You mispronounce a syllable.</string>
+					</regexCodeList>
+					<regexCodePropertyList>
+						<integer>0</integer>
+						<integer>0</integer>
+					</regexCodePropertyList>
+				</Trigger>
+			</TriggerGroup>
+			<Trigger isActive="no" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+				<name>Fcuking wizi imms</name>
+				<script>
+
+
+captureOOC("&lt;cadet_blue&gt;","OOC","&lt;gray&gt;","Wizi Imm", "&lt;cadet_blue&gt;", matches[2])
+
+
+if gagging then
+	deleteLine()
+end
+--createChatConsole()</script>
+				<triggerType>0</triggerType>
+				<conditonLineDelta>0</conditonLineDelta>
+				<mStayOpen>0</mStayOpen>
+				<mCommand></mCommand>
+				<packageName></packageName>
+				<mFgColor>#ff0000</mFgColor>
+				<mBgColor>#ffff00</mBgColor>
+				<mSoundFile></mSoundFile>
+				<colorTriggerFgColor>#000000</colorTriggerFgColor>
+				<colorTriggerBgColor>#000000</colorTriggerBgColor>
+				<regexCodeList>
+					<string>An immortal oocs '(.+)'$</string>
+				</regexCodeList>
+				<regexCodePropertyList>
+					<integer>1</integer>
+				</regexCodePropertyList>
+			</Trigger>
+			<TriggerGroup isActive="yes" isFolder="yes" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+				<name>Buffs</name>
+				<script></script>
+				<triggerType>0</triggerType>
+				<conditonLineDelta>0</conditonLineDelta>
+				<mStayOpen>0</mStayOpen>
+				<mCommand></mCommand>
+				<packageName></packageName>
+				<mFgColor>#ff0000</mFgColor>
+				<mBgColor>#ffff00</mBgColor>
+				<mSoundFile></mSoundFile>
+				<colorTriggerFgColor>#000000</colorTriggerFgColor>
+				<colorTriggerBgColor>#000000</colorTriggerBgColor>
+				<regexCodeList />
+				<regexCodePropertyList />
+				<TriggerGroup isActive="yes" isFolder="yes" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+					<name>Mentalist</name>
+					<script></script>
+					<triggerType>0</triggerType>
+					<conditonLineDelta>0</conditonLineDelta>
+					<mStayOpen>0</mStayOpen>
+					<mCommand></mCommand>
+					<packageName></packageName>
+					<mFgColor>#ff0000</mFgColor>
+					<mBgColor>#ffff00</mBgColor>
+					<mSoundFile></mSoundFile>
+					<colorTriggerFgColor>#000000</colorTriggerFgColor>
+					<colorTriggerBgColor>#000000</colorTriggerBgColor>
+					<regexCodeList />
+					<regexCodePropertyList />
+					<TriggerGroup isActive="yes" isFolder="yes" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+						<name>Combat Ease</name>
+						<script></script>
+						<triggerType>0</triggerType>
+						<conditonLineDelta>0</conditonLineDelta>
+						<mStayOpen>0</mStayOpen>
+						<mCommand></mCommand>
+						<packageName></packageName>
+						<mFgColor>#ff0000</mFgColor>
+						<mBgColor>#ffff00</mBgColor>
+						<mSoundFile></mSoundFile>
+						<colorTriggerFgColor>#000000</colorTriggerFgColor>
+						<colorTriggerBgColor>#000000</colorTriggerBgColor>
+						<regexCodeList />
+						<regexCodePropertyList />
+						<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+							<name>divided will tracking</name>
+							<script>divided = true
+
+autoMode = "mentalist debuff"</script>
+							<triggerType>0</triggerType>
+							<conditonLineDelta>0</conditonLineDelta>
+							<mStayOpen>0</mStayOpen>
+							<mCommand></mCommand>
+							<packageName></packageName>
+							<mFgColor>#ff0000</mFgColor>
+							<mBgColor>#ffff00</mBgColor>
+							<mSoundFile></mSoundFile>
+							<colorTriggerFgColor>#000000</colorTriggerFgColor>
+							<colorTriggerBgColor>#000000</colorTriggerBgColor>
+							<regexCodeList>
+								<string>You have divided the will</string>
+								<string>will appears to already be divided.</string>
+							</regexCodeList>
+							<regexCodePropertyList>
+								<integer>0</integer>
+								<integer>0</integer>
+							</regexCodePropertyList>
+						</Trigger>
+						<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+							<name>Reset on death</name>
+							<script>divided = false</script>
+							<triggerType>0</triggerType>
+							<conditonLineDelta>0</conditonLineDelta>
+							<mStayOpen>0</mStayOpen>
+							<mCommand></mCommand>
+							<packageName></packageName>
+							<mFgColor>#ff0000</mFgColor>
+							<mBgColor>#ffff00</mBgColor>
+							<mSoundFile></mSoundFile>
+							<colorTriggerFgColor>#000000</colorTriggerFgColor>
+							<colorTriggerBgColor>#000000</colorTriggerBgColor>
+							<regexCodeList>
+								<string>has been defeated</string>
+							</regexCodeList>
+							<regexCodePropertyList>
+								<integer>1</integer>
+							</regexCodePropertyList>
+						</Trigger>
+					</TriggerGroup>
+					<TriggerGroup isActive="yes" isFolder="yes" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+						<name>Critical</name>
+						<script></script>
+						<triggerType>0</triggerType>
+						<conditonLineDelta>0</conditonLineDelta>
+						<mStayOpen>0</mStayOpen>
+						<mCommand></mCommand>
+						<packageName></packageName>
+						<mFgColor>#ff0000</mFgColor>
+						<mBgColor>#ffff00</mBgColor>
+						<mSoundFile></mSoundFile>
+						<colorTriggerFgColor>#000000</colorTriggerFgColor>
+						<colorTriggerBgColor>#000000</colorTriggerBgColor>
+						<regexCodeList />
+						<regexCodePropertyList />
+						<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+							<name>Third Eye False</name>
+							<script>buffThirdEye = false</script>
+							<triggerType>0</triggerType>
+							<conditonLineDelta>0</conditonLineDelta>
+							<mStayOpen>0</mStayOpen>
+							<mCommand></mCommand>
+							<packageName></packageName>
+							<mFgColor>#ff0000</mFgColor>
+							<mBgColor>#ffff00</mBgColor>
+							<mSoundFile></mSoundFile>
+							<colorTriggerFgColor>#000000</colorTriggerFgColor>
+							<colorTriggerBgColor>#000000</colorTriggerBgColor>
+							<regexCodeList>
+								<string>Your third eye closes.</string>
+							</regexCodeList>
+							<regexCodePropertyList>
+								<integer>3</integer>
+							</regexCodePropertyList>
+						</Trigger>
+						<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+							<name>Third Eye True</name>
+							<script>buffThirdEye = true</script>
+							<triggerType>0</triggerType>
+							<conditonLineDelta>0</conditonLineDelta>
+							<mStayOpen>0</mStayOpen>
+							<mCommand></mCommand>
+							<packageName></packageName>
+							<mFgColor>#ff0000</mFgColor>
+							<mBgColor>#ffff00</mBgColor>
+							<mSoundFile></mSoundFile>
+							<colorTriggerFgColor>#000000</colorTriggerFgColor>
+							<colorTriggerBgColor>#000000</colorTriggerBgColor>
+							<regexCodeList>
+								<string>You are already under that power.</string>
+								<string>The third eye opens and your sight extends!</string>
+							</regexCodeList>
+							<regexCodePropertyList>
+								<integer>3</integer>
+								<integer>3</integer>
+							</regexCodePropertyList>
+						</Trigger>
+					</TriggerGroup>
+				</TriggerGroup>
+				<TriggerGroup isActive="yes" isFolder="yes" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+					<name>Thief</name>
+					<script></script>
+					<triggerType>0</triggerType>
+					<conditonLineDelta>0</conditonLineDelta>
+					<mStayOpen>0</mStayOpen>
+					<mCommand></mCommand>
+					<packageName></packageName>
+					<mFgColor>#ff0000</mFgColor>
+					<mBgColor>#ffff00</mBgColor>
+					<mSoundFile></mSoundFile>
+					<colorTriggerFgColor>#000000</colorTriggerFgColor>
+					<colorTriggerBgColor>#000000</colorTriggerBgColor>
+					<regexCodeList />
+					<regexCodePropertyList />
+				</TriggerGroup>
+				<TriggerGroup isActive="yes" isFolder="yes" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+					<name>Warrior stuff</name>
+					<script></script>
+					<triggerType>0</triggerType>
+					<conditonLineDelta>0</conditonLineDelta>
+					<mStayOpen>0</mStayOpen>
+					<mCommand></mCommand>
+					<packageName></packageName>
+					<mFgColor>#ff0000</mFgColor>
+					<mBgColor>#ffff00</mBgColor>
+					<mSoundFile></mSoundFile>
+					<colorTriggerFgColor>#000000</colorTriggerFgColor>
+					<colorTriggerBgColor>#000000</colorTriggerBgColor>
+					<regexCodeList />
+					<regexCodePropertyList />
+					<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+						<name>Warcry true</name>
+						<script></script>
+						<triggerType>0</triggerType>
+						<conditonLineDelta>0</conditonLineDelta>
+						<mStayOpen>0</mStayOpen>
+						<mCommand></mCommand>
+						<packageName></packageName>
+						<mFgColor>#ff0000</mFgColor>
+						<mBgColor>#ffff00</mBgColor>
+						<mSoundFile></mSoundFile>
+						<colorTriggerFgColor>#000000</colorTriggerFgColor>
+						<colorTriggerBgColor>#000000</colorTriggerBgColor>
+						<regexCodeList>
+							<string>You yell out a glorious warcry!</string>
+						</regexCodeList>
+						<regexCodePropertyList>
+							<integer>0</integer>
+						</regexCodePropertyList>
+					</Trigger>
+					<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+						<name>Determination on</name>
+						<script>determ = true
+determValue = matches[2]</script>
+						<triggerType>0</triggerType>
+						<conditonLineDelta>0</conditonLineDelta>
+						<mStayOpen>0</mStayOpen>
+						<mCommand></mCommand>
+						<packageName></packageName>
+						<mFgColor>#ff0000</mFgColor>
+						<mBgColor>#ffff00</mBgColor>
+						<mSoundFile></mSoundFile>
+						<colorTriggerFgColor>#000000</colorTriggerFgColor>
+						<colorTriggerBgColor>#000000</colorTriggerBgColor>
+						<regexCodeList>
+							<string>You will absorb damage as long as you have (\d+) mana or more.</string>
+						</regexCodeList>
+						<regexCodePropertyList>
+							<integer>1</integer>
+						</regexCodePropertyList>
+					</Trigger>
+					<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+						<name>Determination false</name>
+						<script>determ = false
+determValue = 0</script>
+						<triggerType>0</triggerType>
+						<conditonLineDelta>0</conditonLineDelta>
+						<mStayOpen>0</mStayOpen>
+						<mCommand></mCommand>
+						<packageName></packageName>
+						<mFgColor>#ff0000</mFgColor>
+						<mBgColor>#ffff00</mBgColor>
+						<mSoundFile></mSoundFile>
+						<colorTriggerFgColor>#000000</colorTriggerFgColor>
+						<colorTriggerBgColor>#000000</colorTriggerBgColor>
+						<regexCodeList>
+							<string>Determination turned off.</string>
+						</regexCodeList>
+						<regexCodePropertyList>
+							<integer>0</integer>
+						</regexCodePropertyList>
+					</Trigger>
+					<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+						<name>You are centered</name>
+						<script>statusCenter = true</script>
+						<triggerType>0</triggerType>
+						<conditonLineDelta>0</conditonLineDelta>
+						<mStayOpen>0</mStayOpen>
+						<mCommand></mCommand>
+						<packageName></packageName>
+						<mFgColor>#ff0000</mFgColor>
+						<mBgColor>#ffff00</mBgColor>
+						<mSoundFile></mSoundFile>
+						<colorTriggerFgColor>#000000</colorTriggerFgColor>
+						<colorTriggerBgColor>#000000</colorTriggerBgColor>
+						<regexCodeList>
+							<string>Your senses sharpen and time slows.</string>
+							<string>You are as focused as you can be.</string>
+						</regexCodeList>
+						<regexCodePropertyList>
+							<integer>0</integer>
+							<integer>0</integer>
+						</regexCodePropertyList>
+					</Trigger>
+					<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+						<name>Not centered</name>
+						<script>statusCenter = false</script>
+						<triggerType>0</triggerType>
+						<conditonLineDelta>0</conditonLineDelta>
+						<mStayOpen>0</mStayOpen>
+						<mCommand></mCommand>
+						<packageName></packageName>
+						<mFgColor>#ff0000</mFgColor>
+						<mBgColor>#ffff00</mBgColor>
+						<mSoundFile></mSoundFile>
+						<colorTriggerFgColor>#000000</colorTriggerFgColor>
+						<colorTriggerBgColor>#000000</colorTriggerBgColor>
+						<regexCodeList>
+							<string>You lose your focus.</string>
+						</regexCodeList>
+						<regexCodePropertyList>
+							<integer>0</integer>
+						</regexCodePropertyList>
+					</Trigger>
+				</TriggerGroup>
+			</TriggerGroup>
 		</TriggerGroup>
 	</TriggerPackage>
 	<TimerPackage>
@@ -14240,8 +14547,10 @@ end</script>
 				</Timer>
 				<Timer isActive="yes" isFolder="no" isTempTimer="no" isOffsetTimer="no">
 					<name>Combat Reset  Timer</name>
-					<script>
-if (getEpoch()-lastcombattime) &gt; 10 and combat then
+					<script>--Fail safe which resets combat if no combat has been had in that timeframe.
+
+
+if auto_hunt and (getEpoch()-lastcombattime) &gt; 10 and combat then
   combat=false
   hunting=false
   targetFound=false
@@ -14315,7 +14624,7 @@ displaytimespan = displaytimespan or 5
 updateKillbars(displaytimespan)
 updateXPbars(displaytimespan)
 
-xprText:echo(calcAscendTime(xaos.Level,xaos.LevelPercent,displaytimespan))
+
 
 
 
@@ -14332,16 +14641,6 @@ xprText:echo(calcAscendTime(xaos.Level,xaos.LevelPercent,displaytimespan))
 cecho("CombatList",damageDisplay(TotalCalc))
 
 </script>
-					<command></command>
-					<packageName></packageName>
-					<time>00:00:01.000</time>
-				</Timer>
-				<Timer isActive="no" isFolder="no" isTempTimer="no" isOffsetTimer="no">
-					<name>Damage Scenario</name>
-					<script>if combatdisplay ~= null then
-  clearWindow("combat")
-  cecho("combat",damageDisplay(TotalCalc))
-end</script>
 					<command></command>
 					<packageName></packageName>
 					<time>00:00:01.000</time>
@@ -14406,19 +14705,19 @@ userDisplay:echo(lbltext)</script>
 				<Timer isActive="yes" isFolder="no" isTempTimer="no" isOffsetTimer="no">
 					<name>Party Grab</name>
 					<script>partystatusgrab=true
-send("party")
-deleteLine()</script>
+send("party",false)
+--deleteLine()</script>
 					<command></command>
 					<packageName></packageName>
 					<time>00:00:05.000</time>
 				</Timer>
 				<Timer isActive="yes" isFolder="no" isTempTimer="no" isOffsetTimer="no">
 					<name>Quest Update</name>
-					<script>function clearquestwindows()
+					<script>local function clearquestwindows()
   clearWindow("queststatus")
   clearWindow("queststatuswin")
 end
-function writequestwindows(text)
+local function writequestwindows(text)
   cecho("queststatus",text)
   cecho("queststatuswin",text)
 end
@@ -14517,7 +14816,10 @@ cecho("ScoreList","Fragments           : " .. tostring(xaos.currency.frags) .. "
 				</Timer>
 				<Timer isActive="yes" isFolder="no" isTempTimer="no" isOffsetTimer="no">
 					<name>Update Variables</name>
-					<script>clearWindow("VariableList")
+					<script>
+
+
+clearWindow("VariableList")
 
 --cecho("VariableList","&lt;white&gt;Buffs\n")
 --for key,value in pairs(xaos.buffs) do
@@ -14526,23 +14828,61 @@ cecho("ScoreList","Fragments           : " .. tostring(xaos.currency.frags) .. "
 --  cecho("VariableList", formattedkey .. ": " .. tostring(value) .. "\n")
 --end
 
-cecho("VariableList","\n&lt;white&gt;Scripting\n")
-cecho("VariableList","Area                : " .. tostring(xaos.scripting.area.name) .. "\n")
-cecho("VariableList","Max Mobs            : " .. tostring(xaos.config.scripting.maxmobs) .. "\n")
-cecho("VariableList","Hunt Wait           : " .. tostring(xaos.config.scripting.huntwait) .. "\n")
-cecho("VariableList","End Combat Wait     : " .. tostring(xaos.config.scripting.endcombatwait) .. "\n")
-cecho("VariableList","Killing             : " .. tostring(killTarget) .. "\n")
-cecho("VariableList","Hunting             : " .. tostring(huntTarget) .. "\n")
-cecho("VariableList","Following           : " .. tostring(followTarget) .. "  (" .. tostring(statusFollowing) .. ")\n")
-cecho("VariableList","Has Leader          : " .. tostring(statusLeader) .. "\n")
-cecho("VariableList","Is Scripting        : " .. tostring(auto_hunt) .. "\n")
-cecho("VariableList","Auto Loot           : " .. tostring(xaos.config.scripting.autoLoot) .. "\n")
-cecho("VariableList","Auto Pickup         : " .. tostring(xaos.config.scripting.autoPickup) .. "\n")
-cecho("VariableList","Scan Mode           : " .. tostring(xaos.config.scripting.scan_mode) .. "\n")
-cecho("VariableList","Find Mode           : " .. tostring(xaos.config.scripting.findmode) .. "\n")
-cecho("VariableList","Buff Mode           : " .. tostring(xaos.config.buffmode) .. "\n")
+local function writevariablename(name,value,linkcommand)
+  name = string.sub(name .. "                    ",1,20)
+  if linkcommand == nil then
+    cecho("VariableList",name)
+  else
+    cechoLink("VariableList","&lt;grey&gt;" .. name,linkcommand,"Click to set input syntax",true)
+  end
+  cecho("VariableList",": " .. value .. "\n")
+end
 
-cecho("VariableList","Wielded             : " .. tostring(wielded) .. "\n")
+cecho("VariableList","\n&lt;white&gt;Scripting\n")
+writevariablename("Is Scripting",tostring(auto_hunt))
+--cecho("VariableList","Is Scripting        : " .. tostring(auto_hunt) .. "\n")
+writevariablename("Area",tostring(xaos.scripting.area.name))
+writevariablename("Max Mobs",tostring(xaos.config.scripting.maxmobs),'cecho("&lt;cyan&gt;maxmobs #");printCmdLine"maxmobs "')
+
+writevariablename("Hunt Wait",tostring(xaos.config.scripting.huntwait),[[cecho("&lt;cyan&gt;huntwait #");printCmdLine"huntwait "]])
+--cechoLink("VariableList", "&lt;grey&gt;Hunt Wait",[[cecho("&lt;cyan&gt;huntwait #");printCmdLine"huntwait "]],"Click to set input syntax",true)
+--cecho("VariableList","           : " .. tostring(xaos.config.scripting.huntwait) .. "\n")
+writevariablename("End Combat Wait",tostring(xaos.config.scripting.endcombatwait),[[cecho("&lt;cyan&gt;endcombatwait #");printCmdLine"endcombatwait "]])
+--cechoLink("VariableList", "&lt;grey&gt;End Combat Wait",[[cecho("&lt;cyan&gt;endcombatwait #");printCmdLine"endcombatwait "]],"Click to set input syntax",true)
+--cecho("VariableList","     : " .. tostring(xaos.config.scripting.endcombatwait) .. "\n")
+writevariablename("Killing",tostring(killTarget))
+--cecho("VariableList","Killing             : " .. tostring(killTarget) .. "\n")
+writevariablename("Hunting",tostring(huntTarget))
+--cecho("VariableList","Hunting             : " .. tostring(huntTarget) .. "\n")
+writevariablename("Following",tostring(followTarget) .. "  (" .. tostring(statusFollowing) .. ")")
+--cecho("VariableList","Following           : " .. tostring(followTarget) .. "  (" .. tostring(statusFollowing) .. ")\n")
+writevariablename("Has Leader",tostring(statusLeader))
+--cecho("VariableList","Has Leader          : " .. tostring(statusLeader) .. "\n")
+
+writevariablename("Auto Loot",tostring(xaos.config.scripting.autoLoot),[[cecho("&lt;cyan&gt;autoloot &lt;comma separated list&gt;");printCmdLine"autoloot "]])
+--cechoLink("VariableList", "&lt;grey&gt;Auto Loot",[[cecho("&lt;cyan&gt;autoloot &lt;comma separated list&gt;");printCmdLine"autoloot "]],"Click to set input syntax",true)
+--cecho("VariableList","           : " .. tostring(xaos.config.scripting.autoLoot) .. "\n")
+writevariablename("Auto Pickup",tostring(xaos.config.scripting.autoPickup),[[cecho("&lt;cyan&gt;autopickup &lt;comma separated list&gt;");printCmdLine"autopickup "]])
+--cechoLink("VariableList", "&lt;grey&gt;Auto Pickup",[[cecho("&lt;cyan&gt;autopickup &lt;comma separated list&gt;");printCmdLine"autopickup "]],"Click to set input syntax",true)
+--cecho("VariableList","         : " .. tostring(xaos.config.scripting.autoPickup) .. "\n")
+--writevariablename("Scan Mode",tostring(xaos.config.scripting.scan_mode))
+--cecho("VariableList","Scan Mode           : " .. tostring(xaos.config.scripting.scan_mode) .. "\n")
+writevariablename("Find Mode",tostring(xaos.config.scripting.findmode))
+--cecho("VariableList","Find Mode           : " .. tostring(xaos.config.scripting.findmode) .. "\n")
+writevariablename("Buff Mode",tostring(xaos.config.buffmode) ,[[printCmdLine"buffmode"]])
+--cechoLink("VariableList", "&lt;grey&gt;Buff Mode",[[printCmdLine"buffmode"]],"Click to set input syntax",true)
+--cecho("VariableList","           : " .. tostring(xaos.config.buffmode) .. "\n")
+writevariablename("Berserk over Center",tostring(xaos.config.berserkovercenter),[[printCmdLine"xconfig berserkovercenter"]])
+--cechoLink("VariableList", "&lt;grey&gt;Berserk over Center",[[printCmdLine"xconfig berserkovercenter"]],"Click to set input syntax",true)
+--cecho("VariableList"," : " .. tostring(xaos.config.berserkovercenter) .. "\n")
+writevariablename("Min HP",tostring(xaos.config.scripting.minhp),[[cecho("&lt;cyan&gt;xconfig minhp # (0-100)");printCmdLine"xconfig minhp "]])
+--cechoLink("VariableList", "&lt;grey&gt;Min HP",[[cecho("&lt;cyan&gt;xconfig minhp # (0-100)");printCmdLine"xconfig minhp "]],"Click to set input syntax",true)
+--cecho("VariableList","              : " .. tostring(xaos.config.scripting.minhp) .. "\n")
+writevariablename("Min Mana",tostring(xaos.config.scripting.minmana),[[cecho("&lt;cyan&gt;xconfig minmana # (0-100)");printCmdLine"xconfig minmana "]])
+--cechoLink("VariableList", "&lt;grey&gt;Min Mana",[[cecho("&lt;cyan&gt;xconfig minmana # (0-100)");printCmdLine"xconfig minmana "]],"Click to set input syntax",true)
+--cecho("VariableList","            : " .. tostring(xaos.config.scripting.minmana) .. "\n")
+writevariablename("Wielded",tostring(wielded))
+--cecho("VariableList","Wielded             : " .. tostring(wielded) .. "\n")
 if xaos.config.debugmode then
 cecho("VariableList","Combat              : " .. tostring(combat) .. "\n")
 cecho("VariableList","targetFound         : " .. tostring(targetFound) .. "\n")
@@ -14550,7 +14890,9 @@ cecho("VariableList","targetFoundID       : " .. tostring(targetFoundID) .. "\n"
 end
 
 cecho("VariableList","\n&lt;white&gt;UI\n")
-cecho("VariableList","Show Exp            : " .. tostring(xaos.config.show_killed) .. "\n")
+writevariablename("Show Exp",tostring(xaos.config.show_killed),[[printCmdLine"showkills"]])
+--cechoLink("VariableList", "&lt;grey&gt;Show Exp",[[printCmdLine"showkills"]],"Click to set input syntax",true)
+--cecho("VariableList","            : " .. tostring(xaos.config.show_killed) .. "\n")
 </script>
 					<command></command>
 					<packageName></packageName>
@@ -14747,7 +15089,7 @@ table.insert(helpdesc,
     {name="setarea",options="&lt;name&gt;?",desc="Sets the current area, for use in scan mode.  Supplying no name will show a list."},
     {name="cleararea",options="",desc="Clears the current area."},
     {name="startscripting",options="&lt;name&gt;?",desc="Starts scripting the current area, or if a name is included, starts hunting the mob name.  In BETA."},   
-    {name="stopscripting",options="&lt;name&gt;?",desc="Stops the current script."},
+    {name="stopscripting",options="",desc="Stops the current script."},
     {name="followleader",options="",desc="Will attempt to stay with your party leader. This will AUTO switch if the leader changes."},
     {name="overrideleader",options="&lt;name&gt;",desc="This will override the leader, to force following someome.  Make sure this is the exact name of the character."},
     {name="phunt",options="&lt;mob&gt;",desc="Prey Hunt: Set target and kill to &lt;mobname&gt; and start hunting.  This does not work with scan mode."},
@@ -14759,14 +15101,16 @@ table.insert(helpdesc,
 table.insert(helpdesc,
   {name="scriptconfig",
    commands={
-    {name="scanmode",options="",desc="Turns on/off scan mode for scripting."},
-    {name="findmode",options="",desc="Turns on/off find mode for scripting.  If one of your party members gets left behind, it will try and go find them."},
-    {name="huntwait",options="",desc="Sets how long to wait before every hunt or scan action, before continuing."},
     {name="endcombatwait",options="",desc="Sets how long to wait at the end of combat, before continuing."},
-    {name="setinitial",options="&lt;command&gt;",desc="Will execute this command, once at the start of combat."},
+    {name="huntwait",options="",desc="Sets how long to wait before every hunt or scan action, before continuing."},
+    {name="setinitial",options="&lt;command&gt;",desc="Will execute this command, once at the start of combat per mob."},
     {name="autoloot",options="&lt;comma seperated list of items&gt;",desc="Will attempt to loot the items from every corpse."},
     {name="autopickup",options="&lt;comma seperated list of items&gt;",desc="Will attemp to pickup the items after every death."},
     {name="maxmobs",options="&lt;number&gt;",desc="Sets the maximum number of scriptable mobs before it will move into a room.  If over the limit will attempt to pull with lightning bolt."},
+    {name="scanmode",options="",desc="Turns on/off scan mode for scripting."},
+    {name="findmode",options="",desc="Turns on/off find mode for scripting.  If one of your party members gets left behind, it will try and go find them."},
+    {name="buffmode",options="",desc="Turns on/off whether you will try and use buffs such as berserk, turning off can help with staying with your party leader."},
+    {name="xconfig",options="&lt;berserkovercenter|minmana|minhp&gt;",desc="Sets configuration options"},
    }
   }
 )
@@ -14775,8 +15119,7 @@ table.insert(helpdesc,
    commands={
     {name="fullempower",options="",desc="Starts the empower process.  Used for when you have alot of hero points (aka ascend)"},
     {name="startempower",options="&lt;all&gt;?",desc="Will full empower either ac resists, or all resists. (5 times each)"},
-    {name="autoempower",options="&lt;set/remove&gt; &lt;name&gt; &lt;percent&gt;",desc="Will automatically empower whenever you kill or run fullempower based on your ratios.  See viewempower."},
-    {name="viewempower",options="",desc="Will print out your current empower configuration."},
+    {name="autoempower",options="&lt;set/remove/view&gt; &lt;name&gt;? &lt;percent&gt;?",desc="Will automatically empower whenever you kill or run fullempower based on your ratios.  view will show you your current configuration."},
    }
   }
 )
@@ -14792,10 +15135,14 @@ table.insert(helpdesc,
   {name="other",
    commands={
     {name="multi",options="&lt;#&gt; &lt;command&gt;",desc="runs the command # of times, use {id} in the command string to reference the number."},
-    {name="xconfig",options="findmode|berserk",desc="Sets configuration options"},
     {name="afkmode",options="&lt;on|off|show&gt;?",desc="turns on afkmode, this starts tracking things that happen when you are away.  Turning it off will present the xp difference and loot gained."},
     {name="showkills",options="",desc="Turns on/off kill counters in the data window."},
     {name="stash/unstash",options="",desc="Your stash is whatever you are currently wearing on your body. This works as eiterh stash &lt;item&gt; or get all.item stash"},
+    {name="beckon",options="",desc="If you are in the same party as a person, will get them to turn on their hunt triggers to you."},
+    {name="gt guard",options="",desc="Will request a guard from the leader."},
+    {name="gt rescue",options="",desc="Will request a rescue from the leader."},
+    {name="gt heal",options="",desc="Will request a heal from your party."},
+    {name="rescueall",options="",desc="Will try to rescue all players in the party."},
    }
   }
 )
@@ -14991,7 +15338,8 @@ local args = matches[3]
 if command == "" then
   hecho("Config Commands: \n")
   hecho("berserkovercenter\n")
-  hecho("findmode\n")
+  hecho("minmana\n")
+  hecho("minhp\n")
 end
 
 if command == "berserk" or command=="berserkovercenter" then
@@ -14999,9 +15347,14 @@ if command == "berserk" or command=="berserkovercenter" then
   echo("Berserk Mode: " .. tostring(xaos.config.berserkovercenter))
 end
 
-if command == "findmode" then
-  xaos.config.scripting.findmode = not xaos.config.scripting.findmode
-  echo("Find Mode: " .. tostring(xaos.config.scripting.findmode)) 
+if command == "minmana" then
+  xaos.config.scripting.minmana = tonumber(args)
+  echo("Min Mana: " .. tostring(xaos.config.scripting.minmana))
+end
+
+if command == "minhp" then
+  xaos.config.scripting.minhp = tonumber(args)
+  echo("Min HP: " .. tostring(xaos.config.scripting.minhp))
 end</script>
 					<command></command>
 					<packageName></packageName>
@@ -15313,34 +15666,27 @@ echo("update complete")
 				<regex></regex>
 				<Alias isActive="yes" isFolder="no">
 					<name>setenchant</name>
-					<script>tableEnchantNum["22"]=0   --impart strength
-tableEnchantNum["26"]=0   --impart intelligence
-tableEnchantNum["25"]=0   --impart wisdom
-tableEnchantNum["23"]=0   --impart dexterity
-tableEnchantNum["24"]=0   --impart constitution
-tableEnchantNum["10"]=0   --add saves
+					<script>tableEnchantNum["22"]=1   --impart strength
+tableEnchantNum["26"]=1   --impart intelligence
+tableEnchantNum["25"]=1   --impart wisdom
+tableEnchantNum["23"]=1   --impart dexterity
+tableEnchantNum["24"]=1   --impart constitution
+tableEnchantNum["10"]=1   --add saves
 tableEnchantNum["6"]=0   --add hitpoints
 tableEnchantNum["8"]=0   --add mana
    --add moves
-   --add luck
    --add light
-tableEnchantNum["3"]=0   --add speed
-tableEnchantNum["1"]=0   --add hitroll
+tableEnchantNum["3"]=1   --add speed
+tableEnchantNum["1"]=4   --add hitroll
 tableEnchantNum["2"]=0   --add damroll
-tableEnchantNum["7"]=0   --regen hp
-tableEnchantNum["9"]=0   --regen mana
-tableEnchantNum["4"]=0   --armor physical
-tableEnchantNum["5"]=0   --armor elemental
-tableEnchantNum["20"]=0   --casting necromantic
-tableEnchantNum["11"]=0   --casting abjurational
-tableEnchantNum["12"]=0   --casting alterational
-tableEnchantNum["14"]=6   --casting conjurational
-tableEnchantNum["21"]=0   --casting religious
-tableEnchantNum["15"]=0   --casting divinational
-tableEnchantNum["17"]=0   --casting illusional
+tableEnchantNum["7"]=1   --regen hp
+tableEnchantNum["9"]=1   --regen mana
+tableEnchantNum["4"]=2   --armor physical
+tableEnchantNum["5"]=3   --armor elemental
+tableEnchantNum["14"]=5   --casting conjurational
 tableEnchantNum["18"]=0   --casting invocational
-tableEnchantNum["13"]=0   --casting beguilery
-tableEnchantNum["19"]=0   --casting maladictive
+tableEnchantNum["16"]=0   --casting enchantment
+
    --resist fire
    --resist cold
    --resist lightning
@@ -15354,10 +15700,21 @@ tableEnchantNum["19"]=0   --casting maladictive
    --instill enkindling touch
    --instill glacial touch
    --instill static touch
+
+
+
+   --add luck
+tableEnchantNum["20"]=0   --casting necromantic
+tableEnchantNum["11"]=0   --casting abjurational
+tableEnchantNum["12"]=0   --casting alterational
+tableEnchantNum["21"]=0   --casting religious
+tableEnchantNum["15"]=0   --casting divinational
+tableEnchantNum["17"]=0   --casting illusional
+tableEnchantNum["13"]=0   --casting beguilery
+tableEnchantNum["19"]=0   --casting maladictive
    --research
    --advanced research
-   --greater research
-tableEnchantNum["16"]=0   --casting enchantment</script>
+   --greater research</script>
 					<command></command>
 					<packageName></packageName>
 					<regex>setenchant</regex>
@@ -16107,108 +16464,6 @@ end</script>
 						<packageName></packageName>
 						<regex>^auto_hunt$</regex>
 					</Alias>
-					<AliasGroup isActive="yes" isFolder="yes">
-						<name>Evaluations</name>
-						<script></script>
-						<command></command>
-						<packageName></packageName>
-						<regex></regex>
-						<Alias isActive="yes" isFolder="no">
-							<name>chaos caves</name>
-							<script>if huntTarget == "chaos mycanoid" then
-	huntTarget = "chaos bat"
-elseif huntTarget == "chaos bat" then
-	huntTarget = "chaos ogre"
-elseif huntTarget == "chaos bat" then
-	huntTarget = "chaos elder"
-elseif huntTarget == "chaos elder" then
-	huntTarget = "chaos widow"
-elseif huntTarget == "chaos widow" then
-	huntTarget "anasasi"
-elseif huntTarget == "anasasi" then
-	huntTarget = "chaos mycanoid"
-else 
-	huntTarget = "chaos mycanoid"
-end
-send("hunt "..huntTarget)
-</script>
-							<command></command>
-							<packageName></packageName>
-							<regex>chaos_caves_evaluation</regex>
-						</Alias>
-						<Alias isActive="yes" isFolder="no">
-							<name>black mountain</name>
-							<script>if huntTarget == "goblin warrior" then
-	huntTarget = "large goblin"
-elseif huntTarget == "large goblin" then
-	huntTarget = "goblin scout"
-elseif huntTarget == "goblin scout" then
-	huntTarget = "goblin healer"
-elseif huntTarget == "elite healer" then
-	huntTarget = "elite goblin"
-else
-	huntTarget = "goblin warrior"
-end
-send("hunt "..huntTarget)
-if debug then
-	debugc("Evaluating chaos caves, changed target to "..huntTarget)
-end</script>
-							<command></command>
-							<packageName></packageName>
-							<regex>black_mountain_evaluation</regex>
-						</Alias>
-						<Alias isActive="yes" isFolder="no">
-							<name>lower swamps</name>
-							<script>if huntTarget == "ogre invoker" then
-	huntTarget = "yeti undead"
-elseif huntTarget == "yeti undead" then
-	huntTarget = "yeti zombie"
-elseif huntTarget == "yeti zombie" then
-	huntTarget = "zombie captain"
-elseif huntTarget == "zombie captain" then
-	huntTarget = "kolx"
-elseif huntTarget == "kolx" then
-	huntTarget = "ogre invoker"
-end
-
-send("hunt "..huntTarget)</script>
-							<command></command>
-							<packageName></packageName>
-							<regex>lower_swamps_evaluation</regex>
-						</Alias>
-						<Alias isActive="yes" isFolder="no">
-							<name>upper swamps</name>
-							<script>if huntTarget == "kalshet defend" then
-	huntTarget = "gnomish zombie"
-elseif huntTarget == "gnomish zombie" then
-	huntTarget = "fire zombie"
-elseif huntTarget == "fire zombie" then
-	huntTarget = "kalshet defend"
-end
-
-send("hunt "..huntTarget)</script>
-							<command></command>
-							<packageName></packageName>
-							<regex>upper_swamps_evaluation</regex>
-						</Alias>
-						<Alias isActive="yes" isFolder="no">
-							<name>maze evaluation</name>
-							<script>if huntTarget == "auto tri" then
-	huntTarget = "voric"
-elseif huntTarget == "voric" then
-	huntTarget = "crassulacean"
-elseif huntTarget == "crassulacean" then
-	huntTarget = "auto tri"
-elseif huntTarget == "javal" then
-	huntTarget = "auto tri"
-end
-
-send("hunt "..huntTarget)</script>
-							<command></command>
-							<packageName></packageName>
-							<regex>the_maze_evaluation</regex>
-						</Alias>
-					</AliasGroup>
 					<Alias isActive="yes" isFolder="no">
 						<name>follow</name>
 						<script>followTarget = matches[2]
@@ -16298,61 +16553,6 @@ send("proc")</script>
 					<command></command>
 					<packageName>xaos-ui-0120</packageName>
 					<regex></regex>
-					<AliasGroup isActive="yes" isFolder="yes">
-						<name>deleteOldProfiles</name>
-						<script></script>
-						<command></command>
-						<packageName>deleteOldProfiles</packageName>
-						<regex></regex>
-						<Alias isActive="yes" isFolder="no">
-							<name>delete old profiles</name>
-							<script>deleteOldProfiles(matches[3], matches[2]=="maps")
-
---Syntax examples: "delete old profiles"  -&gt; deletes profiles older than 31 days
---					"delete old maps 10"	-&gt; deletes maps older than 10 days</script>
-							<command></command>
-							<packageName></packageName>
-							<regex>^delete old (profiles|maps)(?: (\d+))?$</regex>
-						</Alias>
-					</AliasGroup>
-					<AliasGroup isActive="yes" isFolder="yes">
-						<name>echo</name>
-						<script></script>
-						<command></command>
-						<packageName>echo</packageName>
-						<regex></regex>
-						<Alias isActive="yes" isFolder="no">
-							<name>`echo</name>
-							<script>local s = matches[2]
-
-s = string.gsub(s, "%$", "\n")
-feedTriggers("\n" .. s .. "\n")
-echo("\n")</script>
-							<command></command>
-							<packageName></packageName>
-							<regex>`echo (.+)</regex>
-						</Alias>
-					</AliasGroup>
-					<AliasGroup isActive="yes" isFolder="yes">
-						<name>run-lua-code-v4</name>
-						<script></script>
-						<command></command>
-						<packageName>run-lua-code-v4</packageName>
-						<regex></regex>
-						<Alias isActive="no" isFolder="no">
-							<name>run lua code</name>
-							<script>local f,e = loadstring("return "..matches[2])
-if not f then
-	f,e = assert(loadstring(matches[2]))
-end
-
-local r = f()
-if r ~= nil then display(r) end</script>
-							<command></command>
-							<packageName></packageName>
-							<regex>^lua (.*)$</regex>
-						</Alias>
-					</AliasGroup>
 					<AliasGroup isActive="yes" isFolder="yes">
 						<name>general</name>
 						<script></script>
@@ -16799,6 +16999,47 @@ end</script>
 					<packageName></packageName>
 					<regex>^multi ([0-9]*) (.*)</regex>
 				</Alias>
+				<Alias isActive="yes" isFolder="no">
+					<name>Multi Cont Command</name>
+					<script>local counter = matches[2]
+local command = matches[3]
+
+if counter == "clear" then
+  echo("clear")
+else
+  counter = tonumber(counter)
+  command = string.trim(command)
+
+  if multicommand == nil then
+    multicommand = ""
+  end
+  
+  if multicounter == nil then
+    multicounter = 0
+  end
+  
+  --Repeat
+  if multicommand == command then
+    multicounter = multicounter + 1
+  else
+    multicounter = 0
+    multicommand = command
+  end
+  
+  echo (1+(counter*multicounter))
+  echo (counter+(counter*multicounter))
+  
+  for i=1+(counter*multicounter),counter+(counter*multicounter) do 
+    echo(i)
+    local tempcom = string.gsub(command,"{id}",i)
+    debugecho(tempcom)
+    expandAlias(tempcom)
+  end
+end</script>
+					<command></command>
+					<packageName></packageName>
+					<regex>^multicont ([0-9]+)?(.*)</regex>
+				</Alias>
 				<Alias isActive="no" isFolder="no">
 					<name>FullEmpower</name>
 					<script>
@@ -16840,7 +17081,7 @@ end</script>
 					<packageName></packageName>
 					<regex>^[f|F]ull[e|E]mpower(?: )?(.*)</regex>
 				</Alias>
-				<Alias isActive="yes" isFolder="no">
+				<Alias isActive="no" isFolder="no">
 					<name>facelessfrag</name>
 					<script>send("give 2 frags faceless")
 tempTimer(2,function () expandAlias("turnIn") end)
@@ -16851,7 +17092,7 @@ tempTimer(4,function () send("quest list") end)</script>
 				</Alias>
 				<Alias isActive="yes" isFolder="no">
 					<name>showkills</name>
-					<script>--xaos.config.show_killed</script>
+					<script>xaos.config.show_killed = not xaos.config.show_killed</script>
 					<command></command>
 					<packageName></packageName>
 					<regex>^showkills</regex>
@@ -16864,7 +17105,7 @@ tempTimer(4,function () send("quest list") end)</script>
 					<packageName></packageName>
 					<regex>empoweriterate</regex>
 				</Alias>
-				<Alias isActive="yes" isFolder="no">
+				<Alias isActive="no" isFolder="no">
 					<name>^fragconvert</name>
 					<script>send("quest request fragments of the fallen god")
 send("give 2 frags faceless")
@@ -16873,6 +17114,13 @@ send("quest request fragments of the fallen god")</script>
 					<command></command>
 					<packageName></packageName>
 					<regex>^fragconvert</regex>
+				</Alias>
+				<Alias isActive="yes" isFolder="no">
+					<name>unlocklep</name>
+					<script>send('unlock north 715124')</script>
+					<command></command>
+					<packageName></packageName>
+					<regex>unlocklep</regex>
 				</Alias>
 			</AliasGroup>
 			<AliasGroup isActive="yes" isFolder="yes">
@@ -17060,6 +17308,13 @@ if command == "view" then
       helpbodyecho(string.sub(v.target .. spacer,1,25) .. ": " .. v.multiplier*100 .. "%")
     end
     helpbodyecho("")
+    helpbodyecho("Buffer: " .. xaos.config.empowerbuffer)
+    helpbodyecho("")
+elseif command == "buffer" then
+  xaos.config.empowerbuffer = tonumber(amount)
+  helpbodyecho("")
+  helpbodyecho("Buffer: " .. xaos.config.empowerbuffer)
+  helpbodyecho("")
 else
   --make sure it matches an actual empower
   if table.size(table.n_collect(xaos.heroempowers, function(elem) return elem.name == empoweritem end)) == 0 then
@@ -17967,26 +18222,7 @@ end</script>
 			<commandButtonUp></commandButtonUp>
 			<commandButtonDown></commandButtonDown>
 			<icon></icon>
-			<orientation>1</orientation>
-			<location>0</location>
-			<posX>0</posX>
-			<posY>0</posY>
-			<mButtonState>1</mButtonState>
-			<sizeX>0</sizeX>
-			<sizeY>0</sizeY>
-			<buttonColumn>1</buttonColumn>
-			<buttonRotation>0</buttonRotation>
-			<buttonColor>#ffffff</buttonColor>
-		</ActionGroup>
-		<ActionGroup isActive="yes" isFolder="yes" isPushButton="no" isFlatButton="no" useCustomLayout="no">
-			<name>Middle</name>
-			<packageName></packageName>
-			<script></script>
-			<css></css>
-			<commandButtonUp></commandButtonUp>
-			<commandButtonDown></commandButtonDown>
-			<icon></icon>
-			<orientation>1</orientation>
+			<orientation>0</orientation>
 			<location>0</location>
 			<posX>0</posX>
 			<posY>0</posY>
@@ -18015,25 +18251,6 @@ end</script>
 				<buttonRotation>0</buttonRotation>
 				<buttonColor>#ffffff</buttonColor>
 			</Action>
-		</ActionGroup>
-		<ActionGroup isActive="yes" isFolder="yes" isPushButton="no" isFlatButton="no" useCustomLayout="no">
-			<name>Right</name>
-			<packageName></packageName>
-			<script></script>
-			<css></css>
-			<commandButtonUp></commandButtonUp>
-			<commandButtonDown></commandButtonDown>
-			<icon></icon>
-			<orientation>0</orientation>
-			<location>0</location>
-			<posX>0</posX>
-			<posY>70</posY>
-			<mButtonState>1</mButtonState>
-			<sizeX>0</sizeX>
-			<sizeY>0</sizeY>
-			<buttonColumn>1</buttonColumn>
-			<buttonRotation>0</buttonRotation>
-			<buttonColor>#ffffff</buttonColor>
 			<Action isActive="yes" isFolder="no" isPushButton="no" isFlatButton="no" useCustomLayout="no">
 				<name>Toggle Scripting</name>
 				<packageName></packageName>
@@ -18086,7 +18303,45 @@ hunting = false</script>
 				<buttonRotation>0</buttonRotation>
 				<buttonColor>#ffffff</buttonColor>
 			</Action>
-			<ActionGroup isActive="yes" isFolder="yes" isPushButton="no" isFlatButton="no" useCustomLayout="no">
+		</ActionGroup>
+		<ActionGroup isActive="yes" isFolder="yes" isPushButton="no" isFlatButton="no" useCustomLayout="no">
+			<name>Middle</name>
+			<packageName></packageName>
+			<script></script>
+			<css></css>
+			<commandButtonUp></commandButtonUp>
+			<commandButtonDown></commandButtonDown>
+			<icon></icon>
+			<orientation>1</orientation>
+			<location>0</location>
+			<posX>0</posX>
+			<posY>0</posY>
+			<mButtonState>1</mButtonState>
+			<sizeX>0</sizeX>
+			<sizeY>0</sizeY>
+			<buttonColumn>1</buttonColumn>
+			<buttonRotation>0</buttonRotation>
+			<buttonColor>#ffffff</buttonColor>
+		</ActionGroup>
+		<ActionGroup isActive="yes" isFolder="yes" isPushButton="no" isFlatButton="no" useCustomLayout="no">
+			<name>Right</name>
+			<packageName></packageName>
+			<script></script>
+			<css></css>
+			<commandButtonUp></commandButtonUp>
+			<commandButtonDown></commandButtonDown>
+			<icon></icon>
+			<orientation>0</orientation>
+			<location>0</location>
+			<posX>0</posX>
+			<posY>70</posY>
+			<mButtonState>1</mButtonState>
+			<sizeX>0</sizeX>
+			<sizeY>0</sizeY>
+			<buttonColumn>1</buttonColumn>
+			<buttonRotation>0</buttonRotation>
+			<buttonColor>#ffffff</buttonColor>
+			<ActionGroup isActive="no" isFolder="yes" isPushButton="no" isFlatButton="no" useCustomLayout="no">
 				<name>General</name>
 				<packageName></packageName>
 				<script></script>
@@ -20980,7 +21235,7 @@ tempTimer(1.1,[[statusDisarm = false]])</script>
 					</Action>
 				</ActionGroup>
 			</ActionGroup>
-			<ActionGroup isActive="yes" isFolder="yes" isPushButton="no" isFlatButton="no" useCustomLayout="no">
+			<ActionGroup isActive="no" isFolder="yes" isPushButton="no" isFlatButton="no" useCustomLayout="no">
 				<name>Graph</name>
 				<packageName></packageName>
 				<script></script>
@@ -21338,8 +21593,8 @@ xaos.areas= {
 		keywordoverride = true,
 		scanmode = true,
 		killarray = {"necromancer apprentice","skeletal guard","zombie guard","hooded human"},
-    },
-    {
+  },
+  {
 		name = "maze",
 		keyword = "maze",
 		killlist = "maze",
@@ -21348,26 +21603,25 @@ xaos.areas= {
 		huntWait=3,
 		endcombatWait=3,
 		killarray = {"lost soldier","stone gargoyle","crossed grey python","wild Tarani beast","giant maze walker","alpha Javal","flame-haired Javal",},
-    },
-    {
+  },
+  {
 		name = "firewidow",
 		keyword = "fire widow",
 		killlist = "fire widow,vicious drider",
 		keywordoverride = false,
 		scanmode = true,
 		killarray = {"fire widow","vicious drider"},
-    },
-    {
+  },
+  {
 		name = "swamps",
 		keyword = "swamps",
 		killlist = "swamps",
 		keywordoverride = true,
 		scanmode = true,
-		killarray = {
-                 "vondoni zombie","centaur zombie","fleshless zombie troll","gnomish zombie","zombie bishop","defender of Kalshet"},
-	},
-  
-    {
+    --"gnomish zombie",
+		killarray = {"vondoni zombie","centaur zombie","fleshless zombie troll","zombie bishop","defender of Kalshet"},
+	}, 
+  {
 		name = "titanvalley",
 		keyword = "titanvalley",
 		killlist = "titanvalley",
@@ -21419,8 +21673,8 @@ xaos.areas= {
 	},
 	{
 		name = "flameimp",
-		keyword = "flame",
-		killlist = "flame",
+		keyword = "flame imp",
+		killlist = "flame imp",
 		keywordoverride = true,
 		scanmode = true,
 		killarray = {"young flame imp","primitive flame imp","flame imp destroyer","vicious flame imp","fully formed flame imp","primal flame imp","untamed flame imp"},
@@ -21688,6 +21942,9 @@ if xaos.scripting == nil then xaos.scripting = {} end
 if xaos.scripting.area == nil then xaos.scripting.area = {} end
 if xaos.scripting.area.maxmobs == nil then xaos.scripting.area.maxmobs = 10 end
 
+if xaos.config.scripting.minmana == nil then xaos.config.scripting.minmana = 0 end
+if xaos.config.scripting.minhp == nil then xaos.config.scripting.minhp = 0 end
+
 if statusLeader == nil then statusLeader = false end
 if overrideleader == nil then overrideleader = false end
 
@@ -21701,7 +21958,10 @@ if scancount == nil then
     up    = {0,0,0},
     down  = {0,0,0},
   }
-end</script>
+end
+
+if status == nil then status = {} end
+if status.resting == nil then status.resting = false end</script>
 					<eventHandlerList />
 				</Script>
 				<Script isActive="yes" isFolder="no">
@@ -22393,7 +22653,7 @@ function leaderhunt(foltarget)
 end</script>
 				<eventHandlerList />
 			</Script>
-			<ScriptGroup isActive="yes" isFolder="yes">
+			<ScriptGroup isActive="no" isFolder="yes">
 				<name>gostEnchanting</name>
 				<packageName>gostEnchanting</packageName>
 				<script></script>
@@ -22434,204 +22694,70 @@ end
 -------------------------------------------------
 -------------------------------------------------------Variables
 function createGostGui()
-if (useGostEnchant==0) then
-echo("\nLOADING BEREGOST'S ENCHANTING GUI\n")
-else
-  return
-end
+
+enchantgui={}
 
 tableEnchant={}
-tableEnchantNum={}
-tableEnchant["1"]="add hitroll"
-tableEnchantNum["1"]=0
-tableEnchant["2"]="add damr"
-tableEnchantNum["2"]=0
-tableEnchant["3"]="add speed"
-tableEnchantNum["3"]=0
-tableEnchant["4"]="armor phy"
-tableEnchantNum["4"]=0
-tableEnchant["5"]="armor el"
-tableEnchantNum["5"]=0
-tableEnchant["6"]="add hitpo"
-tableEnchantNum["6"]=0
-tableEnchant["7"]="regen hp"
-tableEnchantNum["7"]=0
-tableEnchant["8"]="add mana"
-tableEnchantNum["8"]=0
-tableEnchant["9"]="regen mana"
-tableEnchantNum["9"]=0
-tableEnchant["10"]="add saves"
-tableEnchantNum["10"]=0
-tableEnchant["11"]="casting ab"
-tableEnchantNum["11"]=0
-tableEnchant["12"]="casting al"
-tableEnchantNum["12"]=0
-tableEnchant["13"]="casting be"
-tableEnchantNum["13"]=0
-tableEnchant["14"]="casting co"
-tableEnchantNum["14"]=0
-tableEnchant["15"]="casting di"
-tableEnchantNum["15"]=0
-tableEnchant["16"]="casting en"
-tableEnchantNum["16"]=0
-tableEnchant["17"]="casting il"
-tableEnchantNum["17"]=0
-tableEnchant["18"]="casting in"
-tableEnchantNum["18"]=0
-tableEnchant["19"]="casting ma"
-tableEnchantNum["19"]=0
-tableEnchant["20"]="casting ne"
-tableEnchantNum["20"]=0
-tableEnchant["21"]="casting re"
-tableEnchantNum["21"]=0
-tableEnchant["22"]="impart str"
-tableEnchantNum["22"]=0
-tableEnchant["23"]="impart dex"
-tableEnchantNum["23"]=0
-tableEnchant["24"]="impart con"
-tableEnchantNum["24"]=0
-tableEnchant["25"]="impart wis"
-tableEnchantNum["25"]=0
-tableEnchant["26"]="impart int"
-tableEnchantNum["26"]=0
-
-enchantGUI={}
-enchantGUI["Hitroll"]=0
-enchantGUI["Damroll"]=0
-enchantGUI["Speed"]=0
-enchantGUI["AC"]=0
-enchantGUI["Warding"]=0
-enchantGUI["HP"]=0
-enchantGUI["HP Regen"]=0
-enchantGUI["Mana"]=0
-enchantGUI["Mana Regen"]=0
-enchantGUI["Saves"]=0
-enchantGUI["Abjur Casting"]=0
-enchantGUI["Alter Casting"]=0
-enchantGUI["Begui Casting"]=0
-enchantGUI["Conju Casting"]=0
-enchantGUI["Divin Casting"]=0
-enchantGUI["Encha Casting"]=0
-enchantGUI["Illus Casting"]=0
-enchantGUI["Invoc Casting"]=0
-enchantGUI["Malad Casting"]=0
-enchantGUI["Necro Casting"]=0
-enchantGUI["Relig Casting"]=0
-enchantGUI["Impart Str"]=0
-enchantGUI["Impart Dex"]=0
-enchantGUI["Impart Con"]=0
-enchantGUI["Impart Wis"]=0
-enchantGUI["Impart Int"]=0
+tableEnchant["Hitroll"] = {name="Hitroll", enchant="add hitroll", count=0}
+tableEnchant["Damroll"] = {name="Damroll", enchant="add damr", count=0}
+tableEnchant["Speed"] = {name="Speed", enchant="add speed", count=0}
+tableEnchant["AC"] = {name="AC", enchant="armor phy", count=0}
+tableEnchant["Warding"] = {name="Warding", enchant="armor el", count=0}
+tableEnchant["HP"] = {name="HP", enchant="add hitpo", count=0}
+tableEnchant["HP Regen"] = {name="HP Regen", enchant="regen hp", count=0}
+tableEnchant["Mana"] = {name="Mana", enchant="add mana", count=0}
+tableEnchant["Mana Regen"] = {name="Mana Regen", enchant="regen mana", count=0}
+tableEnchant["Saves"] = {name="Saves", enchant="add saves", count=0}
+tableEnchant["Abjur Casting"] = {name="Abjur Casting", enchant="casting ab", count=0}
+tableEnchant["Alter Casting"] = {name="Alter Casting", enchant="casting al", count=0}
+tableEnchant["Begui Casting"] = {name="Begui Casting", enchant="casting be", count=0}
+tableEnchant["Conju Casting"] = {name="Conju Casting", enchant="casting co", count=0}
+tableEnchant["Divin Casting"] = {name="Divin Casting", enchant="casting di", count=0}
+tableEnchant["Encha Casting"] = {name="Encha Casting", enchant="casting en", count=0}
+tableEnchant["Illus Casting"] = {name="Illus Casting", enchant="casting il", count=0}
+tableEnchant["Invoc Casting"] = {name="Invoc Casting", enchant="casting in", count=0}
+tableEnchant["Malad Casting"] = {name="Malad Casting", enchant="casting ma", count=0}
+tableEnchant["Necro Casting"] = {name="Necro Casting", enchant="casting ne", count=0}
+tableEnchant["Relig Casting"] = {name="Relig Casting", enchant="casting re", count=0}
+tableEnchant["Impart Str"] = {name="Impart Str", enchant="impart str", count=0}
+tableEnchant["Impart Dex"] = {name="Impart Dex", enchant="impart dex", count=0}
+tableEnchant["Impart Con"] = {name="Impart Con", enchant="impart con", count=0}
+tableEnchant["Impart Wis"] = {name="Impart Wis", enchant="impart wis", count=0}
+tableEnchant["Impart Int"] = {name="Impart Int", enchant="impart int", count=0}
 ----------------------------------------Functions
 
 ----------------------------------------Reset Labels Function
 function resetLabels(resetNumbers)
 if(resetNumbers==1)then
-tableEnchant["1"]="add hitroll"
-tableEnchantNum["1"]=0
-tableEnchant["2"]="add damr"
-tableEnchantNum["2"]=0
-tableEnchant["3"]="add speed"
-tableEnchantNum["3"]=0
-tableEnchant["4"]="armor phy"
-tableEnchantNum["4"]=0
-tableEnchant["5"]="armor el"
-tableEnchantNum["5"]=0
-tableEnchant["6"]="add hitpo"
-tableEnchantNum["6"]=0
-tableEnchant["7"]="regen hp"
-tableEnchantNum["7"]=0
-tableEnchant["8"]="add mana"
-tableEnchantNum["8"]=0
-tableEnchant["9"]="regen mana"
-tableEnchantNum["9"]=0
-tableEnchant["10"]="add saves"
-tableEnchantNum["10"]=0
-tableEnchant["11"]="casting ab"
-tableEnchantNum["11"]=0
-tableEnchant["12"]="casting al"
-tableEnchantNum["12"]=0
-tableEnchant["13"]="casting be"
-tableEnchantNum["13"]=0
-tableEnchant["14"]="casting co"
-tableEnchantNum["14"]=0
-tableEnchant["15"]="casting di"
-tableEnchantNum["15"]=0
-tableEnchant["16"]="casting en"
-tableEnchantNum["16"]=0
-tableEnchant["17"]="casting il"
-tableEnchantNum["17"]=0
-tableEnchant["18"]="casting in"
-tableEnchantNum["18"]=0
-tableEnchant["19"]="casting ma"
-tableEnchantNum["19"]=0
-tableEnchant["20"]="casting ne"
-tableEnchantNum["20"]=0
-tableEnchant["21"]="casting re"
-tableEnchantNum["21"]=0
-tableEnchant["22"]="impart str"
-tableEnchantNum["22"]=0
-tableEnchant["23"]="impart dex"
-tableEnchantNum["23"]=0
-tableEnchant["24"]="impart con"
-tableEnchantNum["24"]=0
-tableEnchant["25"]="impart wis"
-tableEnchantNum["25"]=0
-tableEnchant["26"]="impart int"
-tableEnchantNum["26"]=0
-enchantGUI["Hitroll"]=0
-enchantGUI["Damroll"]=0
-enchantGUI["Speed"]=0
-enchantGUI["AC"]=0
-enchantGUI["Warding"]=0
-enchantGUI["HP"]=0
-enchantGUI["HP Regen"]=0
-enchantGUI["Mana"]=0
-enchantGUI["Mana Regen"]=0
-enchantGUI["Saves"]=0
-enchantGUI["Abjur Casting"]=0
-enchantGUI["Alter Casting"]=0
-enchantGUI["Begui Casting"]=0
-enchantGUI["Conju Casting"]=0
-enchantGUI["Divin Casting"]=0
-enchantGUI["Encha Casting"]=0
-enchantGUI["Illus Casting"]=0
-enchantGUI["Invoc Casting"]=0
-enchantGUI["Malad Casting"]=0
-enchantGUI["Necro Casting"]=0
-enchantGUI["Relig Casting"]=0
-enchantGUI["Impart Str"]=0
-enchantGUI["Impart Dex"]=0
-enchantGUI["Impart Con"]=0
-enchantGUI["Impart Wis"]=0
-enchantGUI["Impart Int"]=0
+tableEnchant["Hitroll"].count=0
+tableEnchant["Damroll"].count=0
+tableEnchant["Speed"].count=0
+tableEnchant["AC"].count=0
+tableEnchant["Warding"].count=0
+tableEnchant["HP"].count=0
+tableEnchant["HP Regen"].count=0
+tableEnchant["Mana"].count=0
+tableEnchant["Mana Regen"].count=0
+tableEnchant["Saves"].count=0
+tableEnchant["Abjur Casting"].count=0
+tableEnchant["Alter Casting"].count=0
+tableEnchant["Begui Casting"].count=0
+tableEnchant["Conju Casting"].count=0
+tableEnchant["Divin Casting"].count=0
+tableEnchant["Encha Casting"].count=0
+tableEnchant["Illus Casting"].count=0
+tableEnchant["Invoc Casting"].count=0
+tableEnchant["Malad Casting"].count=0
+tableEnchant["Necro Casting"].count=0
+tableEnchant["Relig Casting"].count=0
+tableEnchant["Impart Str"].count=0
+tableEnchant["Impart Dex"].count=0
+tableEnchant["Impart Con"].count=0
+tableEnchant["Impart Wis"].count=0
+tableEnchant["Impart Int"].count=0
 
 hitEnchLabel:echo("Hitroll&lt;br&gt;"..enchantGUI["Hitroll"],"black","c16")
-damEnchLabel:echo("Damroll&lt;br&gt;"..enchantGUI["Damroll"],"black","c16")
-speEnchLabel:echo("Speed&lt;br&gt;"..enchantGUI["Speed"],"black","c16")
-acEnchLabel:echo("AC&lt;br&gt;"..enchantGUI["AC"],"black","c16")
-wardEnchLabel:echo("Warding&lt;br&gt;"..enchantGUI["Warding"],"black","c16")
-hpEnchLabel:echo("HP&lt;br&gt;"..enchantGUI["HP"],"black","c16")
-hpRegEnchLabel:echo("HP Regen&lt;br&gt;"..enchantGUI["HP Regen"],"black","c16")
-manaEnchLabel:echo("Mana&lt;br&gt;"..enchantGUI["Mana"],"black","c16")
-manaRegEnchLabel:echo("Mana Regen&lt;br&gt;"..enchantGUI["Mana Regen"],"black","c16")
-savesEnchLabel:echo("Saves&lt;br&gt;"..enchantGUI["Saves"],"black","c16")
-abjurEnchLabel:echo("Abjur Casting&lt;br&gt;"..enchantGUI["Abjur Casting"],"black","c16")
-alterEnchLabel:echo("Alter Casting&lt;br&gt;"..enchantGUI["Alter Casting"],"black","c16")
-beguiEnchLabel:echo("Begui Casting&lt;br&gt;"..enchantGUI["Begui Casting"],"black","c16")
-conjuEnchLabel:echo("Conju Casting&lt;br&gt;"..enchantGUI["Conju Casting"],"black","c16")
-divinEnchLabel:echo("Divin Casting&lt;br&gt;"..enchantGUI["Divin Casting"],"black","c16")
-enchaEnchLabel:echo("Encha Casting&lt;br&gt;"..enchantGUI["Encha Casting"],"black","c16")
-illusEnchLabel:echo("Illus Casting&lt;br&gt;"..enchantGUI["Illus Casting"],"black","c16")
-invocEnchLabel:echo("Invoc Casting&lt;br&gt;"..enchantGUI["Invoc Casting"],"black","c16")
-maladEnchLabel:echo("Malad Casting&lt;br&gt;"..enchantGUI["Malad Casting"],"black","c16")
-necroEnchLabel:echo("Necro Casting&lt;br&gt;"..enchantGUI["Necro Casting"],"black","c16")
-religEnchLabel:echo("Relig Casting&lt;br&gt;"..enchantGUI["Relig Casting"],"black","c16")
-strEnchLabel:echo("Impart Str&lt;br&gt;"..enchantGUI["Impart Str"],"black","c16")
-dexEnchLabel:echo("Impart Dex&lt;br&gt;"..enchantGUI["Impart Dex"],"black","c16")
-conEnchLabel:echo("Impart Con&lt;br&gt;"..enchantGUI["Impart Con"],"black","c16")
-wisEnchLabel:echo("Impart Wis&lt;br&gt;"..enchantGUI["Impart Wis"],"black","c16")
-intEnchLabel:echo("Impart Int&lt;br&gt;"..enchantGUI["Impart Int"],"black","c16")
+
 maxLabel()
 end
 end
@@ -22640,31 +22766,8 @@ end
 ------------------------------------------Function Max Label
 function maxLabel()
 hitEnchLabel:show()
-damEnchLabel:show()
-speEnchLabel:show()
-acEnchLabel:show()
-wardEnchLabel:show()
-hpEnchLabel:show()
-hpRegEnchLabel:show()
-manaEnchLabel:show()
-manaRegEnchLabel:show()
-savesEnchLabel:show()
-abjurEnchLabel:show()
-alterEnchLabel:show()
-beguiEnchLabel:show()
-conjuEnchLabel:show()
-divinEnchLabel:show()
-enchaEnchLabel:show()
-illusEnchLabel:show()
-invocEnchLabel:show()
-maladEnchLabel:show()
-necroEnchLabel:show()
-religEnchLabel:show()
-strEnchLabel:show()
-dexEnchLabel:show()
-conEnchLabel:show()
-wisEnchLabel:show()
-intEnchLabel:show()
+
+
 resetEnchLabel:show()
 startEnchLabel:show()
 baseEnchLabel:echo("Click to Close ","black","c16")
@@ -22682,31 +22785,9 @@ baseEnchLabel:echo("Click For Enchanting ","black","c16")
 baseEnchLabel:setClickCallback("maxLabel")
 
 hitEnchLabel:hide()
-damEnchLabel:hide()
-speEnchLabel:hide()
-acEnchLabel:hide()
-wardEnchLabel:hide()
-hpEnchLabel:hide()
-hpRegEnchLabel:hide()
-manaEnchLabel:hide()
-manaRegEnchLabel:hide()
-savesEnchLabel:hide()
-abjurEnchLabel:hide()
-alterEnchLabel:hide()
-beguiEnchLabel:hide()
-conjuEnchLabel:hide()
-divinEnchLabel:hide()
-enchaEnchLabel:hide()
-illusEnchLabel:hide()
-invocEnchLabel:hide()
-maladEnchLabel:hide()
-necroEnchLabel:hide()
-religEnchLabel:hide()
-strEnchLabel:hide()
-dexEnchLabel:hide()
-conEnchLabel:hide()
-wisEnchLabel:hide()
-intEnchLabel:hide()
+
+
+
 resetEnchLabel:hide()
 startEnchLabel:hide()
 end
@@ -22724,473 +22805,30 @@ end
   x="50%", y="0%",                    -- makes the container start 20% of the screen away from the right side
   width = "50%", height="100%",      -- filling it up until the end
 })
-hitEnchLabel = Geyser.Label:new({
-  name = "hitEnchLabel",
-  x = "0%", y ="0%",
-  width = "20%", height ="10%",
-  fgColor = "black",
-},baseEnchContainer)
-hitEnchLabel:setColor("green")
-hitEnchLabel:setStyleSheet([[
-  background-color: grey;
-  border-width: 5px;
-  border-style: solid;
-  border-color: green;
-  border-radius: 3px;
-]])
-hitEnchLabel:echo("Hitroll&lt;br&gt;"..enchantGUI["Hitroll"],"black","c16")
-hitEnchLabel:setClickCallback("enchIncrease","Hitroll","hitEnchLabel","1")
-hitEnchLabel:show()
 
-damEnchLabel = Geyser.Label:new({
-  name = "damEnchLabel",
-  x = "20%", y ="0%",
-  width = "20%", height ="10%",
-  fgColor = "black",
-},baseEnchContainer)
-damEnchLabel:setColor("green")
-damEnchLabel:setStyleSheet([[
-  background-color: grey;
-  border-width: 5px;
-  border-style: solid;
-  border-color: green;
-  border-radius: 3px;
-]])
-damEnchLabel:echo("Damroll&lt;br&gt;"..enchantGUI["Damroll"],"black","c16")
-damEnchLabel:setClickCallback("enchIncrease","Damroll","damEnchLabel","2")
-damEnchLabel:show()
+enchantgui.buttons = {}
 
-speEnchLabel = Geyser.Label:new({
-  name = "speEnchLabel",
-  x = "40%", y ="0%",
-  width = "20%", height ="10%",
-  fgColor = "black",
-},baseEnchContainer)
-speEnchLabel:setColor("green")
-speEnchLabel:setStyleSheet([[
-  background-color: grey;
-  border-width: 5px;
-  border-style: solid;
-  border-color: green;
-  border-radius: 3px;
-]])
-speEnchLabel:echo("Speed&lt;br&gt;"..enchantGUI["Speed"],"black","c16")
-speEnchLabel:setClickCallback("enchIncrease","Speed","speEnchLabel","3")
-speEnchLabel:show()
+for k,v in pairs(tableEnchant) do
 
-acEnchLabel = Geyser.Label:new({
-  name = "acEnchLabel",
-  x = "60%", y ="0%",
-  width = "20%", height ="10%",
-  fgColor = "black",
-},baseEnchContainer)
-acEnchLabel:setColor("green")
-acEnchLabel:setStyleSheet([[
-  background-color: grey;
-  border-width: 5px;
-  border-style: solid;
-  border-color: green;
-  border-radius: 3px;
-]])
-acEnchLabel:echo("AC&lt;br&gt;"..enchantGUI["AC"],"black","c16")
-acEnchLabel:setClickCallback("enchIncrease","AC","acEnchLabel","4")
-acEnchLabel:show()
+  enchantgui.buttons[k] = Geyser.Label:new({
+    name = v.name .. "Label",
+    x = "0%", y ="0%",
+    width = "20%", height ="10%",
+    fgColor = "black",
+  },baseEnchContainer)
+  enchantgui.buttons[k]:setColor("green")
+  enchantgui.buttons[k]:setStyleSheet([[
+    background-color: grey;
+    border-width: 5px;
+    border-style: solid;
+    border-color: green;
+    border-radius: 3px;
+  ]])
+  enchantgui.buttons[k]:echo("Hitroll&lt;br&gt;"..v.count,"black","c16")
+  enchantgui.buttons[k]:setClickCallback("enchIncrease",v.name,v.name .. "Label",k)
+  enchantgui.buttons[k]:show()
 
-wardEnchLabel = Geyser.Label:new({
-  name = "wardEnchLabel",
-  x = "80%", y ="0%",
-  width = "20%", height ="10%",
-  fgColor = "black",
-},baseEnchContainer)
-wardEnchLabel:setColor("green")
-wardEnchLabel:setStyleSheet([[
-  background-color: grey;
-  border-width: 5px;
-  border-style: solid;
-  border-color: green;
-  border-radius: 3px;
-]])
-wardEnchLabel:echo("Warding&lt;br&gt;"..enchantGUI["Warding"],"black","c16")
-wardEnchLabel:setClickCallback("enchIncrease","Warding","wardEnchLabel","5")
-wardEnchLabel:show()
-
-hpEnchLabel = Geyser.Label:new({
-  name = "hpEnchLabel",
-  x = "0%", y ="10%",
-  width = "20%", height ="10%",
-  fgColor = "black",
-},baseEnchContainer)
-hpEnchLabel:setColor("green")
-hpEnchLabel:setStyleSheet([[
-  background-color: grey;
-  border-width: 5px;
-  border-style: solid;
-  border-color: green;
-  border-radius: 3px;
-]])
-hpEnchLabel:echo("HP&lt;br&gt;"..enchantGUI["HP"],"black","c16")
-hpEnchLabel:setClickCallback("enchIncrease","HP","hpEnchLabel","6")
-hpEnchLabel:show()
-
-hpRegEnchLabel = Geyser.Label:new({
-  name = "hpRegEnchLabel",
-  x = "20%", y ="10%",
-  width = "20%", height ="10%",
-  fgColor = "black",
-},baseEnchContainer)
-hpRegEnchLabel:setColor("green")
-hpRegEnchLabel:setStyleSheet([[
-  background-color: grey;
-  border-width: 5px;
-  border-style: solid;
-  border-color: green;
-  border-radius: 3px;
-]])
-hpRegEnchLabel:echo("HP Regen&lt;br&gt;"..enchantGUI["HP Regen"],"black","c16")
-hpRegEnchLabel:setClickCallback("enchIncrease","HP Regen","hpRegEnchLabel","7")
-hpRegEnchLabel:show()
-
-manaEnchLabel = Geyser.Label:new({
-  name = "manaEnchLabel",
-  x = "40%", y ="10%",
-  width = "20%", height ="10%",
-  fgColor = "black",
-},baseEnchContainer)
-manaEnchLabel:setColor("green")
-manaEnchLabel:setStyleSheet([[
-  background-color: grey;
-  border-width: 5px;
-  border-style: solid;
-  border-color: green;
-  border-radius: 3px;
-]])
-manaEnchLabel:echo("Mana&lt;br&gt;"..enchantGUI["Mana"],"black","c16")
-manaEnchLabel:setClickCallback("enchIncrease","Mana","manaEnchLabel","8")
-manaEnchLabel:show()
-
-manaRegEnchLabel = Geyser.Label:new({
-  name = "manaRegEnchLabel",
-  x = "60%", y ="10%",
-  width = "20%", height ="10%",
-  fgColor = "black",
-},baseEnchContainer)
-manaRegEnchLabel:setColor("green")
-manaRegEnchLabel:setStyleSheet([[
-  background-color: grey;
-  border-width: 5px;
-  border-style: solid;
-  border-color: green;
-  border-radius: 3px;
-]])
-manaRegEnchLabel:echo("Mana Regen&lt;br&gt;"..enchantGUI["Mana Regen"],"black","c16")
-manaRegEnchLabel:setClickCallback("enchIncrease","Mana Regen","manaRegEnchLabel","9")
-manaRegEnchLabel:show()
-
-savesEnchLabel = Geyser.Label:new({
-  name = "savesEnchLabel",
-  x = "80%", y ="10%",
-  width = "20%", height ="10%",
-  fgColor = "black",
-},baseEnchContainer)
-savesEnchLabel:setColor("green")
-savesEnchLabel:setStyleSheet([[
-  background-color: grey;
-  border-width: 5px;
-  border-style: solid;
-  border-color: green;
-  border-radius: 3px;
-]])
-savesEnchLabel:echo("Saves&lt;br&gt;"..enchantGUI["Saves"],"black","c16")
-savesEnchLabel:setClickCallback("enchIncrease","Saves","savesEnchLabel","10")
-savesEnchLabel:show()
-
-abjurEnchLabel = Geyser.Label:new({
-  name = "abjurEnchLabel",
-  x = "0%", y ="20%",
-  width = "20%", height ="10%",
-  fgColor = "black",
-},baseEnchContainer)
-abjurEnchLabel:setColor("green")
-abjurEnchLabel:setStyleSheet([[
-  background-color: grey;
-  border-width: 5px;
-  border-style: solid;
-  border-color: green;
-  border-radius: 3px;
-]])
-abjurEnchLabel:echo("Abjur Casting&lt;br&gt;"..enchantGUI["Abjur Casting"],"black","c16")
-abjurEnchLabel:setClickCallback("enchIncrease","Abjur Casting","abjurEnchLabel","11")
-abjurEnchLabel:show()
-
-alterEnchLabel = Geyser.Label:new({
-  name = "alterEnchLabel",
-  x = "20%", y ="20%",
-  width = "20%", height ="10%",
-  fgColor = "black",
-},baseEnchContainer)
-alterEnchLabel:setColor("green")
-alterEnchLabel:setStyleSheet([[
-  background-color: grey;
-  border-width: 5px;
-  border-style: solid;
-  border-color: green;
-  border-radius: 3px;
-]])
-alterEnchLabel:echo("Alter Casting&lt;br&gt;"..enchantGUI["Alter Casting"],"black","c16")
-alterEnchLabel:setClickCallback("enchIncrease","Alter Casting","alterEnchLabel","12")
-alterEnchLabel:show()
-
-beguiEnchLabel = Geyser.Label:new({
-  name = "beguiEnchLabel",
-  x = "40%", y ="20%",
-  width = "20%", height ="10%",
-  fgColor = "black",
-},baseEnchContainer)
-beguiEnchLabel:setColor("green")
-beguiEnchLabel:setStyleSheet([[
-  background-color: grey;
-  border-width: 5px;
-  border-style: solid;
-  border-color: green;
-  border-radius: 3px;
-]])
-beguiEnchLabel:echo("Begui Casting&lt;br&gt;"..enchantGUI["Begui Casting"],"black","c16")
-beguiEnchLabel:setClickCallback("enchIncrease","Begui Casting","beguiEnchLabel","13")
-beguiEnchLabel:show()
-
-conjuEnchLabel = Geyser.Label:new({
-  name = "conjuEnchLabel",
-  x = "60%", y ="20%",
-  width = "20%", height ="10%",
-  fgColor = "black",
-},baseEnchContainer)
-conjuEnchLabel:setColor("green")
-conjuEnchLabel:setStyleSheet([[
-  background-color: grey;
-  border-width: 5px;
-  border-style: solid;
-  border-color: green;
-  border-radius: 3px;
-]])
-conjuEnchLabel:echo("Conju Casting&lt;br&gt;"..enchantGUI["Conju Casting"],"black","c16")
-conjuEnchLabel:setClickCallback("enchIncrease","Conju Casting","conjuEnchLabel","14")
-conjuEnchLabel:show()
-
-divinEnchLabel = Geyser.Label:new({
-  name = "divinEnchLabel",
-  x = "80%", y ="20%",
-  width = "20%", height ="10%",
-  fgColor = "black",
-},baseEnchContainer)
-divinEnchLabel:setColor("green")
-divinEnchLabel:setStyleSheet([[
-  background-color: grey;
-  border-width: 5px;
-  border-style: solid;
-  border-color: green;
-  border-radius: 3px;
-]])
-divinEnchLabel:echo("Divin Casting&lt;br&gt;"..enchantGUI["Divin Casting"],"black","c16")
-divinEnchLabel:setClickCallback("enchIncrease","Divin Casting","divinEnchLabel","15")
-divinEnchLabel:show()
-
-enchaEnchLabel = Geyser.Label:new({
-  name = "enchaEnchLabel",
-  x = "0%", y ="30%",
-  width = "20%", height ="10%",
-  fgColor = "black",
-},baseEnchContainer)
-enchaEnchLabel:setColor("green")
-enchaEnchLabel:setStyleSheet([[
-  background-color: grey;
-  border-width: 5px;
-  border-style: solid;
-  border-color: green;
-  border-radius: 3px;
-]])
-enchaEnchLabel:echo("Encha Casting&lt;br&gt;"..enchantGUI["Encha Casting"],"black","c16")
-enchaEnchLabel:setClickCallback("enchIncrease","Encha Casting","enchaEnchLabel","16")
-enchaEnchLabel:show()
-
-illusEnchLabel = Geyser.Label:new({
-  name = "illusEnchLabel",
-  x = "20%", y ="30%",
-  width = "20%", height ="10%",
-  fgColor = "black",
-},baseEnchContainer)
-illusEnchLabel:setColor("green")
-illusEnchLabel:setStyleSheet([[
-  background-color: grey;
-  border-width: 5px;
-  border-style: solid;
-  border-color: green;
-  border-radius: 3px;
-]])
-illusEnchLabel:echo("Illus Casting&lt;br&gt;"..enchantGUI["Illus Casting"],"black","c16")
-illusEnchLabel:setClickCallback("enchIncrease","Illus Casting","illusEnchLabel","17")
-illusEnchLabel:show()
-
-invocEnchLabel = Geyser.Label:new({
-  name = "invocEnchLabel",
-  x = "40%", y ="30%",
-  width = "20%", height ="10%",
-  fgColor = "black",
-},baseEnchContainer)
-invocEnchLabel:setColor("green")
-invocEnchLabel:setStyleSheet([[
-  background-color: grey;
-  border-width: 5px;
-  border-style: solid;
-  border-color: green;
-  border-radius: 3px;
-]])
-invocEnchLabel:echo("Invoc Casting&lt;br&gt;"..enchantGUI["Invoc Casting"],"black","c16")
-invocEnchLabel:setClickCallback("enchIncrease","Invoc Casting","invocEnchLabel","18")
-invocEnchLabel:show()
-
-maladEnchLabel = Geyser.Label:new({
-  name = "maladEnchLabel",
-  x = "60%", y ="30%",
-  width = "20%", height ="10%",
-  fgColor = "black",
-},baseEnchContainer)
-maladEnchLabel:setColor("green")
-maladEnchLabel:setStyleSheet([[
-  background-color: grey;
-  border-width: 5px;
-  border-style: solid;
-  border-color: green;
-  border-radius: 3px;
-]])
-maladEnchLabel:echo("Malad Casting&lt;br&gt;"..enchantGUI["Malad Casting"],"black","c16")
-maladEnchLabel:setClickCallback("enchIncrease","Malad Casting","maladEnchLabel","19")
-maladEnchLabel:show()
-
-necroEnchLabel = Geyser.Label:new({
-  name = "necroEnchLabel",
-  x = "80%", y ="30%",
-  width = "20%", height ="10%",
-  fgColor = "black",
-},baseEnchContainer)
-necroEnchLabel:setColor("green")
-necroEnchLabel:setStyleSheet([[
-  background-color: grey;
-  border-width: 5px;
-  border-style: solid;
-  border-color: green;
-  border-radius: 3px;
-]])
-necroEnchLabel:echo("Necro Casting&lt;br&gt;"..enchantGUI["Necro Casting"],"black","c16")
-necroEnchLabel:setClickCallback("enchIncrease","Necro Casting","necroEnchLabel","20")
-necroEnchLabel:show()
-
-religEnchLabel = Geyser.Label:new({
-  name = "religEnchLabel",
-  x = "0%", y ="40%",
-  width = "20%", height ="10%",
-  fgColor = "black",
-},baseEnchContainer)
-religEnchLabel:setColor("green")
-religEnchLabel:setStyleSheet([[
-  background-color: grey;
-  border-width: 5px;
-  border-style: solid;
-  border-color: green;
-  border-radius: 3px;
-]])
-religEnchLabel:echo("Relig Casting&lt;br&gt;"..enchantGUI["Relig Casting"],"black","c16")
-religEnchLabel:setClickCallback("enchIncrease","Relig Casting","religEnchLabel","21")
-religEnchLabel:show()
-
-strEnchLabel = Geyser.Label:new({
-  name = "strEnchLabel",
-  x = "20%", y ="40%",
-  width = "20%", height ="10%",
-  fgColor = "black",
-},baseEnchContainer)
-strEnchLabel:setColor("green")
-strEnchLabel:setStyleSheet([[
-  background-color: grey;
-  border-width: 5px;
-  border-style: solid;
-  border-color: green;
-  border-radius: 3px;
-]])
-strEnchLabel:echo("Impart Str&lt;br&gt;"..enchantGUI["Impart Str"],"black","c16")
-strEnchLabel:setClickCallback("enchIncrease","Impart Str","strEnchLabel","22")
-strEnchLabel:show()
-
-dexEnchLabel = Geyser.Label:new({
-  name = "dexEnchLabel",
-  x = "40%", y ="40%",
-  width = "20%", height ="10%",
-  fgColor = "black",
-},baseEnchContainer)
-dexEnchLabel:setColor("green")
-dexEnchLabel:setStyleSheet([[
-  background-color: grey;
-  border-width: 5px;
-  border-style: solid;
-  border-color: green;
-  border-radius: 3px;
-]])
-dexEnchLabel:echo("Impart Dex&lt;br&gt;"..enchantGUI["Impart Dex"],"black","c16")
-dexEnchLabel:setClickCallback("enchIncrease","Impart Dex","dexEnchLabel","23")
-dexEnchLabel:show()
-
-conEnchLabel = Geyser.Label:new({
-  name = "conEnchLabel",
-  x = "60%", y ="40%",
-  width = "20%", height ="10%",
-  fgColor = "black",
-},baseEnchContainer)
-conEnchLabel:setColor("green")
-conEnchLabel:setStyleSheet([[
-  background-color: grey;
-  border-width: 5px;
-  border-style: solid;
-  border-color: green;
-  border-radius: 3px;
-]])
-conEnchLabel:echo("Impart Con&lt;br&gt;"..enchantGUI["Impart Con"],"black","c16")
-conEnchLabel:setClickCallback("enchIncrease","Impart Con","conEnchLabel","24")
-conEnchLabel:show()
-
-wisEnchLabel = Geyser.Label:new({
-  name = "wisEnchLabel",
-  x = "80%", y ="40%",
-  width = "20%", height ="10%",
-  fgColor = "black",
-},baseEnchContainer)
-wisEnchLabel:setColor("green")
-wisEnchLabel:setStyleSheet([[
-  background-color: grey;
-  border-width: 5px;
-  border-style: solid;
-  border-color: green;
-  border-radius: 3px;
-]])
-wisEnchLabel:echo("Impart Wis&lt;br&gt;"..enchantGUI["Impart Wis"],"black","c16")
-wisEnchLabel:setClickCallback("enchIncrease","Impart Wis","wisEnchLabel","25")
-wisEnchLabel:show()
-
-intEnchLabel = Geyser.Label:new({
-  name = "intEnchLabel",
-  x = "0%", y ="50%",
-  width = "20%", height ="10%",
-  fgColor = "black",
-},baseEnchContainer)
-intEnchLabel:setColor("green")
-intEnchLabel:setStyleSheet([[
-  background-color: grey;
-  border-width: 5px;
-  border-style: solid;
-  border-color: green;
-  border-radius: 3px;
-]])
-intEnchLabel:echo("Impart Int&lt;br&gt;"..enchantGUI["Impart Int"],"black","c16")
-intEnchLabel:setClickCallback("enchIncrease","Impart Int","intEnchLabel","26")
-intEnchLabel:show()
+end
 
 startEnchLabel = Geyser.Label:new({
   name = "startEnchLabel",
@@ -23245,7 +22883,7 @@ resetLabels(1)
 minLabel()
 
 
-
+--TODO: FIX
 function enchIncrease(tableTag,labelName,enchIndex)
   enchIndex=tostring(enchIndex)
   if(enchantGUI[tableTag]&lt;=14)then
@@ -23263,16 +22901,16 @@ function startEnchant()
   enableTrigger("gostEnchanting")
   enchCount=0
   switchCount=1
-  if(enchCount&lt;tableEnchantNum[tostring(switchCount)])then
-    send("enchant "..tableEnchant[tostring(switchCount)])
+  if(enchCount&lt;tableEnchant[tostring(switchCount)].count)then
+    send("enchant "..tableEnchant[tostring(switchCount)].enchant)
 	  send("pro")
  	  enchCount=enchCount+1
   else
-		while(tableEnchantNum[tostring(switchCount)]==0)do
+		while(tableEnchant[tostring(switchCount)].count==0)do
 	    switchCount=switchCount+1
 		end
 	  if(tableEnchant[tostring(switchCount)])then
-			send("enchant "..tableEnchant[tostring(switchCount)])
+			send("enchant "..tableEnchant[tostring(switchCount)].enchant)
 	    send("pro")
 		  enchCount=1
 	  end
@@ -23546,7 +23184,7 @@ end</script>
 
 function dataecho(header,text) 
   --if xaos.config.debugmode then
-    feedManager("[" .. header .. "] " ..text .. "\n")
+    feedManager("[" .. header .. "] " ..text)
   --end
 end
 
@@ -24085,6 +23723,8 @@ function resizeParent()
   bottom_container:resize(windowWidth-userwindowWidth-BORDER_WIDTH .. "px","100px")
 end
  
+ 
+resizeParent()
 --
 -- Set mouse event callbacks.
 --
@@ -24220,30 +23860,47 @@ menu_addtab("XP")
 
 left_container = left_container or Geyser.Container:new({name = "left_container", x = 0, y = 0, width = "100%", height = "100%"},menu.XP)
 
-
-
-
 --XP RATE
-
+xprTitle = xprTitle or
+  Geyser.Label:new(
+    {
+      name = "xprTitle",
+      x = "0%",
+      y = "0.5c",
+      width = "100%",
+      height = "2c",
+      message = [[&lt;center&gt;&lt;/center&gt;]],
+    },
+    left_container
+  )
+xprTitle:echo(" Experience Rate:")
 xprText = xprText or
   Geyser.Label:new(
     {
       name = "xprText",
       x = "0%",
-      y = "10c",
+      y = "11.5c",
       width = "100%",
       height = "3c",
       message = [[&lt;center&gt;&lt;/center&gt;]],
     },
     left_container
   )
-
+xprText:setStyleSheet(
+  [[
+    font: large center "Garamond";
+  	
+  	background-color: #222233;
+  	color: #AACCFF;
+    padding-left:15px;
+  ]]
+  )
 xprDisplay = xprDisplay or
   Geyser.Label:new(
     {
       name = "xprDisplay",
       x = "0%",
-      y = "0c",
+      y = "1.8c",
       width = "100%",
       height = "9c",
       message = [[&lt;center&gt;&lt;/center&gt;]],
@@ -24299,28 +23956,40 @@ end
 
 --KILL RATE
 
-killrateText = killrateText or
+--killrateText = killrateText or
+  -- Geyser.Label:new(
+    -- {
+      -- name = "killrateText",
+      -- x = "2%",
+      -- y = "22c",
+      -- width = "100%",
+      -- height = "3c",
+      -- message = [[&lt;center&gt;&lt;/center&gt;]],
+    -- },
+    -- left_container
+  -- )
+killrateTitle = killrateTitle or
   Geyser.Label:new(
     {
-      name = "killrateText",
-      x = "2%",
-      y = "22c",
+      name = "killrateTitle",
+      x = "0%",
+      y = "14c",
       width = "100%",
-      height = "3c",
+      height = "2c",
       message = [[&lt;center&gt;&lt;/center&gt;]],
     },
     left_container
   )
-
-killrateDisplay = killrateDisplay or
-  Geyser.Label:new(
-    {
-      name = "killrateDisplay",
-      x = "2%",
-      y = "12c",
-      width = "100%",
-      height = "7c",
-      message = [[&lt;center&gt;&lt;/center&gt;]],
+killrateTitle:echo(" Kill Rate:")
+ killrateDisplay = killrateDisplay or
+   Geyser.Label:new(
+     {
+       name = "killrateDisplay",
+        x = "0%",
+        y = "13.5c",
+        width = "100%",
+        height = "8c",
+        message = [[&lt;center&gt;&lt;/center&gt;]],
     },
     left_container
   )
@@ -24328,53 +23997,121 @@ killrateDisplay:setFontSize(10)
 killrateDisplay:setStyleSheet(
   [[
   font: large center "Garamond";
-	border: 10px solid black;
+	
 	background-color: #222233;
 	color: #AACCFF;
-	    border-width: 2px;
-    border-style: solid;
-    border-radius: 10px;
 ]]
 )
 
 killRateBars = killRateBars or {}
 for k=1,16 do
 
-killRateBars[k] = killRateBars[k] or
-  Geyser.Gauge:new(
-    {name = "killRateBar" .. k, x = "-" .. (2+(k*6)) .. "%", y = "5%", width = "5%", height = "90%", orientation = "vertical"},
-    killrateDisplay
+  killRateBars[k] = killRateBars[k] or
+    Geyser.Gauge:new(
+      {name = "killRateBar" .. k, x = "-" .. (2+(k*6)) .. "%", y = "5%", width = "5%", height = "90%", orientation = "vertical"},
+      killrateDisplay
+    )
+  killRateBars[k].front:setStyleSheet(
+    [[background-color: QLinearGradient( x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #ff9900, stop: 0.1 #e58700, stop: 0.49 #d47c00 stop: 0.5 #b26400, stop: 1 #985300);
+      border-top: 1px black solid;
+      border-left: 1px black solid;
+      border-bottom: 1px black solid;
+      border-radius: 7;
+  		font-size: 5;]]
   )
-killRateBars[k].front:setStyleSheet(
-  [[background-color: QLinearGradient( x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #ff9900, stop: 0.1 #e58700, stop: 0.49 #d47c00 stop: 0.5 #b26400, stop: 1 #985300);
-    border-top: 1px black solid;
-    border-left: 1px black solid;
-    border-bottom: 1px black solid;
-    border-radius: 7;
-		font-size: 5;]]
-)
-killRateBars[k].back:setStyleSheet(
-  [[background-color: black;
-    border-width: 1px;
-    border-color: black;
-    border-style: solid;
-    border-radius: 7;
-		
-    padding: 3px;]]
-)  
-
+  killRateBars[k].back:setStyleSheet(
+    [[background-color: black;
+      border-width: 1px;
+      border-color: black;
+      border-style: solid;
+      border-radius: 7;
+  		
+      padding: 3px;]]
+  )  
+  killRateBars[k]:move("-" ..((k)*barstart)+(barstart/2)+.1 .. "%","5%")
+    killRateBars[k]:resize(barwidth .. "%","90%")
+    killRateBars[k].front:setStyleSheet(
+      [[background-color: QLinearGradient( x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #ff9900, stop: 0.1 #e58700, stop: 0.49 #d47c00 stop: 0.5 #b26400, stop: 1 #985300);
+        border-top: 0px black solid;
+        border-left: 0px black solid;
+        border-bottom: 0px black solid;
+        border-radius: 0;
+    		font-size: 5;]]
+    )
+    killRateBars[k].back:setStyleSheet(
+      [[background-color: black;
+        border-width: 1px;
+        border-color: black;
+        border-style: solid;
+        border-radius: 1;
+        padding: 1px;]]
+    )  
 end
 
+local graphoptions={{1,"1 min"},{5,"5 mins"},{10,"10 mins"},{15,"15 mins"},{30,"30 mins"},{60,"1 hr"},}
 
 
 
-</script>
-							<eventHandlerList />
-						</Script>
-						<Script isActive="yes" isFolder="no">
-							<name>Kill rate visualization</name>
-							<packageName></packageName>
-							<script></script>
+if xpGraphOptionsBox == nil then
+  xpGraphOptionsBox =  
+    Geyser.HBox:new(
+     {
+       name = "xpGraphOptionsBox",
+        x = "0%",
+        y = "25c",
+        width = "100%",
+        height = "2c",
+        message = [[&lt;center&gt;&lt;/center&gt;]],
+    },
+    left_container
+  )
+  
+  xpGraphOptions = {}
+  
+  for k,v in pairs(graphoptions) do
+    xpGraphOptions[v[1]] = 
+    Geyser.Label:new(
+      {
+        name = "graphoption" .. k,
+        width = "100%",
+        height = "2c",
+        message = [[&lt;center&gt;&lt;/center&gt;]],
+      },
+      xpGraphOptionsBox
+    )
+    xpGraphOptions[v[1]]:setFontSize(10)
+    xpGraphOptions[v[1]]:setStyleSheet(
+      [[
+      font: large center "Garamond";
+    	
+    	background-color: #222233;
+    	color: #AACCFF;
+    
+    ]]
+    )
+    xpGraphOptions[v[1]]:echo(v[2])
+  end
+end
+for k,v in pairs(graphoptions) do
+    xpGraphOptions[v[1]]:setStyleSheet(
+      [[
+      font: large center "Garamond";
+    	
+    	background-color: #222233;
+    	color: #AACCFF;
+    
+    ]]
+    )
+    xpGraphOptions[v[1]]:echo("&lt;center&gt;" .. v[2])
+    xpGraphOptions[v[1]]:setClickCallback("changegraph",v[1])
+end
+
+function changegraph(time)
+
+  displaytimespan=tonumber(time)
+  updateDisplayTime()
+
+end</script>
 							<eventHandlerList />
 						</Script>
 						<Script isActive="yes" isFolder="no">
@@ -24432,10 +24169,11 @@ dataCon = dataCon or Geyser.MiniConsole:new({
     wrapAt = 100,
 },dataBackCon)
 
-dataCon:setTextFormat (255, 255, 255, 0, 0, 0, 0,0,0)
 dataCon:setFontSize(mysettings.datafontsize)
 dataCon:setBufferSize (10000, 1000)
-
+dataCon:fg("white")
+dataCon:bg("black")
+dataCon:setColor("black")
 enableScrollBar("data")
 
 
@@ -24701,7 +24439,9 @@ combatWin = combatWin or Geyser.UserWindow:new({
 combatWin:disableAutoDock() 
 enableScrollBar("combatWin")
 combatWin:hide()
-menu.setdoubleclick("Combat",function() combatWin:show() end)
+
+
+--menu.setdoubleclick("Combat",function() combatWin:show() end)
 
 
 </script>
@@ -24738,7 +24478,7 @@ xpWin = xpWin or Geyser.UserWindow:new({
 xpWin:disableAutoDock() 
 enableScrollBar("xpWin")
 xpWin:hide()
-menu.setdoubleclick("XP",function() xpWin:show() end)
+--menu.setdoubleclick("XP",function() xpWin:show() end)
 
 
 </script>
@@ -24969,6 +24709,8 @@ function updateXPbars(timespan,xptype)
   if index &lt;= 16 then
   xpRateBars[index]:setValue(calcnum,topnum,calcnum)
   end
+  
+  xprText:echo("Approx Time to Ascend: " ..calcAscendTime(xaos.Level,xaos.LevelPercent,displaytimespan))
 end
 
 function updateKillbars(timespan)
@@ -25038,11 +24780,11 @@ function updatestats()
   statcount=0
   maxstatcount=5
   gagmode=true
-  expandAlias("questeat")
-  expandAlias("scoreeat")
-  send("aff")
-  send("tactics")
-  send("hero empower")
+  expandAlias("questeat",false)
+  expandAlias("scoreeat",false)
+  send("aff",false)
+  send("tactics",false)
+  send("hero empower",false)
 end
 
 
@@ -30297,21 +30039,7 @@ end</script>
 						<packageName></packageName>
 						<script>if mysettings.UIType ~= "XaosUI" then return end
 
-function feedManager(message)
-  if lastMessage == nil then
-    lastMessage = "None"
-  end
-  if lastTimestamp == nil then
-    timestamp = getTime(true, "hh:mm:ssap")
-  end
-  local timestamp = getTime(true, "hh:mm:ssap")
-  local console = "UI.FeedList"
-  if message ~= lastMessage or timestamp ~= lastTimestamp then
-    cecho(console, message .. "&lt;DimGrey&gt; @" .. timestamp .. "\n")
-    lastMessage = message
-    lastTimestamp = timestamp
-  end
-end
+
 
 function expPerTerm(term)
   local newTime = getEpoch()
@@ -30576,37 +30304,7 @@ end</script>
   end
 end
 
-function expPerTerm(term)
-  local newTime = getEpoch()
-	local inScopeExp = {}
-	local total = 0
-  	for k,v in pairs(expPool) do
-  		local exp  = rex.match(tostring(v), [[^(.*)\,.*$]])
-  		local time = rex.match(tostring(v), [[^.*\,(.*)$]])
-  		local minTime = tonumber(newTime) - tonumber(term)
-  		local maxTime = newTime
-  		if tonumber(time) &lt;= tonumber(maxTime) and tonumber(time) &gt;= tonumber(minTime) then
-  			table.insert(inScopeExp, exp)
-  		end
-  	end
-  	for k, v in pairs(inScopeExp) do
-  		total = tonumber(total) + tonumber(v)
-  	end
-    if isStringEmpty(tostring(total)) then
-      total = 0
-    end
-  	return total
-end
-function isStringEmpty(s)
-  return s == nil or s == ''
-end
-function isTableEmpty(s)
-  local next = next
-  if next(s) == nil then
-    return true
-  end
-  return false
-end</script>
+</script>
 					<eventHandlerList />
 				</Script>
 			</ScriptGroup>
