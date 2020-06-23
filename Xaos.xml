@@ -16060,7 +16060,7 @@ end</script>
 						<name>huntwait</name>
 						<script>xaos.config.scripting.huntwait=tonumber(matches[2])
 
-echo("\n\n Max Mobs: " .. tostring(xaos.scripting.area.huntwait) .. "\n\n")</script>
+echo("\n\n Hunt Wait: " .. tostring(xaos.scripting.huntwait) .. "\n\n")</script>
 						<command></command>
 						<packageName></packageName>
 						<regex>^huntwait (.*)</regex>
