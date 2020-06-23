@@ -21610,6 +21610,8 @@ echo("\n " .. display(funfurmanual) .. "\n")</script>
 
 if mysettings == nil then mysettings = {} end
 
+mysettings.version = "0.2.0.0"
+
 if io.exists(getMudletHomeDir() .. "/mysettings.dat") then
   table.load(getMudletHomeDir() .. "/mysettings.dat",mysettings)
 end
