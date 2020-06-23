@@ -21608,23 +21608,57 @@ echo("\n " .. display(funfurmanual) .. "\n")</script>
 			<packageName></packageName>
 			<script>if xaos == nil then xaos = {} end
 
---Fail Safe
-if mysettings == nil then mysettings = {
-  oocchatsize = 12,
-  questfontsize = 10,
-  variablefontsize = 10,
-  scorefontsize = 10,
-  datafontsize = 10,
+if mysettings == nil then mysettings = {} end
+
+if io.exists(getMudletHomeDir() .. "/mysettings.dat") then
+  table.load(getMudletHomeDir() .. "/mysettings.dat",mysettings)
+end
+
+if mysettings.oocchatsize == nil then mysettings.oocchatsize = 12 end
+if mysettings.questfontsize == nil then mysettings.questfontsize = 10 end
+if mysettings.variablefontsize == nil then mysettings.variablefontsize =  10 end
+if mysettings.scorefontsize== nil then mysettings.scorefontsize =  10 end
+if mysettings.datafontsize== nil then mysettings.datafontsize = 10 end
+if mysettings.feedconsole== nil then mysettings.feedconsole =  "data" end
+if mysettings.UIType== nil then mysettings.UIType =  "XUI" end
+
+mysettings.XUI = {
+  UIMode = "container",
   feedconsole = "data",
-  UIType = "XUI",
-  XUI = {
-    UIMode = "container",
-    feedconsole = "data",
-  },
-  XaosUI = {
-    feedconsole = "UI.FeedList",
-  },
-} end</script>
+}
+mysettings.XaosUI = {
+  feedconsole = "UI.FeedList",
+}
+
+function savemysettings()
+  table.save(getMudletHomeDir() .. "/mysettings.dat",mysettings)
+end
+function changeUI(uiname)
+
+  if uiname == "XUI" then
+    mysettings.feedconsole = "data"
+    UIType = "XUI"
+    enableScript("XUI")
+    disableScript("XaosUI")
+    enableTimer("XUI")
+    disableTimer("XaosUI")
+    enableAlias("XUI")
+    disableAlias("XaosUI")
+  elseif uiname == "XaosUI" then
+    mysettings.feedconsole = "UI.FeedList"
+    UIType = "XaosUI"
+    enableScript("XaosUI")
+    disableScript("XUI")
+    enableTimer("XaosUI")
+    disableTimer("XUI")
+    enableAlias("XaosUI")
+    disableAlias("XUI")
+  end
+  savemysettings()
+  cecho("&lt;yellow&gt;It is highly recommended you close and reopen mudlet.")
+end
+
+changeUI(mysettings.UIType)</script>
 			<eventHandlerList />
 			<ScriptGroup isActive="yes" isFolder="yes">
 				<name>Variables</name>
@@ -22986,7 +23020,7 @@ end</script>
   --local console = "UI.FeedList"
   if (ignoretime and message ~= lastMessage) or ((ignoretime == nil or not ignoretime) and (message ~= lastMessage or timestamp ~= lastTimestamp)) then
   --if message ~= lastMessage and (ignoretime or timestamp ~= lastTimestamp then
-    cecho(feedconsole, message .. "&lt;DimGrey&gt; @" .. timestamp .. "\n")
+    cecho(mysettings.feedconsole, message .. "&lt;DimGrey&gt; @" .. timestamp .. "\n")
     lastMessage = message
     lastTimestamp = timestamp
   end
