@@ -18347,12 +18347,10 @@ end</script>
 			<Action isActive="yes" isFolder="no" isPushButton="no" isFlatButton="no" useCustomLayout="no">
 				<name>Toggle Scripting</name>
 				<packageName></packageName>
-				<script>huntTarget = huntTarget or "Helpful Bob"
-if auto_hunt then
+				<script>if auto_hunt then
   auto_hunt = false
   xuicom("You will no longer attempt to automatically hunt targets")
 else
-  send("auto ")
   auto_hunt = true
   xuicom(
     "You will attempt to automatically hunt something. Current settings indicate you're going to hunt " ..
