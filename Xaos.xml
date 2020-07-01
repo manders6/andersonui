@@ -1414,7 +1414,7 @@ end
 							<name>End Rest</name>
 							<script>
 if status.resting and 
-  (tonumber(xPrompt.mana) &gt;= tonumber(xaos.config.scripting.minmana) or tonumber(xPrompt.hp) &gt;= tonumber(xaos.config.scripting.minhp) 
+  (tonumber(xPrompt.mana) &gt;= tonumber(xaos.config.scripting.minmana) and tonumber(xPrompt.hp) &gt;= tonumber(xaos.config.scripting.minhp) 
   ) then
   
   send("wake")
@@ -2620,63 +2620,16 @@ recentGold = recentGold + matches[2] </script>
 						</Trigger>
 					</TriggerGroup>
 				</TriggerGroup>
-				<TriggerGroup isActive="yes" isFolder="yes" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
-					<name>Data Collectors</name>
-					<script></script>
-					<triggerType>0</triggerType>
-					<conditonLineDelta>0</conditonLineDelta>
-					<mStayOpen>0</mStayOpen>
-					<mCommand></mCommand>
-					<packageName></packageName>
-					<mFgColor>#ff0000</mFgColor>
-					<mBgColor>#ffff00</mBgColor>
-					<mSoundFile></mSoundFile>
-					<colorTriggerFgColor>#000000</colorTriggerFgColor>
-					<colorTriggerBgColor>#000000</colorTriggerBgColor>
-					<regexCodeList />
-					<regexCodePropertyList />
-					<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
-						<name>Other Loot</name>
-						<script>local person = string.trim(matches[2])
-local loot = string.trim(matches[3])
-
-if not string.match(loot," coins") then
-  local notimp = {"fragment of the fallen","unaligned soul"}
-  if table.contains(notimp,loot) then
-    feedManager("&lt;white&gt;[LOOT] " .. person .. "-" .. loot)
-  else
-    feedManager("&lt;DodgerBlue&gt;[LOOT] " .. person .. "-" .. loot)
-  end
-end
-
---a fragment of the fallen</script>
-						<triggerType>0</triggerType>
-						<conditonLineDelta>0</conditonLineDelta>
-						<mStayOpen>0</mStayOpen>
-						<mCommand></mCommand>
-						<packageName></packageName>
-						<mFgColor>#ff0000</mFgColor>
-						<mBgColor>#ffff00</mBgColor>
-						<mSoundFile></mSoundFile>
-						<colorTriggerFgColor>#000000</colorTriggerFgColor>
-						<colorTriggerBgColor>#000000</colorTriggerBgColor>
-						<regexCodeList>
-							<string>(?:[aA] |[tT]he |[aA]n )?(.*) gets (?:a|the|an) (.*) from the (?:glowing )?corpse</string>
-						</regexCodeList>
-						<regexCodePropertyList>
-							<integer>1</integer>
-						</regexCodePropertyList>
-					</Trigger>
-					<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
-						<name>Loot</name>
-						<script>
+				<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+					<name>Loot</name>
+					<script>
 local person = "Me"
 local loot = string.trim(matches[2])
 
 if not string.match(loot," coins") then
   --cecho("data","&lt;white&gt;[LO " .. getTime(true,"HH.mm") .. "] " .. loot .. "\n")
   
-  local notimp = {"fragment of the fallen","unaligned soul"}
+  local notimp = {"fragment of the fallen","unaligned soul","coin of the defiler"}
   if table.contains(notimp,loot) then
     feedManager("&lt;white&gt;[LOOT] " .. loot)
     --send("put '" .. loot .. "' '" .. xaos.backpack)
@@ -2698,44 +2651,75 @@ end
 --a fragment of the fallen
 
 </script>
-						<triggerType>0</triggerType>
-						<conditonLineDelta>0</conditonLineDelta>
-						<mStayOpen>0</mStayOpen>
-						<mCommand></mCommand>
-						<packageName></packageName>
-						<mFgColor>#ff0000</mFgColor>
-						<mBgColor>#ffff00</mBgColor>
-						<mSoundFile></mSoundFile>
-						<colorTriggerFgColor>#000000</colorTriggerFgColor>
-						<colorTriggerBgColor>#000000</colorTriggerBgColor>
-						<regexCodeList>
-							<string>You get (?:a|the|an) (.*) from the (?:glowing )?corpse</string>
-						</regexCodeList>
-						<regexCodePropertyList>
-							<integer>1</integer>
-						</regexCodePropertyList>
-					</Trigger>
-					<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
-						<name>Artifact Drop</name>
-						<script>feedManager("&lt;yellow&gt;[LOOT] Artifact!")</script>
-						<triggerType>0</triggerType>
-						<conditonLineDelta>0</conditonLineDelta>
-						<mStayOpen>0</mStayOpen>
-						<mCommand></mCommand>
-						<packageName></packageName>
-						<mFgColor>#ff0000</mFgColor>
-						<mBgColor>#ffff00</mBgColor>
-						<mSoundFile></mSoundFile>
-						<colorTriggerFgColor>#000000</colorTriggerFgColor>
-						<colorTriggerBgColor>#000000</colorTriggerBgColor>
-						<regexCodeList>
-							<string>Enjoy your Artifact!</string>
-						</regexCodeList>
-						<regexCodePropertyList>
-							<integer>0</integer>
-						</regexCodePropertyList>
-					</Trigger>
-				</TriggerGroup>
+					<triggerType>0</triggerType>
+					<conditonLineDelta>0</conditonLineDelta>
+					<mStayOpen>0</mStayOpen>
+					<mCommand></mCommand>
+					<packageName></packageName>
+					<mFgColor>#ff0000</mFgColor>
+					<mBgColor>#ffff00</mBgColor>
+					<mSoundFile></mSoundFile>
+					<colorTriggerFgColor>#000000</colorTriggerFgColor>
+					<colorTriggerBgColor>#000000</colorTriggerBgColor>
+					<regexCodeList>
+						<string>You get (?:a|the|an) (.*) from the (?:glowing )?corpse</string>
+					</regexCodeList>
+					<regexCodePropertyList>
+						<integer>1</integer>
+					</regexCodePropertyList>
+				</Trigger>
+				<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+					<name>Other Loot</name>
+					<script>local person = string.trim(matches[2])
+local loot = string.trim(matches[3])
+
+if not string.match(loot," coins") then
+  local notimp = {"fragment of the fallen","unaligned soul","coin of the defiler"}
+  if table.contains(notimp,loot) then
+    feedManager("&lt;white&gt;[LOOT] " .. person .. "-" .. loot)
+  else
+    feedManager("&lt;DodgerBlue&gt;[LOOT] " .. person .. "-" .. loot)
+  end
+end
+
+--a fragment of the fallen</script>
+					<triggerType>0</triggerType>
+					<conditonLineDelta>0</conditonLineDelta>
+					<mStayOpen>0</mStayOpen>
+					<mCommand></mCommand>
+					<packageName></packageName>
+					<mFgColor>#ff0000</mFgColor>
+					<mBgColor>#ffff00</mBgColor>
+					<mSoundFile></mSoundFile>
+					<colorTriggerFgColor>#000000</colorTriggerFgColor>
+					<colorTriggerBgColor>#000000</colorTriggerBgColor>
+					<regexCodeList>
+						<string>(?:[aA] |[tT]he |[aA]n )?(.*) gets (?:a|the|an) (.*) from the (?:glowing )?corpse</string>
+					</regexCodeList>
+					<regexCodePropertyList>
+						<integer>1</integer>
+					</regexCodePropertyList>
+				</Trigger>
+				<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+					<name>Artifact Drop</name>
+					<script>feedManager("&lt;yellow&gt;[LOOT] Artifact!")</script>
+					<triggerType>0</triggerType>
+					<conditonLineDelta>0</conditonLineDelta>
+					<mStayOpen>0</mStayOpen>
+					<mCommand></mCommand>
+					<packageName></packageName>
+					<mFgColor>#ff0000</mFgColor>
+					<mBgColor>#ffff00</mBgColor>
+					<mSoundFile></mSoundFile>
+					<colorTriggerFgColor>#000000</colorTriggerFgColor>
+					<colorTriggerBgColor>#000000</colorTriggerBgColor>
+					<regexCodeList>
+						<string>Enjoy your Artifact!</string>
+					</regexCodeList>
+					<regexCodePropertyList>
+						<integer>0</integer>
+					</regexCodePropertyList>
+				</Trigger>
 			</TriggerGroup>
 			<TriggerGroup isActive="no" isFolder="yes" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
 				<name>gostEnchanting</name>
@@ -3267,11 +3251,11 @@ end</script>
 						<integer>1</integer>
 					</regexCodePropertyList>
 				</Trigger>
-				<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+				<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="yes" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
 					<name>XP Award</name>
-					<script>feedManager("[ XP " .. getTime(true,"HH.mm") .. "] Complete: " .. string.format("%4.2f",tonumber(matches[2])/1000) .. "K XP")</script>
+					<script>feedManager("[ XP " .. getTime(true,"HH.mm") .. "] Complete: " .. string.format("%4.2f",tonumber(multimatches[2][2])/1000) .. "K XP")</script>
 					<triggerType>0</triggerType>
-					<conditonLineDelta>0</conditonLineDelta>
+					<conditonLineDelta>1</conditonLineDelta>
 					<mStayOpen>0</mStayOpen>
 					<mCommand></mCommand>
 					<packageName></packageName>
@@ -3282,8 +3266,10 @@ end</script>
 					<colorTriggerBgColor>#000000</colorTriggerBgColor>
 					<regexCodeList>
 						<string>You have been awarded ([0-9]+) XP!</string>
+						<string>You have gained ([0-9]+) experience.</string>
 					</regexCodeList>
 					<regexCodePropertyList>
+						<integer>1</integer>
 						<integer>1</integer>
 					</regexCodePropertyList>
 				</Trigger>
@@ -3361,8 +3347,9 @@ end</script>
 					</Trigger>
 					<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
 						<name>Quest Goal Done</name>
-						<script>feedManager("[ Quest ] " .. killedID .. ": Complete")
-
+						<script>if (getEpoch()-lastcombattime) &lt; 5 then
+  feedManager("[ Quest ] " .. killedID .. ": Complete")
+end
 --quest_updateobjective(killedID,1)
 --quest_completeobjective(killedID)
 
@@ -4351,7 +4338,7 @@ table.insert(curpartystatus.members,
   charmie = rex.match(matches[2],[[^([aA] |[tT]he |[aA]n )]]) ~= nil
 })
 --debugecho(missingcount)
-if xaos.party.leader == "Your" and xaos.config.scripting.findmode and missingcount &gt; 0 then
+if xaos.party.leader == "Your" and matches[2] ~= "someone" and xaos.config.scripting.findmode and missingcount &gt; 0 then
   --playSoundFile([[C:\Windows\media\chimes.wav]])
   if followTarget == "" then
     debugecho("we lost " ..  matches[2])
@@ -5100,8 +5087,11 @@ end</script>
 if gagmode then
   statcount = statcount+1
 else
-  echo(checkbuffs().missing)
-end</script>
+  --echo(checkbuffs().missing)
+  tempTimer(.1,function() echo(checkbuffs().missing) end)
+end
+
+</script>
 							<triggerType>0</triggerType>
 							<conditonLineDelta>0</conditonLineDelta>
 							<mStayOpen>0</mStayOpen>
@@ -6138,23 +6128,24 @@ end</script>
 				</regexCodePropertyList>
 				<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="yes" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
 					<name>Prompt eater</name>
-					<script>  current_health = tonumber(xPrompt.hp)
-  hpbar:setValue(current_health, 100, nil)
-  hpbar.front:echo(xPrompt.hp .. "%", nil, "c")
-  
-  current_mana = tonumber(xPrompt.mana)
-  manabar:setValue(current_mana, 100, nil)
-  manabar.front:echo(xPrompt.mana .. "%", nil, "c")
-  
-  current_mvm = tonumber(xPrompt.move)
-  mvmbar:setValue(current_mvm, 100, nil)
-  mvmbar.front:echo(xPrompt.move .. "%", nil, "c")
-  
-  current_xp = tonumber(xPrompt.exp)
-  
-  xaos.fightingstyle = multimatches[1][5]
-  
+					<script>current_health = tonumber(xPrompt.hp)
+hpbar:setValue(current_health, 100, nil)
+hpbar.front:echo(xPrompt.hp .. "%", nil, "c")
+
+current_mana = tonumber(xPrompt.mana)
+manabar:setValue(current_mana, 100, nil)
+manabar.front:echo(xPrompt.mana .. "%", nil, "c")
+
+current_mvm = tonumber(xPrompt.move)
+mvmbar:setValue(current_mvm, 100, nil)
+mvmbar.front:echo(xPrompt.move .. "%", nil, "c")
+
+current_xp = tonumber(xPrompt.exp)
+
+xaos.fightingstyle = xPrompt.style
+if not mysettings.showprompt then
   deleteLine()
+end
 
   
 </script>
@@ -13456,7 +13447,7 @@ end</script>
 				</Trigger>
 			</TriggerGroup>
 		</TriggerGroup>
-		<TriggerGroup isActive="no" isFolder="yes" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+		<TriggerGroup isActive="yes" isFolder="yes" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
 			<name>Specific Loot</name>
 			<script></script>
 			<triggerType>0</triggerType>
@@ -15048,6 +15039,7 @@ table.insert(helpdesc,
     {name="phunt",options="&lt;mob&gt;",desc="Prey Hunt: Set target and kill to &lt;mobname&gt; and start hunting.  This does not work with scan mode."},
     {name="fhunt",options="&lt;friend&gt;",desc="Friend Hunt: Set target to &lt;name&gt;, clear kill and start hunting"},
     {name="detectarea",options="",desc="Will attempt to determine the current area.  Make sure you are surrounded by area mobs."},
+   
    }
   }
 )
@@ -15063,7 +15055,7 @@ table.insert(helpdesc,
     {name="scanmode",options="",desc="Turns on/off scan mode for scripting."},
     {name="findmode",options="",desc="Turns on/off find mode for scripting.  If one of your party members gets left behind, it will try and go find them."},
     {name="buffmode",options="",desc="Turns on/off whether you will try and use buffs such as berserk, turning off can help with staying with your party leader."},
-    {name="xconfig",options="&lt;berserkovercenter|minmana|minhp&gt;",desc="Sets configuration options. Min Mana and HP require a 0-100."},
+    {name="xconfig",options="&lt;berserkovercenter|minmana|minhp|showprompt&gt;",desc="Sets configuration options. Min Mana and HP require a 0-100."},
    }
   }
 )
@@ -15326,6 +15318,11 @@ end
 if command == "minhp" then
   xaos.config.scripting.minhp = tonumber(args)
   echo("Min HP: " .. tostring(xaos.config.scripting.minhp))
+end
+
+if command == "showprompt" then
+  mysettings.showprompt = not mysettings.showprompt
+  helpbodyecho("Show Prompt: " .. tostring(mysettings.showprompt))
 end</script>
 					<command></command>
 					<packageName></packageName>
@@ -16060,7 +16057,7 @@ end</script>
 						<name>huntwait</name>
 						<script>xaos.config.scripting.huntwait=tonumber(matches[2])
 
-echo("\n\n Hunt Wait: " .. tostring(xaos.scripting.huntwait) .. "\n\n")</script>
+echo("\n\n Hunt Wait: " .. tostring(xaos.config.scripting.huntwait) .. "\n\n")</script>
 						<command></command>
 						<packageName></packageName>
 						<regex>^huntwait (.*)</regex>
@@ -17093,6 +17090,30 @@ send("quest request fragments of the fallen god")</script>
 					<packageName></packageName>
 					<regex>unlocklep</regex>
 				</Alias>
+				<Alias isActive="yes" isFolder="no">
+					<name>DefilerTurnIn</name>
+					<script>send("quest request the defiler")
+send("give coin hood")
+send("quest complete the defiler")
+tempTimer(2,function() send("quest request the defiler") end)</script>
+					<command></command>
+					<packageName></packageName>
+					<regex>defilerturnin</regex>
+				</Alias>
+				<Alias isActive="yes" isFolder="no">
+					<name>Reset XP Graph</name>
+					<script>xpcollector = {}
+killcollector = {}
+
+displaytimespan = displaytimespan or 5
+
+updateKillbars(displaytimespan)
+updateXPbars(displaytimespan)
+</script>
+					<command></command>
+					<packageName></packageName>
+					<regex>^resetxp</regex>
+				</Alias>
 			</AliasGroup>
 			<AliasGroup isActive="yes" isFolder="yes">
 				<name>Boss</name>
@@ -17112,6 +17133,20 @@ end</script>
 					<command></command>
 					<packageName></packageName>
 					<regex>^rescueall</regex>
+				</Alias>
+				<Alias isActive="yes" isFolder="no">
+					<name>Fly Whole Party</name>
+					<script>send("c fly")
+for k,v in pairs(xaos.party.members) do
+  if not v.charmie then
+    if v.name ~= xaos.charactername then
+      send("c fly " .. v.name)
+    end
+  end
+end</script>
+					<command></command>
+					<packageName></packageName>
+					<regex>^flyall</regex>
 				</Alias>
 			</AliasGroup>
 			<AliasGroup isActive="yes" isFolder="yes">
@@ -18345,42 +18380,19 @@ end</script>
 				<buttonColor>#ffffff</buttonColor>
 			</Action>
 			<Action isActive="yes" isFolder="no" isPushButton="no" isFlatButton="no" useCustomLayout="no">
-				<name>Toggle Scripting</name>
+				<name>Stop Scripting</name>
 				<packageName></packageName>
-				<script>huntTarget = huntTarget or "Helpful Bob"
-if auto_hunt then
+				<script>if auto_hunt then
   auto_hunt = false
   xuicom("You will no longer attempt to automatically hunt targets")
+  
+  combat = false
+  hunting = false
 else
-  send("auto ")
   auto_hunt = true
-  xuicom(
-    "You will attempt to automatically hunt something. Current settings indicate you're going to hunt " ..
-    huntTarget
-  )
-	xuicom("Currently, tracking "..wielded.." as your wielded weapon.")
-  if statusFollowing then
-    --This bit handles the "What do I do if I'm following someone?" question
-    obsessionMode = true
-    huntTarget = followTarget
-    location = nil
-    xuicom("You are following " .. followTarget .. " and this script will attempt to hunt them.")
-    xuicom("Obsession mode is on by default. Use &lt;white&gt;obsessionoff&lt;light_blue&gt; to turn it off.\n")
-    cechoLink(
-      "[ XUI ] &lt;light_blue&gt;Click here for more info on obsession mode.\n",
-      [[xuicom("Obsession mode inputs hunt aggressively in an attempt to keep up with the party leader.\n")]],
-      "obsession mode info",
-      true
-    )
-    if huntTarget then
-    else
-      variableCheck(huntTarget, "hunt location")
-      auto_hunt = false
-    end
-  end
+  
 end
-combat = false
-hunting = false</script>
+</script>
 				<css></css>
 				<commandButtonUp></commandButtonUp>
 				<commandButtonDown></commandButtonDown>
@@ -21623,6 +21635,7 @@ if mysettings.scorefontsize== nil then mysettings.scorefontsize =  10 end
 if mysettings.datafontsize== nil then mysettings.datafontsize = 10 end
 if mysettings.feedconsole== nil then mysettings.feedconsole =  "data" end
 if mysettings.UIType== nil then mysettings.UIType =  "XUI" end
+if mysettings.showprompt == nil then mysettings.showprompt = false end
 
 mysettings.XUI = {
   UIMode = "container",
@@ -21636,10 +21649,12 @@ function savemysettings()
   table.save(getMudletHomeDir() .. "/mysettings.dat",mysettings)
 end
 function changeUI(uiname)
-
+  
+  local tempuiname = mysettings.UIType
+  
   if uiname == "XUI" then
     mysettings.feedconsole = "data"
-    UIType = "XUI"
+    mysettings.UIType = "XUI"
     enableScript("XUI")
     disableScript("XaosUI")
     enableTimer("XUI")
@@ -21648,7 +21663,7 @@ function changeUI(uiname)
     disableAlias("XaosUI")
   elseif uiname == "XaosUI" then
     mysettings.feedconsole = "UI.FeedList"
-    UIType = "XaosUI"
+    mysettings.UIType = "XaosUI"
     enableScript("XaosUI")
     disableScript("XUI")
     enableTimer("XaosUI")
@@ -21657,7 +21672,9 @@ function changeUI(uiname)
     disableAlias("XUI")
   end
   savemysettings()
-  cecho("&lt;yellow&gt;It is highly recommended you close and reopen mudlet.")
+  if tempuiname ~= uiname then
+    cecho("&lt;yellow&gt;It is highly recommended you close and reopen mudlet.")
+  end
 end
 
 changeUI(mysettings.UIType)</script>
@@ -21853,8 +21870,8 @@ xaos.areas= {
 	{
 		name = "blaze",
 		keyword = "blaze",
-		killlist = "blaze,koruk",
-		keywordoverride = false,
+		killlist = "blaze",
+		keywordoverride = true,
 		scanmode = true,
 		killarray = {"blaze ghoul","paladin of koruk"},
 	},
@@ -21866,13 +21883,21 @@ xaos.areas= {
 		scanmode = true,
 		killarray = {"shambling drow wizard","Champion of Koruk","seared devil"},
 	},
+  	{
+		name = "slayersofkoruk",
+		keyword = "korukslayer",
+		killlist = "korukslayer",
+		keywordoverride = true,
+		scanmode = true,
+		killarray = {"Nalfeshnee","Archon of Koruk","guardian of the cathedral","slayer of koruk","spiritweaver","daughter of Koruk"},
+	},
 	{
 		name = "guarng",
-		keyword = "celeestial",
+		keyword = "celestial",
 		killlist = "celestial",
 		keywordoverride = true,
 		scanmode = true,
-		killarray = {"elven druid","elven guard","elven paladin","elite guardian magus","elfin mage hound","elven illusionist"},
+		killarray = {"celestial guard","celestial paladin","elite guardian magus","celestial mage hound","celestial illusionist","celestial mentalist","celestial druid","silent celestial janitor"},
 	},
 }</script>
 						<eventHandlerList />
@@ -30452,6 +30477,12 @@ end</script>
 					<eventHandlerList />
 				</Script>
 			</ScriptGroup>
+			<Script isActive="yes" isFolder="no">
+				<name>UIPulse</name>
+				<packageName></packageName>
+				<script></script>
+				<eventHandlerList />
+			</Script>
 		</ScriptGroup>
 	</ScriptPackage>
 	<KeyPackage>
