@@ -14603,7 +14603,7 @@ end
 					<time>00:10:00.000</time>
 				</Timer>
 			</TimerGroup>
-			<TimerGroup isActive="yes" isFolder="yes" isTempTimer="no" isOffsetTimer="no">
+			<TimerGroup isActive="no" isFolder="yes" isTempTimer="no" isOffsetTimer="no">
 				<name>XUI</name>
 				<script></script>
 				<command></command>
@@ -30695,6 +30695,72 @@ function parsePulse(pulsetext)
 end</script>
 				<eventHandlerList />
 			</Script>
+			<ScriptGroup isActive="yes" isFolder="yes">
+				<name>MSDP</name>
+				<packageName></packageName>
+				<script>sendMSDP("REPORT","EXPERIENCE")
+sendMSDP("REPORT","EXPERIENCE_MAX")
+sendMSDP("REPORT","EXPERIENCE_TNL")
+sendMSDP("REPORT","HEALTH")
+sendMSDP("REPORT","HEALTH_MAX")
+sendMSDP("REPORT","LEVEL")
+sendMSDP("REPORT","RACE")
+sendMSDP("REPORT","CLASS")
+sendMSDP("REPORT","MANA")
+sendMSDP("REPORT","MANA_MAX")
+sendMSDP("REPORT","WIMPY")
+sendMSDP("REPORT","PRACTICE")
+sendMSDP("REPORT","MONEY")
+sendMSDP("REPORT","MOVEMENT")
+sendMSDP("REPORT","MOVEMENT_MAX")
+sendMSDP("REPORT","HITROLL")
+sendMSDP("REPORT","DAMROLL")
+sendMSDP("REPORT","AC")
+sendMSDP("REPORT","STR")
+sendMSDP("REPORT","INT")
+sendMSDP("REPORT","WIS")
+sendMSDP("REPORT","DEX")
+sendMSDP("REPORT","CON")
+sendMSDP("REPORT","STR_PERM")
+sendMSDP("REPORT","INT_PERM")
+sendMSDP("REPORT","WIS_PERM")
+sendMSDP("REPORT","DEX_PERM")
+sendMSDP("REPORT","CON_PERM")</script>
+				<eventHandlerList />
+				<Script isActive="yes" isFolder="no">
+					<name>grab_perm_str</name>
+					<packageName></packageName>
+					<script>function grab_perm_str()
+  echo(msdp.STR_PERM)
+end</script>
+					<eventHandlerList>
+						<string>msdp.STR_PERM</string>
+						<string>msdp.STR</string>
+						<string>msdp.HEALTH</string>
+						<string>msdp.MANA</string>
+					</eventHandlerList>
+				</Script>
+				<Script isActive="yes" isFolder="no">
+					<name>grab_mana</name>
+					<packageName></packageName>
+					<script>function grab_mana()
+  echo(msdp.MANA)
+end</script>
+					<eventHandlerList>
+						<string>msdp.MANA</string>
+					</eventHandlerList>
+				</Script>
+				<Script isActive="yes" isFolder="no">
+					<name>grab_EXPERIENCE</name>
+					<packageName></packageName>
+					<script>function grab_EXPERIENCE()
+  echo(msdp.EXPERIENCE)
+end</script>
+					<eventHandlerList>
+						<string>msdp.eMSDP_EXPERIENCE</string>
+					</eventHandlerList>
+				</Script>
+			</ScriptGroup>
 		</ScriptGroup>
 	</ScriptPackage>
 	<KeyPackage>
