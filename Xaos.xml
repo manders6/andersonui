@@ -6173,17 +6173,9 @@ end</script>
 				</regexCodePropertyList>
 				<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="yes" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
 					<name>Prompt eater</name>
-					<script>current_health = tonumber(xPrompt.hp)
-hpbar:setValue(current_health, 100, nil)
-hpbar.front:echo(xPrompt.hp .. "%", nil, "c")
+					<script>
 
-current_mana = tonumber(xPrompt.mana)
-manabar:setValue(current_mana, 100, nil)
-manabar.front:echo(xPrompt.mana .. "%", nil, "c")
 
-current_mvm = tonumber(xPrompt.move)
-mvmbar:setValue(current_mvm, 100, nil)
-mvmbar.front:echo(xPrompt.move .. "%", nil, "c")
 
 current_xp = tonumber(xPrompt.exp)
 
@@ -30480,9 +30472,9 @@ function isXaosPrompt()
       [[^HEALTH (\d+)\% MANA (\d+)\% MVM (\d+)\% STIL (.*) XP (\d+)\% Directions  (.*) Hungry  (.*) $]]
     ) ~= nil
   then
-    xPrompt.hp,
-    xPrompt.mana,
-    xPrompt.move,
+    xPrompt.hp2,
+    xPrompt.mana2,
+    xPrompt.move2,
     xPrompt.style,
     xPrompt.exp,
     xPrompt.exits,
@@ -30698,7 +30690,8 @@ end</script>
 			<ScriptGroup isActive="yes" isFolder="yes">
 				<name>MSDP</name>
 				<packageName></packageName>
-				<script>sendMSDP("REPORT","EXPERIENCE")
+				<script>function enableMSDP()
+sendMSDP("REPORT","EXPERIENCE")
 sendMSDP("REPORT","EXPERIENCE_MAX")
 sendMSDP("REPORT","EXPERIENCE_TNL")
 sendMSDP("REPORT","HEALTH")
@@ -30725,26 +30718,30 @@ sendMSDP("REPORT","STR_PERM")
 sendMSDP("REPORT","INT_PERM")
 sendMSDP("REPORT","WIS_PERM")
 sendMSDP("REPORT","DEX_PERM")
-sendMSDP("REPORT","CON_PERM")</script>
+sendMSDP("REPORT","CON_PERM")
+end
+enableMSDP()</script>
 				<eventHandlerList />
 				<Script isActive="yes" isFolder="no">
-					<name>grab_perm_str</name>
+					<name>grab_STR_PERM</name>
 					<packageName></packageName>
-					<script>function grab_perm_str()
+					<script>function grab_STR_PERM()
   echo(msdp.STR_PERM)
 end</script>
 					<eventHandlerList>
 						<string>msdp.STR_PERM</string>
-						<string>msdp.STR</string>
-						<string>msdp.HEALTH</string>
-						<string>msdp.MANA</string>
 					</eventHandlerList>
 				</Script>
 				<Script isActive="yes" isFolder="no">
-					<name>grab_mana</name>
+					<name>grab_MANA</name>
 					<packageName></packageName>
-					<script>function grab_mana()
-  echo(msdp.MANA)
+					<script>function grab_MANA()
+  debugecho("grabbed")
+  xPrompt.mana = 100*tonumber(msdp.MANA)/5050
+  
+  --current_mana = tonumber(xPrompt.mana)
+  manabar:setValue(xPrompt.mana, 100, nil)
+  manabar.front:echo(string.format("%2.1f",xPrompt.mana) .. "%", nil, "c")
 end</script>
 					<eventHandlerList>
 						<string>msdp.MANA</string>
@@ -30758,6 +30755,36 @@ end</script>
 end</script>
 					<eventHandlerList>
 						<string>msdp.eMSDP_EXPERIENCE</string>
+					</eventHandlerList>
+				</Script>
+				<Script isActive="yes" isFolder="no">
+					<name>grab_HEALTH</name>
+					<packageName></packageName>
+					<script>function grab_HEALTH()
+  debugecho("grabbed")
+  xPrompt.hp = 100*tonumber(msdp.HEALTH)/5315
+  
+  current_health = tonumber(xPrompt.hp)
+  hpbar:setValue(current_health, 100, nil)
+  hpbar.front:echo(string.format("%2.1f",xPrompt.hp) .. "%", nil, "c")
+end</script>
+					<eventHandlerList>
+						<string>msdp.HEALTH</string>
+					</eventHandlerList>
+				</Script>
+				<Script isActive="yes" isFolder="no">
+					<name>grab_MOVEMENT</name>
+					<packageName></packageName>
+					<script>function grab_MOVEMENT()
+  debugecho("grabbed")
+  xPrompt.move = 100*tonumber(msdp.MOVEMENT)/1300
+  
+  current_mvm = tonumber(xPrompt.move)
+  mvmbar:setValue(current_mvm, 100, nil)
+  mvmbar.front:echo(string.format("%2.1f",xPrompt.move) .. "%", nil, "c")
+end</script>
+					<eventHandlerList>
+						<string>msdp.MOVEMENT</string>
 					</eventHandlerList>
 				</Script>
 			</ScriptGroup>
