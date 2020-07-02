@@ -3686,17 +3686,10 @@ end</script>
 					<name>Echo Level</name>
 					<script>
 local lvl = tonumber(string.trim(matches[2]))
-local lvlpercent = matches[3]
-if lvlpercent == nil then
-  lvlpercent = 0
-else
-  lvlpercent = tonumber(string.trim(matches[3]))
-end
 
-currentLevelPercent = lvlpercent
+
+
 currentLevel=lvl
-
-xaos.LevelPercent = lvlpercent
 xaos.Level=lvl</script>
 					<triggerType>0</triggerType>
 					<conditonLineDelta>0</conditonLineDelta>
@@ -3709,11 +3702,57 @@ xaos.Level=lvl</script>
 					<colorTriggerFgColor>#000000</colorTriggerFgColor>
 					<colorTriggerBgColor>#000000</colorTriggerBgColor>
 					<regexCodeList>
-						<string>HLevel\: (.*)  \((.*)\%\)</string>
+						<string>Hero Lvl: ([0-9]+)</string>
 						<string>Level\: (.*)\|</string>
 					</regexCodeList>
 					<regexCodePropertyList>
 						<integer>1</integer>
+						<integer>1</integer>
+					</regexCodePropertyList>
+				</Trigger>
+				<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+					<name>Level Percent</name>
+					<script>--Hero Exp:(?:\s*)([0-9]+)/([0-9]+)
+
+local lvlpercent = 100*matches[2]/matches[3]
+
+currentLevelPercent = lvlpercent
+xaos.LevelPercent = lvlpercent</script>
+					<triggerType>0</triggerType>
+					<conditonLineDelta>0</conditonLineDelta>
+					<mStayOpen>0</mStayOpen>
+					<mCommand></mCommand>
+					<packageName></packageName>
+					<mFgColor>#ff0000</mFgColor>
+					<mBgColor>#ffff00</mBgColor>
+					<mSoundFile></mSoundFile>
+					<colorTriggerFgColor>#000000</colorTriggerFgColor>
+					<colorTriggerBgColor>#000000</colorTriggerBgColor>
+					<regexCodeList>
+						<string>Hero Exp:(?:\s*)([0-9]+)/([0-9]+)</string>
+					</regexCodeList>
+					<regexCodePropertyList>
+						<integer>1</integer>
+					</regexCodePropertyList>
+				</Trigger>
+				<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+					<name>Ascend Percent</name>
+					<script>xaos.ascendcount = tonumber(matches[2])
+--Ascend:(?:\s*)([0-9]+)/10000</script>
+					<triggerType>0</triggerType>
+					<conditonLineDelta>0</conditonLineDelta>
+					<mStayOpen>0</mStayOpen>
+					<mCommand></mCommand>
+					<packageName></packageName>
+					<mFgColor>#ff0000</mFgColor>
+					<mBgColor>#ffff00</mBgColor>
+					<mSoundFile></mSoundFile>
+					<colorTriggerFgColor>#000000</colorTriggerFgColor>
+					<colorTriggerBgColor>#000000</colorTriggerBgColor>
+					<regexCodeList>
+						<string>Ascend:(?:\s*)([0-9]+)/10000</string>
+					</regexCodeList>
+					<regexCodePropertyList>
 						<integer>1</integer>
 					</regexCodePropertyList>
 				</Trigger>
@@ -3771,7 +3810,7 @@ end</script>
 					<colorTriggerFgColor>#000000</colorTriggerFgColor>
 					<colorTriggerBgColor>#000000</colorTriggerBgColor>
 					<regexCodeList>
-						<string>Class: ([^-]*)(?:-)?(.*)? Religion</string>
+						<string>Class: ([^-]*)(?:-)?(.*)? \|</string>
 					</regexCodeList>
 					<regexCodePropertyList>
 						<integer>1</integer>
@@ -3881,11 +3920,11 @@ xaos.currency.frags=string.trim(matches[2])</script>
 						<integer>1</integer>
 					</regexCodePropertyList>
 				</Trigger>
-				<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+				<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="yes" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
 					<name>Trait Grab</name>
-					<script>xaos.traits = string.trim(matches[2])</script>
+					<script>xaos.traits = string.gsub(string.trim(multimatches[2][2]),",","")</script>
 					<triggerType>0</triggerType>
-					<conditonLineDelta>0</conditonLineDelta>
+					<conditonLineDelta>1</conditonLineDelta>
 					<mStayOpen>0</mStayOpen>
 					<mCommand></mCommand>
 					<packageName></packageName>
@@ -3895,9 +3934,11 @@ xaos.currency.frags=string.trim(matches[2])</script>
 					<colorTriggerFgColor>#000000</colorTriggerFgColor>
 					<colorTriggerBgColor>#000000</colorTriggerBgColor>
 					<regexCodeList>
-						<string>Traits:(.*)\|</string>
+						<string>^\|-Traits</string>
+						<string>\| (.*) \|</string>
 					</regexCodeList>
 					<regexCodePropertyList>
+						<integer>1</integer>
 						<integer>1</integer>
 					</regexCodePropertyList>
 				</Trigger>
@@ -3923,22 +3964,20 @@ end</script>
 					<colorTriggerFgColor>#000000</colorTriggerFgColor>
 					<colorTriggerBgColor>#000000</colorTriggerBgColor>
 					<regexCodeList>
-						<string>Name: (.*) HLevel:</string>
-						<string>Name: (.*) Level:</string>
+						<string>Name: ([^-]+)</string>
 					</regexCodeList>
 					<regexCodePropertyList>
 						<integer>1</integer>
-						<integer>1</integer>
 					</regexCodePropertyList>
 				</Trigger>
-				<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+				<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="yes" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
 					<name>Items and Weight</name>
-					<script>local itemcur = tonumber(string.trim(matches[2]))
-local itemmax = tonumber(string.trim(matches[3]))
-local eqcur = tonumber(string.trim(matches[4]))
-local eqmax = tonumber(string.trim(matches[5]))
+					<script>local itemcur = tonumber(string.trim(multimatches[2][2]))
+local itemmax = tonumber(string.trim(multimatches[2][3]))
+local eqcur = tonumber(string.trim(multimatches[1][2]))
+local eqmax = tonumber(string.trim(multimatches[1][3]))
 
---echo(itemcur .. " " .. itemmax  .. " " .. eqcur  .. " " .. eqmax)
+echo(itemcur .. " " .. itemmax  .. " " .. eqcur  .. " " .. eqmax)
 
 local ratio = .95
 
@@ -3954,7 +3993,7 @@ end
 
 </script>
 					<triggerType>0</triggerType>
-					<conditonLineDelta>0</conditonLineDelta>
+					<conditonLineDelta>1</conditonLineDelta>
 					<mStayOpen>0</mStayOpen>
 					<mCommand></mCommand>
 					<packageName></packageName>
@@ -3964,9 +4003,11 @@ end
 					<colorTriggerFgColor>#000000</colorTriggerFgColor>
 					<colorTriggerBgColor>#000000</colorTriggerBgColor>
 					<regexCodeList>
-						<string>Items: (.*)/(.*)     Eq weight: (.*)/(.*) </string>
+						<string>\| Eq Weight:  ([0-9]+)/([0-9]+)</string>
+						<string>\|     Items:  ([0-9]+)/([0-9]+)</string>
 					</regexCodeList>
 					<regexCodePropertyList>
+						<integer>1</integer>
 						<integer>1</integer>
 					</regexCodePropertyList>
 				</Trigger>
@@ -3984,7 +4025,7 @@ end
 					<colorTriggerFgColor>#000000</colorTriggerFgColor>
 					<colorTriggerBgColor>#000000</colorTriggerBgColor>
 					<regexCodeList>
-						<string> Hero Points: (.*) Damroll</string>
+						<string>Hero Points: (.*) \|</string>
 						<string>You gain (?:.*) hero points, totalling (.*).</string>
 						<string>You feel empowered! \((.*) hero points remaining\).</string>
 					</regexCodeList>
@@ -4030,12 +4071,12 @@ deleteLine()</script>
 						<colorTriggerFgColor>#000000</colorTriggerFgColor>
 						<colorTriggerBgColor>#000000</colorTriggerBgColor>
 						<regexCodeList>
-							<string>|--------------------------------------------------------------------|</string>
-							<string>| Name</string>
+							<string>/(.*)\\</string>
+							<string>\| Hero Lvl: </string>
 						</regexCodeList>
 						<regexCodePropertyList>
-							<integer>0</integer>
-							<integer>0</integer>
+							<integer>1</integer>
+							<integer>1</integer>
 						</regexCodePropertyList>
 					</Trigger>
 					<TriggerGroup isActive="yes" isFolder="yes" isTempTrigger="no" isMultiline="yes" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
@@ -4073,8 +4114,12 @@ deleteLine()</script>
 							<colorTriggerBgColor>#000000</colorTriggerBgColor>
 							<regexCodeList>
 								<string>^\|</string>
+								<string>\-----------------------------------------------------------------------------------/</string>
+								<string>/(.*)\\</string>
 							</regexCodeList>
 							<regexCodePropertyList>
+								<integer>1</integer>
+								<integer>0</integer>
 								<integer>1</integer>
 							</regexCodePropertyList>
 						</Trigger>
@@ -13446,6 +13491,27 @@ end</script>
 					</regexCodePropertyList>
 				</Trigger>
 			</TriggerGroup>
+			<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+				<name>UIPulse</name>
+				<script>parsePulse(string.trim(matches[2]))
+deleteLine()</script>
+				<triggerType>0</triggerType>
+				<conditonLineDelta>0</conditonLineDelta>
+				<mStayOpen>0</mStayOpen>
+				<mCommand></mCommand>
+				<packageName></packageName>
+				<mFgColor>#ff0000</mFgColor>
+				<mBgColor>#ffff00</mBgColor>
+				<mSoundFile></mSoundFile>
+				<colorTriggerFgColor>#000000</colorTriggerFgColor>
+				<colorTriggerBgColor>#000000</colorTriggerBgColor>
+				<regexCodeList>
+					<string>UI_Pulse_Start\[(.*)\]UI_Pulse_Stop</string>
+				</regexCodeList>
+				<regexCodePropertyList>
+					<integer>1</integer>
+				</regexCodePropertyList>
+			</Trigger>
 		</TriggerGroup>
 		<TriggerGroup isActive="yes" isFolder="yes" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
 			<name>Specific Loot</name>
@@ -14734,7 +14800,7 @@ cecho("ScoreList","Tactics             : " .. tostring(xaos.tactics) .. "\n")
 cecho("ScoreList","Style               : " .. tostring(xaos.fightingstyle) .. "\n")
 cecho("ScoreList","\n&lt;white&gt;Level\n")
 cecho("ScoreList","Level               : " .. tostring(xaos.Level) .. "\n")
-cecho("ScoreList","Level %             : " .. tostring(xaos.LevelPercent) .. "\n")
+cecho("ScoreList","Level %             : " .. tostring(string.format("%2.2f",xaos.LevelPercent)) .. "\n")
 --cecho("ScoreList","Level Dings         : " .. tostring(leveltotals[currentLevel]) .. "\n")
 --cecho("ScoreList","Ratio               : " .. tostring(xaos.LevelPercent / leveltotals[currentLevel]) .. "\n")
 
@@ -24795,16 +24861,18 @@ function calcAscendTime(lvl,lvlpercent,timespan)
 end
 
 function calcAscendPercent(level, levelPercent)
-  level = tonumber(level)%100
-  levelPercent = tonumber(levelPercent)
+  return 100*xaos.ascendcount/10000
   
-  level = level - 1
-  nextlevel = level+1
+  --level = tonumber(level)%100
+  --levelPercent = tonumber(levelPercent)
   
-  local curasc = level*((2+(level*2))/2)/9900
-  local nextasc = nextlevel*((2+(nextlevel*2))/2)/9900
+  --level = level - 1
+  --nextlevel = level+1
   
-  return 100*(curasc+((nextasc-curasc)*(levelPercent/100)))
+  --local curasc = level*((2+(level*2))/2)/9900
+  --local nextasc = nextlevel*((2+(nextlevel*2))/2)/9900
+  
+  --return 100*(curasc+((nextasc-curasc)*(levelPercent/100)))
   
   --return 100*(levelratio[(level%100)]+((levelratio[(level%100)+1]-levelratio[(level%100)])*(tonumber(levelPercent)/100)))
 end
@@ -30480,7 +30548,151 @@ end</script>
 			<Script isActive="yes" isFolder="no">
 				<name>UIPulse</name>
 				<packageName></packageName>
-				<script></script>
+				<script>--UI_Pulse_Start[chName-Ezin,chRace-Bogmin,chSex-male,chLevel-100,chHeroLevel-588(100%),chRealLevel688%,chHeroPoints-2190%,chClass-disciple,chSecondClass-cleric,chPatron-order,chCaste-order master,chFavour-1500,chAge-26,chWeight-598,chAfflict-Order,chAfflictStage-master,chAfflictAge-67Y,chTrains-325,chSaves--257,chStr-80/95,chInt-86/95,chWis-89/104,chDex-81/91,chCon-85/95,chRegenHp-308,chRegenMana-76,chHunger-200/200,chThirst-200/200,chCarrying-287/319,chEqWeight-1304/1525,chGold-3114951,chSilver-1151187,chFrags-543,chSouls-12,chDodgeMod-94,chSpellMod-94,chTraits-Bruiser genesis chosen reborn overpowered mastermind,chSlash-15/56/-3631,chBash-15/56/-3631,chPierce-30/56/-3631,chFire-0/23/-1225,chCold-0/23/-1225,chMental-10/23/-1225,chMagic-0/23/-1225,chLight-0/23/-1225,chNegative-0/23/-1225,chHoly-0/23/-1225,chUnholy-0/23/-1225,chLightning-5/23/-1225,chSound-20/23/-1225,chAcid-0/23/-1225,chPoison-0/23/-1225,chDisease-0/23/-1225,chBase-133,chNecromantic-133,chAbjurational-133,chAlternation-133,chConjuration-226,chEnchantment-176,chDivination-133,chIllusion-133,chInvocation-133,chBeguilery-133,chReligion-133,chMaladictive-133,chHitroll-237:27,chDamroll-299:312:17,chCritital-25:187,chSpeed-342:396,chDamage-100:575,chHeal-100,RHD-59/41/86,RHS-547,LHD-58/41/78,LHS-547,CDO-81,CPP-80,CSP-45,chXpMod-3,chBulk-120,chMaxQual-artifact,chTraitSlots-6/6,chArtiSlots-6/6,chTactics-default,chStyle-culling,chBoons-cruelty:artificer:shock and awe:enhanced speed:,chAffects-Spell soften defense affecting warding by 105 for 1 minute 9 seconds:Spell soften defense affecting armor class by 105 for 1 minute 9 seconds:Misc hero empower affecting damage roll by 81 permanently:Misc hero empower affecting hitpoints by 1350 permanently:Misc hero empower affecting speed by 81 permanently:Misc hero empower affecting warding by -675 permanently:Spell sanctuary affecting damage reduction by 20 and sanctuary flag permanently:Spell consecrated aura affecting damage reduction by 10 permanently:Misc hero empower affecting resist slash by 10 permanently:Misc hero empower affecting resist pierce by 10 permanently:Misc hero empower affecting resist blunt by 10 permanently:Spell inner faith adding unknown effects permanently:Spell blind faith affecting mana by 788 and blind_faith flag permanently:Spell godspeed affecting speed by 15 permanently:Spell godspeed affecting dexterity by 3 permanently:Misc favour bonus affecting warding by -50 permanently:Misc favour bonus affecting armor class by -50 permanently:Skill trance affecting damage roll by 37 permanently:Skill trance affecting dodge boost by 10 permanently:Skill trance affecting regen hp by 134 permanently:Skill trance affecting armor class by -134 permanently:Spell permanency adding unknown effects permanently:Spell purging blades adding purging blades flag permanently:Spell order shield affecting resist pierce by 15 permanently:Misc hero empower affecting saves by -26 permanently:Misc hero empower affecting conjurational casting by 26 permanently:Misc hero empower affecting enchantment casting by 26 permanently:Misc hero empower affecting regen mana by 130 permanently:Spell accelerate healing affecting regen hp by 176 permanently:Spell magic shield affecting warding by -75 permanently:Spell magic shield affecting save vs spell by -10 permanently:Spell imbue wisdom affecting wisdom by 3 permanently:Spell frenzy adding unknown effects permanently:Misc hero empower affecting regen hp by 270 permanently:Misc hero empower affecting hit roll by 54 permanently:Misc hero empower affecting armor class by -675 permanently:Spell bless affecting hit roll by 13 for 49 minutes 38 seconds:Spell bless affecting save vs spell by -13 for 49 minutes 38 seconds:Spell bless affecting enchantment casting by 9 for 49 minutes 38 seconds:,chEquipment-&lt;2&gt;[large   ] a Hero's maple ring,&lt;3&gt;[large   ] a Hero's maple ring,&lt;4&gt;[large   ] (Glowing) (Humming) a masterwork dearthril neckguard,&lt;5&gt;[large   ] (Glowing) (Humming) a masterwork dearthril neckguard,&lt;6&gt;[large   ] (Artifact) (Glowing) the Chest Plate of the Artificer,&lt;7&gt;[large   ] (Bound) (Artifact) (Visored) the Helm of Cruelty,&lt;8&gt;[large   ] a Zelator's legplates,&lt;9&gt;[large   ] a Zelator's boots,&lt;10&gt;[large   ] (Artifact) the Gauntlets of Static's Champion,&lt;13&gt;[large   ] a Zelator's robes,&lt;14&gt;[large   ] a Zelator's belt,&lt;15&gt;[large   ] a Hero's bracelet,&lt;16&gt;[large   ] a Hero's bracelet,&lt;17&gt;[large   ] (Bound) (Artifact) (Humming) the Battle Hammer 'Jotunnstrike',&lt;18&gt;[large   ] (Bound) (Artifact) (Humming) the Battle Hammer 'Jotunnstrike',&lt;20&gt;[tiny    ] (Glowing) (Humming) a maple carving of a dragon,&lt;30&gt;[large   ] (Artifact) (Humming) the Bloody Black Cloak of the Claw,,chInventory-(27) [medium  ] (Glowing) (Humming) a coin of the defiler:[tiny    ] a surplus backpack:[tiny    ] (Artifact) the Mantle of the Dusk Seeker:[small   ] a piece of the Goddess:( 2) [large   ] (Bound) (Artifact) (Glowing) the Shining Fist of Askalam:[tiny    ] a ball of fire:[huge    ] (Bound) (Artifact) (Glowing) the Staff of the Dawn Wizard:[tiny    ] (Glowing) a cloudy crystal shard:( 6) [large   ] a surplus backpack:(185) [tiny    ] a tiny spark of magic:[large   ] (Glowing) a heavy steel shield:[small   ] a bowl of noodle soup:]UI_Pulse_Stop
+
+
+--Errors: RealHeroLevel Missing dash, HeroPoints has a %
+
+--TODO: Fix Items/Equip
+
+function parsePulse(pulsetext)
+  pulsetext = pulsetext
+  
+  local pulses = string.split(pulsetext,",")
+  
+  for k,v in pairs(pulses) do
+    
+    local start, stop = string.find(v, "-")
+    local attrname = ""
+    local attrvalue = ""
+    
+    if start ~= nil and stop ~= nil then
+      attrname = string.sub(v,1,start-1)
+      attrvalue = string.sub(v,stop+1)
+    end
+
+    
+    --echo(attrname)
+    --echo(attrvalue)
+    
+    if (attrname=="chName") then
+    
+      --Name
+      xaos.charactername = string.trim(attrvalue)
+      
+      --On Login
+      if initialload then
+        loadprofile(true)
+        initialload=false
+        enableTimer("User Timer")
+        expandAlias(xaos.config.reconnectaction)
+      end
+      
+    elseif (attrname=="chHeroLevel") then
+      --Level
+      local lvl,lvlpercent = rex.match(attrvalue,[[([0-9]+)\(([0-9]+)%\)]])
+      
+      currentLevelPercent = lvlpercent
+      currentLevel=lvl
+      
+      xaos.LevelPercent = tonumber(lvlpercent)
+      xaos.Level=tonumber(lvl)
+      
+    elseif (attrname=="chClass") then
+      xaos.class.primary = string.trim(attrvalue)
+
+    elseif (attrname=="chSecondClass") then
+      xaos.class.reborn = string.trim(attrvalue)
+
+    elseif (attrname=="chTraits") then
+      xaos.traits = string.trim(attrvalue)
+      
+    elseif (attrname=="chHeroPoints") then
+      local x=string.gsub(attrvalue,"%%","")    
+      xaos.heropoints=tonumber(x)    
+    elseif (attrname=="chFrags") then
+      xaos.currency.frags=tonumber(attrvalue)
+    elseif (attrname=="chSouls") then
+      xaos.currency.souls=tonumber(attrvalue)
+    elseif (attrname=="chTactics") then
+      xaos.tactics = string.trim(attrvalue)
+    elseif (attrname=="chStyle") then
+      xaos.fightingstyle = string.trim(attrvalue)
+    elseif (attrname=="chAffects") then
+      
+      for key,value in pairs(xaos.buffs) do
+        xaos.buffs[key] = false
+      end
+      
+      xaos.bufflist = {}
+      
+      local affectlist = string.split(attrvalue,":")
+
+      for ak,av in pairs(affectlist) do
+        --^(?:\s*)(?:Skill:|Spell:| misc:|Effect:) (.*) (modifies|grants|makes|adds|gives|will)
+        --table.insert(xaos.bufflist,string.trim(matches[2]))
+        local affectname = rex.match(av,[[(?:Skill|Spell|misc|Effect) (.*) affecting]])
+        if affectname ~= nil then affectname = string.trim(string.lower(affectname)) end
+        if not table.contains(xaos.bufflist,affectname) then
+          table.insert(xaos.bufflist,affectname)
+        end
+      end
+
+      xaos.buffs.statusCenter=table.contains(xaos.bufflist,"discipline")
+      xaos.buffs.statusBerserk=table.contains(xaos.bufflist,"berserk")
+      xaos.buffs.statusResolve=table.contains(xaos.bufflist,"resolve")
+      xaos.buffs.statusWarcry=table.contains(xaos.bufflist,"warcry")
+      xaos.buffs.statusBless=table.contains(xaos.bufflist,"bless")
+      xaos.buffs.statusTrance=table.contains(xaos.bufflist,"trance")
+      
+    elseif (attrname=="") then
+    elseif (attrname=="") then
+    elseif (attrname=="") then
+    elseif (attrname=="") then
+    elseif (attrname=="") then
+    elseif (attrname=="") then
+    
+    end
+    
+    
+    
+    
+  end
+  --Update Class Details
+      
+    xaos.class.cleric = false
+    xaos.class.mage = false
+    xaos.class.warrior = false
+    xaos.class.thief = false
+    xaos.class.barbarian=false
+    
+    local classtable = {}
+    classtable = {"warrior","gladiator","knight","berserker","paladin","geomancer"}
+    if table.contains(classtable,xaos.class.primary) or table.contains(classtable,xaos.class.reborn) then
+      xaos.class.warrior = true
+    end
+    
+    
+    classtable = {"cleric","bishop","monk","druid"}
+    if table.contains(classtable,xaos.class.primary) or table.contains(classtable,xaos.class.reborn) then
+      xaos.class.cleric = true
+    end
+    
+    classtable = {"barbarian","spirit champion","witch doctor","rift binder","journeyman"}
+    if table.contains(classtable,xaos.class.primary) or table.contains(classtable,xaos.class.reborn) then
+      xaos.class.barbarian = true
+    end
+    
+    classtable = {"thief","rake","assassin","disciple"}
+    if table.contains(classtable,xaos.class.primary) or table.contains(classtable,xaos.class.reborn) then
+      xaos.class.thief = true
+    end
+    
+    classtable = {"mage","invoker","illusionist","elementalist","mentalist","necromancer"}
+    if table.contains(classtable,xaos.class.primary) or table.contains(classtable,xaos.class.reborn) then
+      xaos.class.mage = true
+    end
+end</script>
 				<eventHandlerList />
 			</Script>
 		</ScriptGroup>
