@@ -14698,7 +14698,7 @@ partyDisplay2:echo(lblentries[2])</script>
 
 local lbltext = "&lt;div style='white-space: pre-wrap;padding:5px;'&gt;"
 lbltext = lbltext .. xaos.charactername .. "&lt;br/&gt;&lt;br/&gt;"
-lbltext = lbltext .."Level    : " .. xaos.Level .. " (" .. xaos.LevelPercent .. "%)" .. "&lt;br/&gt;"
+lbltext = lbltext .."Level    : " .. xaos.Level .. " (" .. string.format("%2.2f",xaos.LevelPercent) .. "%)" .. "&lt;br/&gt;"
 
 lbltext = lbltext .."Tactics  : " .. tostring(xaos.tactics) .. "&lt;br/&gt;"
 lbltext = lbltext .."Style    : " .. tostring(xaos.fightingstyle) .. "&lt;br/&gt;"
