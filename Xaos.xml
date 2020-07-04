@@ -83,7 +83,9 @@ enableTimer("Party Timer")
 enableTimer("Update Combat")
 enableTimer("XPRate")
 
-feedManager("[ALERT] Logged in to character")</script>
+feedManager("[ALERT] Logged in to character")
+
+enableMSDP()</script>
 					<triggerType>0</triggerType>
 					<conditonLineDelta>0</conditonLineDelta>
 					<mStayOpen>0</mStayOpen>
@@ -15442,8 +15444,8 @@ for k,v in pairs(queststoturnin) do
       send("quest complete " .. v.name)
       --questinfo = questinfo .. "" .. questname .. "  - Completed\n"
     else
-      --echo("InfoList","\n\n" .. questname .. "  - Not Complete\n\n")
-      echo("\n\n" .. v.name .. "  - Not Complete\n\n")
+      --echo("InfoList","\n\n" .. questname .. "  - Not Complete\n")
+      echo("" .. v.name .. "  - Not Complete\n")
       --questinfo = questinfo .. "" .. questname .. "  - Not Complete\n"
     end
 end
