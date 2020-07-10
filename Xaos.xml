@@ -85,7 +85,8 @@ enableTimer("XPRate")
 
 feedManager("[ALERT] Logged in to character")
 
-enableMSDP()</script>
+raiseEvent("xaos_connect")
+</script>
 					<triggerType>0</triggerType>
 					<conditonLineDelta>0</conditonLineDelta>
 					<mStayOpen>0</mStayOpen>
@@ -105,6 +106,74 @@ enableMSDP()</script>
 						<integer>0</integer>
 					</regexCodePropertyList>
 				</Trigger>
+				<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+					<name>CopyOver Start</name>
+					<script>copyoverinprogress=true</script>
+					<triggerType>0</triggerType>
+					<conditonLineDelta>0</conditonLineDelta>
+					<mStayOpen>0</mStayOpen>
+					<mCommand></mCommand>
+					<packageName></packageName>
+					<mFgColor>#ff0000</mFgColor>
+					<mBgColor>#ffff00</mBgColor>
+					<mSoundFile></mSoundFile>
+					<colorTriggerFgColor>#000000</colorTriggerFgColor>
+					<colorTriggerBgColor>#000000</colorTriggerBgColor>
+					<regexCodeList>
+						<string>Performing copyover... Please wait.</string>
+					</regexCodeList>
+					<regexCodePropertyList>
+						<integer>0</integer>
+					</regexCodePropertyList>
+				</Trigger>
+				<TriggerGroup isActive="yes" isFolder="yes" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+					<name>CopyOver In Progress</name>
+					<script></script>
+					<triggerType>0</triggerType>
+					<conditonLineDelta>0</conditonLineDelta>
+					<mStayOpen>0</mStayOpen>
+					<mCommand></mCommand>
+					<packageName></packageName>
+					<mFgColor>#ff0000</mFgColor>
+					<mBgColor>#ffff00</mBgColor>
+					<mSoundFile></mSoundFile>
+					<colorTriggerFgColor>#000000</colorTriggerFgColor>
+					<colorTriggerBgColor>#000000</colorTriggerBgColor>
+					<regexCodeList>
+						<string>return copyoverinprogress</string>
+					</regexCodeList>
+					<regexCodePropertyList>
+						<integer>4</integer>
+					</regexCodePropertyList>
+					<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+						<name>100%</name>
+						<script>
+tempTimer(1,function()
+    echo("Restablishing MSDP") 
+    enableMSDP()
+  end
+)
+
+copyoverinprogress=false
+</script>
+						<triggerType>0</triggerType>
+						<conditonLineDelta>0</conditonLineDelta>
+						<mStayOpen>0</mStayOpen>
+						<mCommand></mCommand>
+						<packageName></packageName>
+						<mFgColor>#ff0000</mFgColor>
+						<mBgColor>#ffff00</mBgColor>
+						<mSoundFile></mSoundFile>
+						<colorTriggerFgColor>#000000</colorTriggerFgColor>
+						<colorTriggerBgColor>#000000</colorTriggerBgColor>
+						<regexCodeList>
+							<string>100%</string>
+						</regexCodeList>
+						<regexCodePropertyList>
+							<integer>0</integer>
+						</regexCodePropertyList>
+					</Trigger>
+				</TriggerGroup>
 			</TriggerGroup>
 			<TriggerGroup isActive="yes" isFolder="yes" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
 				<name>Scripting</name>
@@ -3705,7 +3774,7 @@ xaos.Level=lvl</script>
 					<colorTriggerBgColor>#000000</colorTriggerBgColor>
 					<regexCodeList>
 						<string>Hero Lvl: ([0-9]+)</string>
-						<string>Level\: (.*)\|</string>
+						<string> Level\: (.*)\|</string>
 					</regexCodeList>
 					<regexCodePropertyList>
 						<integer>1</integer>
@@ -3966,7 +4035,7 @@ end</script>
 					<colorTriggerFgColor>#000000</colorTriggerFgColor>
 					<colorTriggerBgColor>#000000</colorTriggerBgColor>
 					<regexCodeList>
-						<string>Name: ([^-]+)</string>
+						<string>Name: ([^-\s]+)</string>
 					</regexCodeList>
 					<regexCodePropertyList>
 						<integer>1</integer>
@@ -14597,7 +14666,7 @@ end
 					<time>00:10:00.000</time>
 				</Timer>
 			</TimerGroup>
-			<TimerGroup isActive="no" isFolder="yes" isTempTimer="no" isOffsetTimer="no">
+			<TimerGroup isActive="yes" isFolder="yes" isTempTimer="no" isOffsetTimer="no">
 				<name>XUI</name>
 				<script></script>
 				<command></command>
@@ -21697,6 +21766,8 @@ if mysettings.feedconsole== nil then mysettings.feedconsole =  "data" end
 if mysettings.UIType== nil then mysettings.UIType =  "XUI" end
 if mysettings.showprompt == nil then mysettings.showprompt = false end
 
+if mysettings.
+
 mysettings.XUI = {
   UIMode = "container",
   feedconsole = "data",
@@ -24565,7 +24636,7 @@ end</script>
 						<script></script>
 						<eventHandlerList />
 						<Script isActive="yes" isFolder="no">
-							<name>Party Lavel</name>
+							<name>Party Level</name>
 							<packageName></packageName>
 							<script>if mysettings.UIType ~= "XUI" then return end
 
@@ -24595,7 +24666,9 @@ partyDisplay2:setStyleSheet([[
 	background-color: #222233;
 	color: #AACCFF;
   font-family: Courier;
-]])</script>
+]])
+
+</script>
 							<eventHandlerList />
 						</Script>
 						<Script isActive="yes" isFolder="no">
@@ -30692,79 +30765,371 @@ end</script>
 			<ScriptGroup isActive="yes" isFolder="yes">
 				<name>MSDP</name>
 				<packageName></packageName>
-				<script>function enableMSDP()
-sendMSDP("REPORT","EXPERIENCE")
-sendMSDP("REPORT","EXPERIENCE_MAX")
-sendMSDP("REPORT","EXPERIENCE_TNL")
-sendMSDP("REPORT","HEALTH")
-sendMSDP("REPORT","HEALTH_MAX")
-sendMSDP("REPORT","LEVEL")
-sendMSDP("REPORT","RACE")
-sendMSDP("REPORT","CLASS")
-sendMSDP("REPORT","MANA")
-sendMSDP("REPORT","MANA_MAX")
-sendMSDP("REPORT","WIMPY")
-sendMSDP("REPORT","PRACTICE")
-sendMSDP("REPORT","MONEY")
-sendMSDP("REPORT","MOVEMENT")
-sendMSDP("REPORT","MOVEMENT_MAX")
-sendMSDP("REPORT","HITROLL")
-sendMSDP("REPORT","DAMROLL")
-sendMSDP("REPORT","AC")
-sendMSDP("REPORT","STR")
-sendMSDP("REPORT","INT")
-sendMSDP("REPORT","WIS")
-sendMSDP("REPORT","DEX")
-sendMSDP("REPORT","CON")
-sendMSDP("REPORT","STR_PERM")
-sendMSDP("REPORT","INT_PERM")
-sendMSDP("REPORT","WIS_PERM")
-sendMSDP("REPORT","DEX_PERM")
-sendMSDP("REPORT","CON_PERM")
+				<script>-- function disableMSDP()
+  -- for k,v in pairs(msdp.REPORTED_VARIABLES) do
+    -- sendMSDP("UNREPORT",v)
+  -- end
+-- end
+-- function enableMSDP()
+  -- sendMSDP("REPORT","AFFECTS")
+  -- sendMSDP("REPORT","ASCEND_EXP")
+  -- sendMSDP("REPORT","CHARACTER_NAME")
+  -- sendMSDP("REPORT","CLASS")
+  -- sendMSDP("REPORT","EQ_WEIGHT_MAX")
+  -- sendMSDP("REPORT","EQ_WEIGHT")
+  -- sendMSDP("REPORT","FRAGS")
+  -- sendMSDP("REPORT","HEALTH_MAX")
+  -- sendMSDP("REPORT","HEALTH")
+  -- sendMSDP("REPORT","HERO_EXP_TNL")
+  -- sendMSDP("REPORT","HERO_EXP")
+  -- sendMSDP("REPORT","HERO_LEVEL")
+  -- sendMSDP("REPORT","HERO_POINTS")
+  -- sendMSDP("REPORT","HUNGER_MAX")
+  -- sendMSDP("REPORT","HUNGER")
+  -- sendMSDP("REPORT","ITEMS_MAX")
+  -- sendMSDP("REPORT","ITEMS")
+  -- sendMSDP("REPORT","MANA_MAX")
+  -- sendMSDP("REPORT","MANA")
+  -- sendMSDP("REPORT","MOVEMENT_MAX")
+  -- sendMSDP("REPORT","MOVEMENT")
+  -- sendMSDP("REPORT","RACE")
+  -- sendMSDP("REPORT","SECOND_CLASS")
+  -- sendMSDP("REPORT","SOULS")
+  -- sendMSDP("REPORT","STYLE")
+  -- sendMSDP("REPORT","THIRST_MAX")
+  -- sendMSDP("REPORT","THIRST")
+  -- sendMSDP("REPORT","TRAITS")
+  -- sendMSDP("LIST","REPORTED_VARIABLES")
+-- end
+-- enableMSDP()
+
+function disableMSDP()
+  local timer = 0
+  for k,v in pairs(msdp.REPORTABLE_VARIABLES) do
+    tempTimer(timer,function() sendMSDP("UNREPORT",v) end)
+    timer = timer + 0.01
+  end
+  tempTimer(timer, function () 
+    sendMSDP("LIST","REPORTED_VARIABLES")
+    echo("MSDP Unreporting Complete: " .. timer)
+  end)
 end
-enableMSDP()</script>
+function enableMSDP()
+  local timer = 0
+  for k,v in pairs(msdp.REPORTABLE_VARIABLES) do
+    tempTimer(timer,function() sendMSDP("REPORT",v) end)
+    timer = timer + 0.01
+  end
+  tempTimer(timer, function () 
+    sendMSDP("LIST","REPORTED_VARIABLES")
+    echo("MSDP Reporting Complete: " .. timer)
+  end)
+end
+function reportMSDP()
+-- ask for a list of commands, lists, and reportable variables that the server supports
+sendMSDP("LIST", "COMMANDS", "LISTS", "REPORTABLE_VARIABLES")
+sendMSDP("LIST", "COMMANDS", "LISTS", "REPORTED_VARIABLES")
+end
+reportMSDP()
+tempTimer(1,function() enableMSDP() end)
+
+</script>
 				<eventHandlerList />
 				<Script isActive="yes" isFolder="no">
-					<name>grab_STR_PERM</name>
+					<name>MSDP Update Functions</name>
 					<packageName></packageName>
-					<script>function grab_STR_PERM()
-  echo(msdp.STR_PERM)
-end</script>
-					<eventHandlerList>
-						<string>msdp.STR_PERM</string>
-					</eventHandlerList>
-				</Script>
-				<Script isActive="yes" isFolder="no">
-					<name>grab_MANA</name>
-					<packageName></packageName>
-					<script>function grab_MANA()
-  debugecho("grabbed")
-  xPrompt.mana = 100*tonumber(msdp.MANA)/5050
+					<script>function msdpConnect(event, arg, profile)
+  reportMSDP()
+  tempTimer(1,function() enableMSDP() end)
+end
+
+-- Register the event handler.
+registerAnonymousEventHandler("xaos_connect", "msdpConnect")
+
+function msdpUpdateEQ()
   
-  --current_mana = tonumber(xPrompt.mana)
-  manabar:setValue(xPrompt.mana, 100, nil)
-  manabar.front:echo(string.format("%2.1f",xPrompt.mana) .. "%", nil, "c")
+  if msdp.ITEMS == nil or msdp.ITEMS_MAX == nil or msdp.EQ_WEIGHT == nil or msdp.EQ_WEIGHT_MAX then
+    return
+  end
+
+  local itemcur = tonumber(msdp.ITEMS)
+  local itemmax = tonumber(msdp.ITEMS_MAX)
+  local eqcur = tonumber(msdp.EQ_WEIGHT)
+  local eqmax = tonumber(msdp.EQ_WEIGHT_MAX)
+
+  local ratio = .95
+  
+  if (itemcur/itemmax) &gt; ratio then
+    feedManager("Items dangerously full, could miss an artifact: " .. math.floor(itemmax*ratio),true)
+    statusOverloaded=true
+  elseif (eqcur/eqmax) &gt; ratio then
+    feedManager("Weight dangerously full, could miss an artifact: ".. math.floor(eqmax*ratio),true)
+    statusOverloaded=true
+  else
+    statusOverloaded=false
+  end
+
+end
+
+function msdpUpdateClass()
+
+  if msdp.CLASS == nil or msdp.SECOND_CLASS == nil then
+    return
+  end
+
+--Update Class Details
+      
+    xaos.class.cleric = false
+    xaos.class.mage = false
+    xaos.class.warrior = false
+    xaos.class.thief = false
+    xaos.class.barbarian=false
+    
+    local classtable = {}
+    classtable = {"warrior","gladiator","knight","berserker","paladin","geomancer"}
+    if table.contains(classtable,xaos.class.primary) or table.contains(classtable,xaos.class.reborn) then
+      xaos.class.warrior = true
+    end
+    
+    
+    classtable = {"cleric","bishop","monk","druid"}
+    if table.contains(classtable,xaos.class.primary) or table.contains(classtable,xaos.class.reborn) then
+      xaos.class.cleric = true
+    end
+    
+    classtable = {"barbarian","spirit champion","witch doctor","rift binder","journeyman"}
+    if table.contains(classtable,xaos.class.primary) or table.contains(classtable,xaos.class.reborn) then
+      xaos.class.barbarian = true
+    end
+    
+    classtable = {"thief","rake","assassin","disciple"}
+    if table.contains(classtable,xaos.class.primary) or table.contains(classtable,xaos.class.reborn) then
+      xaos.class.thief = true
+    end
+    
+    classtable = {"mage","invoker","illusionist","elementalist","mentalist","necromancer"}
+    if table.contains(classtable,xaos.class.primary) or table.contains(classtable,xaos.class.reborn) then
+      xaos.class.mage = true
+    end
+    
+end</script>
+					<eventHandlerList />
+				</Script>
+				<Script isActive="yes" isFolder="no">
+					<name>MSDP UI Items</name>
+					<packageName></packageName>
+					<script>
+
+partyDisplay:hide()
+partyDisplay2:hide()
+
+
+
+right_container = right_container or Geyser.Container:new({
+  name = "right_container",
+  x = "-150px", y = "0",
+  width = "150px", height = "100%",
+})
+
+msdpPartyDisplay = msdpPartyDisplay or Geyser.VBox:new({
+  name = "msdpPartyDisplay",
+  x = "0", y = "0",
+  width = "100%", height = "45%",
+}, right_container)
+
+msdpOppDisplay = msdpOppDisplay or Geyser.VBox:new({
+  name = "msdpOppDisplay",
+  x = "0", y = "45%",
+  width = "100%", height = "45%",
+}, right_container)
+
+msdpTargetDisplay = msdpTargetDisplay or Geyser.VBox:new({
+  name = "msdpTargetDisplay",
+  x = "0", y = "90%",
+  width = "100%", height = "10%",
+}, right_container)
+
+--Temporary
+msdpPartyLabel = msdpPartyLabel or Geyser.VBox:new({
+  name = "msdpPartyLabel",
+  x = "0", y = "0",
+  width = "100%", height = "100%",
+}, msdpPartyDisplay)
+
+msdpOppLabel = msdpOppLabel or Geyser.VBox:new({
+  name = "msdpOppLabel",
+  x = "0", y = "0",
+  width = "100%", height = "100%",
+}, msdpOppDisplay)
+
+OPPGauges = OPPGauges or {} 
+OPPLabels = OPPLabels or {}
+
+function grabOppGauge(index)
+  local cont
+  if index == 1 then 
+    cont = msdpTargetDisplay
+  else
+    cont = msdpOppDisplay
+  end
+  OPPGauges[index] = OPPGauges[index] or
+      Geyser.Gauge:new({name = "OPPGauges_"..index,  x = "1%", y = 0, width = "98%", height =25}, cont)
+  OPPGauges[index].front:setStyleSheet(
+    [[background-color: rgba(255, 0, 0,10%);
+      border-width: 1px;
+      border-color: black;
+      border-style: solid;
+      border-radius: 7;
+      padding: 3px;
+  ]]
+  )
+  OPPGauges[index].back:setStyleSheet(
+    [[background-color: rgba(255, 0, 0,30%);
+      border-width: 1px;
+      border-color: black;
+      border-style: solid;
+      border-radius: 7;
+      padding: 3px;
+  ]]
+  )
+  OPPLabels[index] = OPPLabels[index] or
+      Geyser.Label:new({name = "OPPLabels_"..index,  x = "1%", y = 0, width = "98%", height =10}, cont)
+  return {label=OPPLabels[index],gauge=OPPGauges[index]}
+end
+
+--Overloaded function
+function resizeParent()
+  local windowWidth, windowHeight = getMainWindowSize()
+  --local userwindowWidth, userwindowHeight = getUserWindowSize("menu.back")
+ --echo(userwindowWidth)
+  local userwindowWidth = menu.window.get_width()
+ --echo(userwindowWidth)
+  
+  bottom_container:resize(windowWidth-userwindowWidth-BORDER_WIDTH .. "px","100px")
+  
+  right_container:move("-" .. userwindowWidth+BORDER_WIDTH+150 .. "px","0px")
+  
+  setBorderRight(userwindowWidth+BORDER_WIDTH+150)
+
+end
+
+resizeParent()</script>
+					<eventHandlerList />
+				</Script>
+				<Script isActive="yes" isFolder="no">
+					<name>grab_REPORTED_VARIABLES</name>
+					<packageName></packageName>
+					<script>function grab_AFFECTS()
+  debugecho("MSDP:AFFECTS")
 end</script>
 					<eventHandlerList>
-						<string>msdp.MANA</string>
+						<string>msdp.REPORTED_VARIABLES</string>
 					</eventHandlerList>
 				</Script>
 				<Script isActive="yes" isFolder="no">
-					<name>grab_EXPERIENCE</name>
+					<name>grab_AFFECTS</name>
 					<packageName></packageName>
-					<script>function grab_EXPERIENCE()
-  echo(msdp.EXPERIENCE)
+					<script>function grab_AFFECTS()
+  debugecho("MSDP:AFFECTS")
+  xaos.bufflist = {}
+  for k,v in pairs(msdp.AFFECTS) do
+    table.insert(xaos.bufflist,k)
+  end
 end</script>
 					<eventHandlerList>
-						<string>msdp.eMSDP_EXPERIENCE</string>
+						<string>msdp.AFFECTS</string>
+					</eventHandlerList>
+				</Script>
+				<Script isActive="yes" isFolder="no">
+					<name>grab_ASCEND_EXP</name>
+					<packageName></packageName>
+					<script>function grab_ASCEND_EXP()
+  debugecho("MSDP:ASCEND")
+  local curasc = 100*tonumber(msdp.ASCEND_EXP)/10000
+  local ascstring = string.format("%2.2f",curasc) .. "%"
+  ascbar:setValue(curasc, 100, nil)
+  ascbar.back:echo(ascstring, nil, "c")
+  xaos.ascendcount = msdp.ASCEND_EXP
+end</script>
+					<eventHandlerList>
+						<string>msdp.ASCEND_EXP</string>
+					</eventHandlerList>
+				</Script>
+				<Script isActive="yes" isFolder="no">
+					<name>grab_CHARACTER_NAME</name>
+					<packageName></packageName>
+					<script>function grab_CHARACTER_NAME()
+  debugecho("MSDP:CHARACTER_NAME")
+  xaos.charactername = msdp.CHARACTER_NAME
+
+end
+
+
+</script>
+					<eventHandlerList>
+						<string>msdp.CHARACTER_NAME</string>
+					</eventHandlerList>
+				</Script>
+				<Script isActive="yes" isFolder="no">
+					<name>grab_CLASS</name>
+					<packageName></packageName>
+					<script>function grab_CLASS()
+  xaos.primary = string.trim(msdp.CLASS)
+  msdpUpdateClass()
+end
+
+</script>
+					<eventHandlerList>
+						<string>msdp.CLASS</string>
+					</eventHandlerList>
+				</Script>
+				<Script isActive="yes" isFolder="no">
+					<name>grab_EQ_WEIGHT_MAX</name>
+					<packageName></packageName>
+					<script>function grab_EQ_WEIGHT_MAX()
+  msdpUpdateEQ()
+end
+</script>
+					<eventHandlerList>
+						<string>msdp.EQ_WEIGHT_MAX</string>
+					</eventHandlerList>
+				</Script>
+				<Script isActive="yes" isFolder="no">
+					<name>grab_EQ_WEIGHT</name>
+					<packageName></packageName>
+					<script>function grab_EQ_WEIGHT()
+
+  msdpUpdateEQ()
+
+end
+
+
+</script>
+					<eventHandlerList>
+						<string>msdp.EQ_WEIGHT</string>
+					</eventHandlerList>
+				</Script>
+				<Script isActive="yes" isFolder="no">
+					<name>grab_FRAGS</name>
+					<packageName></packageName>
+					<script>function grab_FRAGS()
+  xaos.currency.frags=tonumber(msdp.FRAGS)
+end
+</script>
+					<eventHandlerList>
+						<string>msdp.FRAGS</string>
 					</eventHandlerList>
 				</Script>
 				<Script isActive="yes" isFolder="no">
 					<name>grab_HEALTH</name>
 					<packageName></packageName>
 					<script>function grab_HEALTH()
-  debugecho("grabbed")
-  xPrompt.hp = 100*tonumber(msdp.HEALTH)/5315
+  
+  if msdp.HEALTH == nil or msdp.HEALTH_MAX == nil then
+    return
+  end
+  
+  xPrompt.hp = 100*tonumber(msdp.HEALTH)/tonumber(msdp.HEALTH_MAX)
   
   current_health = tonumber(xPrompt.hp)
   hpbar:setValue(current_health, 100, nil)
@@ -30775,11 +31140,160 @@ end</script>
 					</eventHandlerList>
 				</Script>
 				<Script isActive="yes" isFolder="no">
+					<name>grab_HEALTH_MAX</name>
+					<packageName></packageName>
+					<script>function grab_HEALTH_MAX()
+  debugecho("Health Max grabbed")
+  
+  if msdp.HEALTH == nil or msdp.HEALTH_MAX == nil then
+    return
+  end
+  
+  xPrompt.hp = 100*tonumber(msdp.HEALTH)/tonumber(msdp.HEALTH_MAX)
+  
+  current_health = tonumber(xPrompt.hp)
+  hpbar:setValue(current_health, 100, nil)
+  hpbar.front:echo(string.format("%2.1f",xPrompt.hp) .. "%", nil, "c")
+end</script>
+					<eventHandlerList>
+						<string>msdp.HEALTH_MAX</string>
+					</eventHandlerList>
+				</Script>
+				<Script isActive="yes" isFolder="no">
+					<name>grab_HERO_EXP_TNL</name>
+					<packageName></packageName>
+					<script>function grab_HERO_EXP_TNL()
+  if msdp.HERO_EXP == nil or msdp.HERO_EXP_TNL == nil then
+    return
+  end
+  xaos.LevelPercent = 100*msdp.HERO_EXP / msdp.HERO_EXP_TNL
+end
+</script>
+					<eventHandlerList>
+						<string>msdp.HERO_EXP_TNL</string>
+					</eventHandlerList>
+				</Script>
+				<Script isActive="yes" isFolder="no">
+					<name>grab_HERO_EXP</name>
+					<packageName></packageName>
+					<script>function grab_HERO_EXP()
+  if msdp.HERO_EXP == nil or msdp.HERO_EXP_TNL == nil then
+    return
+  end
+  xaos.LevelPercent = 100*msdp.HERO_EXP / msdp.HERO_EXP_TNL
+end
+</script>
+					<eventHandlerList>
+						<string>msdp.HERO_EXP</string>
+					</eventHandlerList>
+				</Script>
+				<Script isActive="yes" isFolder="no">
+					<name>grab_HERO_LEVEL</name>
+					<packageName></packageName>
+					<script>function grab_HERO_LEVEL()
+  xaos.Level = tonumber(msdp.HERO_LEVEL)
+end
+</script>
+					<eventHandlerList>
+						<string>msdp.HERO_LEVEL</string>
+					</eventHandlerList>
+				</Script>
+				<Script isActive="yes" isFolder="no">
+					<name>grab_HERO_POINTS</name>
+					<packageName></packageName>
+					<script>function grab_HERO_POINTS()
+  xaos.heropoints=tonumber(msdp.HERO_POINTS)  
+end
+</script>
+					<eventHandlerList>
+						<string>msdp.HERO_POINTS</string>
+					</eventHandlerList>
+				</Script>
+				<Script isActive="yes" isFolder="no">
+					<name>grab_HUNGER_MAX</name>
+					<packageName></packageName>
+					<script>function grab_HUNGER_MAX()
+
+end
+</script>
+					<eventHandlerList>
+						<string>msdp.HUNGER_MAX</string>
+					</eventHandlerList>
+				</Script>
+				<Script isActive="yes" isFolder="no">
+					<name>grab_HUNGER</name>
+					<packageName></packageName>
+					<script>function grab_HUNGER()
+
+end
+</script>
+					<eventHandlerList>
+						<string>msdp.HUNGER</string>
+					</eventHandlerList>
+				</Script>
+				<Script isActive="yes" isFolder="no">
+					<name>grab_ITEMS_MAX</name>
+					<packageName></packageName>
+					<script>function grab_ITEMS_MAX()
+  msdpUpdateEQ()
+end
+</script>
+					<eventHandlerList>
+						<string>msdp.ITEMS_MAX</string>
+					</eventHandlerList>
+				</Script>
+				<Script isActive="yes" isFolder="no">
+					<name>grab_ITEMS</name>
+					<packageName></packageName>
+					<script>function grab_ITEMS()
+  msdpUpdateEQ()
+end
+</script>
+					<eventHandlerList>
+						<string>msdp.ITEMS</string>
+					</eventHandlerList>
+				</Script>
+				<Script isActive="yes" isFolder="no">
+					<name>grab_MANA</name>
+					<packageName></packageName>
+					<script>function grab_MANA()
+  debugecho("grabbed")
+  
+  if msdp.MANA == nil or msdp.MANA_MAX == nil then
+    return
+  end
+  
+  xPrompt.mana = 100*tonumber(msdp.MANA)/tonumber(msdp.MANA_MAX)
+  
+  --current_mana = tonumber(xPrompt.mana)
+  manabar:setValue(xPrompt.mana, 100, nil)
+  manabar.front:echo(string.format("%2.1f",xPrompt.mana) .. "%", nil, "c")
+end</script>
+					<eventHandlerList>
+						<string>msdp.MANA</string>
+					</eventHandlerList>
+				</Script>
+				<Script isActive="yes" isFolder="no">
+					<name>grab_MANA_MAX</name>
+					<packageName></packageName>
+					<script>function grab_MANA_MAX()
+  debugecho("grabbed")
+  xPrompt.mana = 100*tonumber(msdp.MANA)/tonumber(msdp.MANA_MAX)
+  
+  --current_mana = tonumber(xPrompt.mana)
+  manabar:setValue(xPrompt.mana, 100, nil)
+  manabar.front:echo(string.format("%2.1f",xPrompt.mana) .. "%", nil, "c")
+end</script>
+					<eventHandlerList>
+						<string>msdp.MANA_MAX</string>
+					</eventHandlerList>
+				</Script>
+				<Script isActive="yes" isFolder="no">
 					<name>grab_MOVEMENT</name>
 					<packageName></packageName>
 					<script>function grab_MOVEMENT()
   debugecho("grabbed")
-  xPrompt.move = 100*tonumber(msdp.MOVEMENT)/1300
+  xPrompt.move = 100*tonumber(msdp.MOVEMENT)/tonumber(msdp.MOVEMENT_MAX)
   
   current_mvm = tonumber(xPrompt.move)
   mvmbar:setValue(current_mvm, 100, nil)
@@ -30787,6 +31301,128 @@ end</script>
 end</script>
 					<eventHandlerList>
 						<string>msdp.MOVEMENT</string>
+					</eventHandlerList>
+				</Script>
+				<Script isActive="yes" isFolder="no">
+					<name>grab_OPPONENTS</name>
+					<packageName></packageName>
+					<script>function grab_OPPONENTS()
+  
+  for oppname,oppstats in pairs(msdp.OPPONENTS) do
+    local opphp,oppmana,oppmove = rex.match(oppstats,[[([0-9]{1,3}|-{1,3})\s([0-9]{1,3}|-{1,3})\s([0-9]{1,3}|-{1,3})]])
+    --echo(opphp)
+    local oppitems = grabOppGauge(1)
+  
+    if oppname == "None" then
+      oppitems.label:echo("None")
+      oppitems.gauge:setValue(0, 100, nil)
+      oppitems.gauge.back:echo("", nil, "c")
+    else
+      if opphp ~= "---" then
+        oppitems.label:echo(oppname) 
+        oppitems.gauge:setValue(tonumber(opphp), 100, nil)
+        oppitems.gauge.back:echo(opphp, nil, "c")
+      end
+    end
+  end
+  
+
+end</script>
+					<eventHandlerList>
+						<string>msdp.OPPONENTS</string>
+					</eventHandlerList>
+				</Script>
+				<Script isActive="yes" isFolder="no">
+					<name>grab_OPP_TARGET</name>
+					<packageName></packageName>
+					<script>function grab_OPP_TARGET()
+  local oppname, oppstats = next(msdp.OPP_TARGET)
+  local opphp,oppmana,oppmove = rex.match(oppstats,[[([0-9]{1,3}|-{1,3})\s([0-9]{1,3}|-{1,3})\s([0-9]{1,3}|-{1,3})]])
+  --echo(opphp)
+  local oppitems = grabOppGauge(1)
+
+  if oppname == "None" then
+    oppitems.label:echo("None")
+    oppitems.gauge:setValue(0, 100, nil)
+    oppitems.gauge.back:echo("", nil, "c")
+  else
+    if opphp ~= "---" then
+      oppitems.label:echo(oppname) 
+      oppitems.gauge:setValue(tonumber(opphp), 100, nil)
+      oppitems.gauge.back:echo(opphp, nil, "c")
+    end
+  end
+
+end</script>
+					<eventHandlerList>
+						<string>msdp.OPP_TARGET</string>
+					</eventHandlerList>
+				</Script>
+				<Script isActive="yes" isFolder="no">
+					<name>grab_SECOND_CLASS</name>
+					<packageName></packageName>
+					<script>function grab_SECOND_CLASS()
+  xaos.reborn = string.trim(msdp.SECOND_CLASS)
+  msdpUpdateClass()
+end
+</script>
+					<eventHandlerList>
+						<string>msdp.SECOND_CLASS</string>
+					</eventHandlerList>
+				</Script>
+				<Script isActive="yes" isFolder="no">
+					<name>grab_SOULS</name>
+					<packageName></packageName>
+					<script>function grab_SOULS()
+  xaos.currency.souls=tonumber(msdp.SOULS)
+end
+</script>
+					<eventHandlerList>
+						<string>msdp.SOULS</string>
+					</eventHandlerList>
+				</Script>
+				<Script isActive="yes" isFolder="no">
+					<name>grab_STYLE</name>
+					<packageName></packageName>
+					<script>function grab_STYLE()
+  xaos.fightingstyle = string.trim(msdp.STYLE)
+end
+</script>
+					<eventHandlerList>
+						<string>msdp.STYLE</string>
+					</eventHandlerList>
+				</Script>
+				<Script isActive="yes" isFolder="no">
+					<name>grab_THIRST_MAX</name>
+					<packageName></packageName>
+					<script>function grab_THIRST_MAX()
+
+end
+</script>
+					<eventHandlerList>
+						<string>msdp.THIRST_MAX</string>
+					</eventHandlerList>
+				</Script>
+				<Script isActive="yes" isFolder="no">
+					<name>grab_THIRST</name>
+					<packageName></packageName>
+					<script>function grab_THIRST()
+
+end
+</script>
+					<eventHandlerList>
+						<string>msdp.THIRST</string>
+					</eventHandlerList>
+				</Script>
+				<Script isActive="yes" isFolder="no">
+					<name>grab_TRAITS</name>
+					<packageName></packageName>
+					<script>function grab_TRAITS()
+  xaos.traits = string.trim(msdp.TRAITS)
+end
+</script>
+					<eventHandlerList>
+						<string>msdp.TRAITS</string>
 					</eventHandlerList>
 				</Script>
 			</ScriptGroup>
