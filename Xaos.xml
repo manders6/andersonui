@@ -149,8 +149,7 @@ raiseEvent("xaos_connect")
 						<name>100%</name>
 						<script>
 tempTimer(1,function()
-    echo("Restablishing MSDP") 
-    enableMSDP()
+    raiseEvent("xaos_connect")
   end
 )
 
@@ -14383,7 +14382,7 @@ determValue = 0</script>
 		</TriggerGroup>
 	</TriggerPackage>
 	<TimerPackage>
-		<TimerGroup isActive="yes" isFolder="yes" isTempTimer="no" isOffsetTimer="no">
+		<TimerGroup isActive="no" isFolder="yes" isTempTimer="no" isOffsetTimer="no">
 			<name>Xaos</name>
 			<script></script>
 			<command></command>
@@ -21748,7 +21747,6 @@ echo("\n " .. display(funfurmanual) .. "\n")</script>
 			<name>Xaos</name>
 			<packageName></packageName>
 			<script>if xaos == nil then xaos = {} end
-
 if mysettings == nil then mysettings = {} end
 
 mysettings.version = "0.2.0.0"
@@ -21766,7 +21764,8 @@ if mysettings.feedconsole== nil then mysettings.feedconsole =  "data" end
 if mysettings.UIType== nil then mysettings.UIType =  "XUI" end
 if mysettings.showprompt == nil then mysettings.showprompt = false end
 
-if mysettings.
+if mysettings.features == nil then mysettings.features = {} end
+if mysettings.features.msdp == nil then mysettings.features.msdp = false end
 
 mysettings.XUI = {
   UIMode = "container",
@@ -21779,6 +21778,7 @@ mysettings.XaosUI = {
 function savemysettings()
   table.save(getMudletHomeDir() .. "/mysettings.dat",mysettings)
 end
+
 function changeUI(uiname)
   
   local tempuiname = mysettings.UIType
@@ -21808,7 +21808,32 @@ function changeUI(uiname)
   end
 end
 
-changeUI(mysettings.UIType)</script>
+changeUI(mysettings.UIType)
+savemysettings()
+
+function setFeature(name,enable)
+  mysettings.features[name] = enable
+  if name == "msdp" then
+    if enable then 
+      enableScript("MSDP")
+      registerMSDPEvents()
+      loadMSDPUI()
+        
+    else
+      unregisterMSDPEvents()
+      disableScript("MSDP")
+    end
+  end
+  echo("Setting Feature " .. name .. ": " .. (enable and "On" or "Off"))
+end
+
+for k,v in pairs(mysettings.features) do
+  tempTimer(1,
+    function() 
+      setFeature(k,v)
+    end
+  )
+end</script>
 			<eventHandlerList />
 			<ScriptGroup isActive="yes" isFolder="yes">
 				<name>Variables</name>
@@ -23718,7 +23743,7 @@ bottom_container =
 
 --HP Gauge
 hpbar =
-  Geyser.Gauge:new({name = "hpbar", x = "20%", y = 0, width = "30%", height = 42}, bottom_container)
+  Geyser.Gauge:new({name = "hpbar", x = "20%", y = 0, width = "25%", height = 62}, bottom_container)
 hpbar.front:setStyleSheet(
   [[background-color: QLinearGradient( x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #f04141, stop: 0.1 #ef2929, stop: 0.49 #cc0000, stop: 0.5 #a40000, stop: 1 #cc0000);
     border-width: 1px;
@@ -23739,7 +23764,7 @@ hpbar.back:setStyleSheet(
 )
 --Mana Gauge
 manabar =
-  Geyser.Gauge:new({name = "manabar", x = "50%", y = 0, width = "30%", height = 20}, bottom_container)
+  Geyser.Gauge:new({name = "manabar", x = "45%", y = 0, width = "20%", height = 30}, bottom_container)
 manabar.front:setStyleSheet(
   [[background-color: QLinearGradient( x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #4e89e8, stop: 0.1 #2d74e5, stop: 0.49 #104599, stop: 0.5 #072a60, stop: 1 #011b44);
        border-width: 1px;
@@ -23783,7 +23808,7 @@ xpbar:hide()
 --Ascend Gauge
 --250, 123, 30,
 ascbar =
-  Geyser.Gauge:new({name = "ascbar",  x = "20%", y = 55, width = "60%", height =25}, bottom_container)
+  Geyser.Gauge:new({name = "ascbar",  x = "20%", y = 70, width = "45%", height =25}, bottom_container)
 ascbar.front:setStyleSheet(
   [[background-color: rgba(7, 221, 204,40%);
     border-width: 1px;
@@ -23803,7 +23828,7 @@ ascbar.back:setStyleSheet(
 --mvm Gauge
 --background-color: QLinearGradient( x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #efba4f, stop: 0.1 #ba8a2a, stop: 0.49 #966e1e, stop: 0.5 #a3700b, stop: 1 #B89902);
 mvmbar =
-  Geyser.Gauge:new({name = "mvmbar", x = "50%", y = 22, width = "30%", height = 20}, bottom_container)
+  Geyser.Gauge:new({name = "mvmbar", x = "45%", y = 32, width = "20%", height = 30}, bottom_container)
 mvmbar.front:setStyleSheet(
   [[background-color: QLinearGradient( x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #efba4f, stop: 0.1 #ba8a2a, stop: 0.49 #966e1e, stop: 0.5 #a3700b, stop: 1 #B89902);
     border-width: 1px;
@@ -30765,43 +30790,12 @@ end</script>
 			<ScriptGroup isActive="yes" isFolder="yes">
 				<name>MSDP</name>
 				<packageName></packageName>
-				<script>-- function disableMSDP()
-  -- for k,v in pairs(msdp.REPORTED_VARIABLES) do
-    -- sendMSDP("UNREPORT",v)
-  -- end
--- end
--- function enableMSDP()
-  -- sendMSDP("REPORT","AFFECTS")
-  -- sendMSDP("REPORT","ASCEND_EXP")
-  -- sendMSDP("REPORT","CHARACTER_NAME")
-  -- sendMSDP("REPORT","CLASS")
-  -- sendMSDP("REPORT","EQ_WEIGHT_MAX")
-  -- sendMSDP("REPORT","EQ_WEIGHT")
-  -- sendMSDP("REPORT","FRAGS")
-  -- sendMSDP("REPORT","HEALTH_MAX")
-  -- sendMSDP("REPORT","HEALTH")
-  -- sendMSDP("REPORT","HERO_EXP_TNL")
-  -- sendMSDP("REPORT","HERO_EXP")
-  -- sendMSDP("REPORT","HERO_LEVEL")
-  -- sendMSDP("REPORT","HERO_POINTS")
-  -- sendMSDP("REPORT","HUNGER_MAX")
-  -- sendMSDP("REPORT","HUNGER")
-  -- sendMSDP("REPORT","ITEMS_MAX")
-  -- sendMSDP("REPORT","ITEMS")
-  -- sendMSDP("REPORT","MANA_MAX")
-  -- sendMSDP("REPORT","MANA")
-  -- sendMSDP("REPORT","MOVEMENT_MAX")
-  -- sendMSDP("REPORT","MOVEMENT")
-  -- sendMSDP("REPORT","RACE")
-  -- sendMSDP("REPORT","SECOND_CLASS")
-  -- sendMSDP("REPORT","SOULS")
-  -- sendMSDP("REPORT","STYLE")
-  -- sendMSDP("REPORT","THIRST_MAX")
-  -- sendMSDP("REPORT","THIRST")
-  -- sendMSDP("REPORT","TRAITS")
-  -- sendMSDP("LIST","REPORTED_VARIABLES")
--- end
--- enableMSDP()
+				<script></script>
+				<eventHandlerList />
+				<Script isActive="yes" isFolder="no">
+					<name>MSDP Register Functions</name>
+					<packageName></packageName>
+					<script>
 
 function disableMSDP()
   local timer = 0
@@ -30830,21 +30824,35 @@ function reportMSDP()
 sendMSDP("LIST", "COMMANDS", "LISTS", "REPORTABLE_VARIABLES")
 sendMSDP("LIST", "COMMANDS", "LISTS", "REPORTED_VARIABLES")
 end
-reportMSDP()
-tempTimer(1,function() enableMSDP() end)
 
-</script>
-				<eventHandlerList />
-				<Script isActive="yes" isFolder="no">
-					<name>MSDP Update Functions</name>
-					<packageName></packageName>
-					<script>function msdpConnect(event, arg, profile)
+function msdpConnect(event, arg, profile)
   reportMSDP()
   tempTimer(1,function() enableMSDP() end)
 end
 
--- Register the event handler.
-registerAnonymousEventHandler("xaos_connect", "msdpConnect")
+msdpevents = {}
+
+function registerMSDPEvents()
+
+  echo("Registering Event Handler")
+  -- Register the event handler.
+  msdpevents.xaos_connect = registerAnonymousEventHandler("xaos_connect", "msdpConnect")
+  
+end
+
+function unregisterMSDPEvents()
+
+  if msdpevents.xaos_connect ~= nil then
+    killAnonymousEventHandler(msdpevents.xaos_connect)
+  end
+  
+end</script>
+					<eventHandlerList />
+				</Script>
+				<Script isActive="yes" isFolder="no">
+					<name>MSDP Update Functions</name>
+					<packageName></packageName>
+					<script>
 
 function msdpUpdateEQ()
   
@@ -30919,108 +30927,194 @@ end</script>
 					<name>MSDP UI Items</name>
 					<packageName></packageName>
 					<script>
+function loadMSDPUI()
+  if msdpUIloaded == nil or not msdpUIloaded then
+    msdpUIloaded = true
+    partyDisplay:hide()
+    partyDisplay2:hide()
+    
+    
+    
+    right_container = right_container or Geyser.Container:new({
+      name = "right_container",
+      x = "-150px", y = "0",
+      width = "150px", height = "100%",
+    })
+    
+    msdpPartyDisplay = msdpPartyDisplay or Geyser.VBox:new({
+      name = "msdpPartyDisplay",
+      x = "2%", y = "0",
+      width = "96%", height = "40%",
+    }, right_container)
+    
+    msdpOppDisplay = msdpOppDisplay or Geyser.VBox:new({
+      name = "msdpOppDisplay",
+      x = "2%", y = "45%",
+      width = "95%", height = "40%",
+    }, right_container)
+    
+    msdpTargetDisplay = msdpTargetDisplay or Geyser.VBox:new({
+      name = "msdpTargetDisplay",
+      x = "68%", y = "0%",
+      width = "30%", height = "90%",
+    }, bottom_container)
+    
+    
+    msdpOppExtras = msdpOppExtras or Geyser.VBox:new({
+      name = "msdpOppExtras",
+      x = "2%", y = "45%",
+      width = "95%", height = "40%",
+    }, right_container)
+    msdpOppExtras:hide()
+    
+    msdpPartyExtras = msdpPartyExtras or Geyser.VBox:new({
+      name = "msdpPartyExtras",
+      x = "2%", y = "0",
+      width = "96%", height = "40%",
+    }, right_container)
+    msdpPartyExtras:hide()
+    
+    OPPGauges = OPPGauges or {} 
+    OPPLabels = OPPLabels or {}
+    
+    
+    
+    PartyGauges = PartyGauges or {} 
+    PartyLabels = PartyLabels or {}
+    function grabPartyGauge(index)
+      local cont,contheight
 
-partyDisplay:hide()
-partyDisplay2:hide()
+      cont = msdpPartyDisplay
+      contheight = 10
 
-
-
-right_container = right_container or Geyser.Container:new({
-  name = "right_container",
-  x = "-150px", y = "0",
-  width = "150px", height = "100%",
-})
-
-msdpPartyDisplay = msdpPartyDisplay or Geyser.VBox:new({
-  name = "msdpPartyDisplay",
-  x = "0", y = "0",
-  width = "100%", height = "45%",
-}, right_container)
-
-msdpOppDisplay = msdpOppDisplay or Geyser.VBox:new({
-  name = "msdpOppDisplay",
-  x = "0", y = "45%",
-  width = "100%", height = "45%",
-}, right_container)
-
-msdpTargetDisplay = msdpTargetDisplay or Geyser.VBox:new({
-  name = "msdpTargetDisplay",
-  x = "0", y = "90%",
-  width = "100%", height = "10%",
-}, right_container)
-
---Temporary
-msdpPartyLabel = msdpPartyLabel or Geyser.VBox:new({
-  name = "msdpPartyLabel",
-  x = "0", y = "0",
-  width = "100%", height = "100%",
-}, msdpPartyDisplay)
-
-msdpOppLabel = msdpOppLabel or Geyser.VBox:new({
-  name = "msdpOppLabel",
-  x = "0", y = "0",
-  width = "100%", height = "100%",
-}, msdpOppDisplay)
-
-OPPGauges = OPPGauges or {} 
-OPPLabels = OPPLabels or {}
+      
+      PartyGauges[index] = PartyGauges[index] or
+          Geyser.Gauge:new({name = "PartyGauges_"..index,  x = "1%", y = 0, width = "98%", height =contheight}, cont)
+      PartyGauges[index].front:setStyleSheet(
+        [[background-color: rgba(0, 255, 0,10%);
+          border-width: 1px;
+          border-color: black;
+          border-style: solid;
+          border-radius: 7;
+          padding: 3px;
+      ]]
+      )
+      PartyGauges[index].back:setStyleSheet(
+        [[background-color: rgba(0, 255, 0,30%);
+          border-width: 1px;
+          border-color: black;
+          border-style: solid;
+          border-radius: 7;
+          padding: 3px;
+      ]]
+      )
+      PartyLabels[index] = PartyLabels[index] or
+          Geyser.Label:new({name = "PartyLabels_"..index,  x = "1%", y = 0, width = "98%", height =10}, cont)
+      return {label=PartyLabels[index],gauge=PartyGauges[index]}
+    end
+    --Overloaded function
+    function resizeParent()
+      local windowWidth, windowHeight = getMainWindowSize()
+      --local userwindowWidth, userwindowHeight = getUserWindowSize("menu.back")
+     --echo(userwindowWidth)
+      local userwindowWidth = menu.window.get_width()
+     --echo(userwindowWidth)
+      
+      bottom_container:resize(windowWidth-userwindowWidth-BORDER_WIDTH .. "px","100px")
+      
+      right_container:move("-" .. userwindowWidth+BORDER_WIDTH+150 .. "px","0px")
+      
+      setBorderRight(userwindowWidth+BORDER_WIDTH+150)
+    
+    end
+    
+    resizeParent()
+  end
+end
 
 function grabOppGauge(index)
-  local cont
-  if index == 1 then 
-    cont = msdpTargetDisplay
-  else
-    cont = msdpOppDisplay
+      local cont,contheight
+      if index == 1 then 
+        cont = msdpTargetDisplay
+        contheight = 25
+      else
+        cont = msdpOppDisplay
+        contheight = 10
+      end
+      
+      OPPGauges[index] = OPPGauges[index] or
+          Geyser.Gauge:new({name = "OPPGauges_"..index,  x = "1%", y = 0, width = "98%", height =contheight}, cont)
+      OPPGauges[index].front:setStyleSheet(
+        [[background-color: rgba(255, 0, 0,10%);
+          border-width: 1px;
+          border-color: black;
+          border-style: solid;
+          border-radius: 7;
+          padding: 3px;
+      ]]
+      )
+      OPPGauges[index].back:setStyleSheet(
+        [[background-color: rgba(255, 0, 0,30%);
+          border-width: 1px;
+          border-color: black;
+          border-style: solid;
+          border-radius: 7;
+          padding: 3px;
+      ]]
+      )
+      
+      msdpOppDisplay:resize("95%",math.min((table.size(OPPGauges)-1),5)*60 .. "px")
+      OPPLabels[index] = OPPLabels[index] or
+          Geyser.Label:new({name = "OPPLabels_"..index,  x = "1%", y = 0, width = "98%", height =10}, cont)
+      OPPGauges[index]:changeContainer(cont)
+      OPPLabels[index]:changeContainer(cont)   
+      
+      return {label=OPPLabels[index],gauge=OPPGauges[index]}
+    end
+  function hideOppGauges(index)
+    local i
+    if index==1 then index = 2 end
+    
+    for i=index,table.size(OPPGauges) do
+      OPPGauges[i]:changeContainer(msdpOppExtras)
+      OPPLabels[i]:changeContainer(msdpOppExtras)
+    end
   end
-  OPPGauges[index] = OPPGauges[index] or
-      Geyser.Gauge:new({name = "OPPGauges_"..index,  x = "1%", y = 0, width = "98%", height =25}, cont)
-  OPPGauges[index].front:setStyleSheet(
-    [[background-color: rgba(255, 0, 0,10%);
-      border-width: 1px;
-      border-color: black;
-      border-style: solid;
-      border-radius: 7;
-      padding: 3px;
-  ]]
-  )
-  OPPGauges[index].back:setStyleSheet(
-    [[background-color: rgba(255, 0, 0,30%);
-      border-width: 1px;
-      border-color: black;
-      border-style: solid;
-      border-radius: 7;
-      padding: 3px;
-  ]]
-  )
-  OPPLabels[index] = OPPLabels[index] or
-      Geyser.Label:new({name = "OPPLabels_"..index,  x = "1%", y = 0, width = "98%", height =10}, cont)
-  return {label=OPPLabels[index],gauge=OPPGauges[index]}
+function createdummygauges()
+ msdp.PARTY_MEM = {}
+ msdp.PARTY_MEM.Jim = "100 100 100"
+ msdp.PARTY_MEM.Bob = "80 100 100"
+ msdp.PARTY_MEM.Ray = "100 100 100"
+ msdp.PARTY_MEM.Sally = "100 100 100"
+ grab_PARTY_MEM()
+ msdp.OPPONENTS = {}
+ msdp.OPPONENTS.Jim = "100 100 100"
+ msdp.OPPONENTS.Bob = "80 100 100"
+ msdp.OPPONENTS.Ray = "100 100 100"
+ msdp.OPPONENTS.Sally = "100 100 100"
+ msdp.OPPONENTS.Jim2 = "100 100 100"
+ msdp.OPPONENTS.Bob2 = "80 100 100"
+ msdp.OPPONENTS.Ray2 = "100 100 100"
+ msdp.OPPONENTS.Sally2 = "100 100 100"
+ msdp.OPPONENTS.Jim3 = "100 100 100"
+ msdp.OPPONENTS.Bob3 = "80 100 100"
+ msdp.OPPONENTS.Ray3 = "100 100 100"
+ msdp.OPPONENTS.Sally3 = "100 100 100"
+ --msdp.OPPONENTS.Jim4 = "100 100 100"
+ --msdp.OPPONENTS.Bob4 = "80 100 100"
+ --msdp.OPPONENTS.Ray4 = "100 100 100"
+ --msdp.OPPONENTS.Sally4 = "100 100 100"
+ grab_OPPONENTS()
 end
 
---Overloaded function
-function resizeParent()
-  local windowWidth, windowHeight = getMainWindowSize()
-  --local userwindowWidth, userwindowHeight = getUserWindowSize("menu.back")
- --echo(userwindowWidth)
-  local userwindowWidth = menu.window.get_width()
- --echo(userwindowWidth)
-  
-  bottom_container:resize(windowWidth-userwindowWidth-BORDER_WIDTH .. "px","100px")
-  
-  right_container:move("-" .. userwindowWidth+BORDER_WIDTH+150 .. "px","0px")
-  
-  setBorderRight(userwindowWidth+BORDER_WIDTH+150)
-
-end
-
-resizeParent()</script>
+</script>
 					<eventHandlerList />
 				</Script>
 				<Script isActive="yes" isFolder="no">
 					<name>grab_REPORTED_VARIABLES</name>
 					<packageName></packageName>
-					<script>function grab_AFFECTS()
-  debugecho("MSDP:AFFECTS")
+					<script>function grab_REPORTED_VARIABLES()
+
 end</script>
 					<eventHandlerList>
 						<string>msdp.REPORTED_VARIABLES</string>
@@ -31307,11 +31401,11 @@ end</script>
 					<name>grab_OPPONENTS</name>
 					<packageName></packageName>
 					<script>function grab_OPPONENTS()
-  
+  local index = 2
   for oppname,oppstats in pairs(msdp.OPPONENTS) do
     local opphp,oppmana,oppmove = rex.match(oppstats,[[([0-9]{1,3}|-{1,3})\s([0-9]{1,3}|-{1,3})\s([0-9]{1,3}|-{1,3})]])
     --echo(opphp)
-    local oppitems = grabOppGauge(1)
+    local oppitems = grabOppGauge(index)
   
     if oppname == "None" then
       oppitems.label:echo("None")
@@ -31324,8 +31418,9 @@ end</script>
         oppitems.gauge.back:echo(opphp, nil, "c")
       end
     end
+    index = index + 1
   end
-  
+  hideOppGauges(index)
 
 end</script>
 					<eventHandlerList>
@@ -31356,6 +31451,38 @@ end</script>
 end</script>
 					<eventHandlerList>
 						<string>msdp.OPP_TARGET</string>
+					</eventHandlerList>
+				</Script>
+				<Script isActive="yes" isFolder="no">
+					<name>grab_PARTY_MEM</name>
+					<packageName></packageName>
+					<script>
+
+function grab_PARTY_MEM()
+  local index = 1
+  for partyname,partystats in pairs(msdp.PARTY_MEM) do
+    local partyhp,partymana,partymove = rex.match(partystats,[[([0-9]{1,3}|-{1,3})\s([0-9]{1,3}|-{1,3})\s([0-9]{1,3}|-{1,3})]])
+    --echo(partyhp)
+    local partyitems = grabPartyGauge(index)
+  
+    if partyname == "None" then
+      partyitems.label:echo("None")
+      partyitems.gauge:setValue(0, 100, nil)
+      partyitems.gauge.back:echo("", nil, "c")
+    else
+      if partyhp ~= "---" then
+        partyitems.label:echo(partyname) 
+        partyitems.gauge:setValue(tonumber(partyhp), 100, nil)
+        partyitems.gauge.back:echo(partyhp, nil, "c")
+      end
+    end
+    index = index + 1
+  end
+  
+
+end</script>
+					<eventHandlerList>
+						<string>msdp.PARTY_MEM</string>
 					</eventHandlerList>
 				</Script>
 				<Script isActive="yes" isFolder="no">
