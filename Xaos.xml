@@ -14760,10 +14760,10 @@ partyDisplay2:echo(lblentries[2])</script>
 
 local lbltext = "&lt;div style='white-space: pre-wrap;padding:5px;'&gt;"
 lbltext = lbltext .. xaos.charactername .. "&lt;br/&gt;&lt;br/&gt;"
-lbltext = lbltext .."Level    : " .. xaos.Level .. " (" .. string.format("%2.2f",xaos.LevelPercent) .. "%)" .. "&lt;br/&gt;"
+lbltext = lbltext .."Lev : " .. xaos.Level .. " (" .. string.format("%2.2f",xaos.LevelPercent) .. "%)" .. "&lt;br/&gt;"
 
-lbltext = lbltext .."Tactics  : " .. tostring(xaos.tactics) .. "&lt;br/&gt;"
-lbltext = lbltext .."Style    : " .. tostring(xaos.fightingstyle) .. "&lt;br/&gt;"
+lbltext = lbltext .."Tact: " .. tostring(xaos.tactics) .. "&lt;br/&gt;"
+lbltext = lbltext .."Styl: " .. tostring(xaos.fightingstyle) .. "&lt;br/&gt;"
 
 lbltext = lbltext .. "&lt;/div&gt;"
 userDisplay:echo(lbltext)</script>
@@ -15431,6 +15431,8 @@ if command == "" then
   hecho("berserkovercenter\n")
   hecho("minmana\n")
   hecho("minhp\n")
+  hecho("showprompt\n")
+  hecho("autoempower\n")
 end
 
 if command == "berserk" or command=="berserkovercenter" then
@@ -15451,6 +15453,12 @@ end
 if command == "showprompt" then
   mysettings.showprompt = not mysettings.showprompt
   helpbodyecho("Show Prompt: " .. tostring(mysettings.showprompt))
+  savemysettings()
+end
+
+if command == "autoempower" then
+  xaos.config.autoempower = not xaos.config.autoempower
+  helpbodyecho("Auto Empower: " .. tostring(xaos.config.autoempower))
 end</script>
 					<command></command>
 					<packageName></packageName>
@@ -15483,6 +15491,28 @@ echo("\n\n Beta Mode: " .. tostring(xaos.config.betamode) .. "\n\n")</script>
 					<packageName></packageName>
 					<regex>^betamode</regex>
 				</Alias>
+				<AliasGroup isActive="yes" isFolder="yes">
+					<name>Modules</name>
+					<script></script>
+					<command></command>
+					<packageName></packageName>
+					<regex></regex>
+					<Alias isActive="yes" isFolder="no">
+						<name>enablemodule</name>
+						<script>setFeature(string.lower(string.trim(matches[2])),true)</script>
+						<command></command>
+						<packageName></packageName>
+						<regex>enablemodule(?:\s)?(.*)</regex>
+					</Alias>
+					<Alias isActive="yes" isFolder="no">
+						<name>disablemodule</name>
+						<script>setFeature(string.lower(string.trim(matches[2])),false)
+cecho("\n&lt;cyan&gt;Most modules will not be completly disabled, until you restart mudlet.\n")</script>
+						<command></command>
+						<packageName></packageName>
+						<regex>disablemodule(?:\s)?(.*)</regex>
+					</Alias>
+				</AliasGroup>
 			</AliasGroup>
 			<AliasGroup isActive="yes" isFolder="yes">
 				<name>Quests</name>
@@ -22419,7 +22449,7 @@ function newprofile()
   xaos.config.buffmode = true
   xaos.config.beeptell = false
   xaos.config.customDrink = ""
-  xaos.config.autoempower = true
+  xaos.config.autoempower = false
   xaos.config.betamode = false
 
 
@@ -23734,7 +23764,7 @@ end
 
 setBorderBottom(130)
 -- give it a unique name here
-bottom_container =
+bottom_container = bottom_container or
   Geyser.Container:new({name = "bottom_container", x = 0, y = -100, width = "100%", height = 100})
 --setBorderLeft(200)
 -- give it a unique name here
@@ -23742,8 +23772,8 @@ bottom_container =
 -- with a width of 200, and a height of the full screen, hence 100%
 
 --HP Gauge
-hpbar =
-  Geyser.Gauge:new({name = "hpbar", x = "20%", y = 0, width = "25%", height = 62}, bottom_container)
+hpbar = hpbar or
+  Geyser.Gauge:new({name = "hpbar", x = "15%", y = "50%", width = "20%", height = "40%"}, bottom_container)
 hpbar.front:setStyleSheet(
   [[background-color: QLinearGradient( x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #f04141, stop: 0.1 #ef2929, stop: 0.49 #cc0000, stop: 0.5 #a40000, stop: 1 #cc0000);
     border-width: 1px;
@@ -23763,8 +23793,8 @@ hpbar.back:setStyleSheet(
 ]]
 )
 --Mana Gauge
-manabar =
-  Geyser.Gauge:new({name = "manabar", x = "45%", y = 0, width = "20%", height = 30}, bottom_container)
+manabar = manabar or
+  Geyser.Gauge:new({name = "manabar", x = "35%", y = "50%", width = "20%", height = "40%"}, bottom_container)
 manabar.front:setStyleSheet(
   [[background-color: QLinearGradient( x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #4e89e8, stop: 0.1 #2d74e5, stop: 0.49 #104599, stop: 0.5 #072a60, stop: 1 #011b44);
        border-width: 1px;
@@ -23782,33 +23812,10 @@ manabar.back:setStyleSheet(
     padding: 3px;]]
 )
 
---background-color: QLinearGradient( x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #b142d6, stop: 0.1 #9d32c1, stop: 0.49 #842ca3, stop: 0.5 #721f8e, stop: 1 #591072);
---QLinearGradient( x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 rgba(177, 66, 214,50%), stop: 0.1 rgba(157, 50, 193,20%), stop: 0.49 rgba(132, 44, 163,20%), stop: 0.5 rgba(114, 31, 142,20%), stop: 1 rgba(89, 16, 114,20%)
---Xp Gauge
-xpbar =
-  Geyser.Gauge:new({name = "xpbar", x = "20%", y = 51, width = "60%", height = 20}, bottom_container)
-xpbar.front:setStyleSheet(
-  [[background-color: rgba(157, 50, 193,40%);
-    border-width: 1px;
-    border-color: purple;
-    border-style: solid;
-    border-radius: 7;
-    padding: 3px;]]
-)
---background-color: rgba(0,0,0,0%);
-xpbar.back:setStyleSheet(
-  [[background-color: QLinearGradient( x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #000000, stop: 0.1 #000000, stop: 0.49 #000000, stop: 0.5 #000000, stop: 1 #000000);
-    border-width: 1px;
-    border-color: purple;
-    border-style: solid;
-    border-radius: 7;
-    padding: 3px;]]
-)
-xpbar:hide()
 --Ascend Gauge
 --250, 123, 30,
-ascbar =
-  Geyser.Gauge:new({name = "ascbar",  x = "20%", y = 70, width = "45%", height =25}, bottom_container)
+ascbar = ascbar or
+  Geyser.Gauge:new({name = "ascbar", x = "55%", y = "70%", width = "20%", height = "20%"}, bottom_container)
 ascbar.front:setStyleSheet(
   [[background-color: rgba(7, 221, 204,40%);
     border-width: 1px;
@@ -23827,8 +23834,8 @@ ascbar.back:setStyleSheet(
 )
 --mvm Gauge
 --background-color: QLinearGradient( x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #efba4f, stop: 0.1 #ba8a2a, stop: 0.49 #966e1e, stop: 0.5 #a3700b, stop: 1 #B89902);
-mvmbar =
-  Geyser.Gauge:new({name = "mvmbar", x = "45%", y = 32, width = "20%", height = 30}, bottom_container)
+mvmbar = mvmbar or
+  Geyser.Gauge:new({name = "mvmbar", x = "55%", y = "50%", width = "20%", height = "20%"}, bottom_container)
 mvmbar.front:setStyleSheet(
   [[background-color: QLinearGradient( x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #efba4f, stop: 0.1 #ba8a2a, stop: 0.49 #966e1e, stop: 0.5 #a3700b, stop: 1 #B89902);
     border-width: 1px;
@@ -24705,8 +24712,8 @@ partyDisplay2:setStyleSheet([[
 
 userDisplay = userDisplay or Geyser.Label:new({
   name = "userLabel",
-  x = "1%", y = "0",
-  width = "18%", height = "100%",
+  x = "-15%", y = "0",
+  width = "15%", height = "100%",
 }, bottom_container)
 
 userDisplay:setFontSize(10)
@@ -30975,43 +30982,17 @@ function loadMSDPUI()
     msdpPartyExtras:hide()
     
     OPPGauges = OPPGauges or {} 
-    OPPLabels = OPPLabels or {}
+    --OPPLabels = OPPLabels or {}
+    
+    OPPGauges[1] = OPPGauges[index] or
+          Geyser.Gauge:new({name = "OPPGauges_"..index,  x = "20%", y = 0, width = "50%", height ="40%"}, bottom_container)
     
     
+    PartyGauges = PartyGauges or {}
+    PartyManaGauges = PartyManaGauges or {} 
+    --PartyLabels = PartyLabels or {}
     
-    PartyGauges = PartyGauges or {} 
-    PartyLabels = PartyLabels or {}
-    function grabPartyGauge(index)
-      local cont,contheight
 
-      cont = msdpPartyDisplay
-      contheight = 10
-
-      
-      PartyGauges[index] = PartyGauges[index] or
-          Geyser.Gauge:new({name = "PartyGauges_"..index,  x = "1%", y = 0, width = "98%", height =contheight}, cont)
-      PartyGauges[index].front:setStyleSheet(
-        [[background-color: rgba(0, 255, 0,10%);
-          border-width: 1px;
-          border-color: black;
-          border-style: solid;
-          border-radius: 7;
-          padding: 3px;
-      ]]
-      )
-      PartyGauges[index].back:setStyleSheet(
-        [[background-color: rgba(0, 255, 0,30%);
-          border-width: 1px;
-          border-color: black;
-          border-style: solid;
-          border-radius: 7;
-          padding: 3px;
-      ]]
-      )
-      PartyLabels[index] = PartyLabels[index] or
-          Geyser.Label:new({name = "PartyLabels_"..index,  x = "1%", y = 0, width = "98%", height =10}, cont)
-      return {label=PartyLabels[index],gauge=PartyGauges[index]}
-    end
     --Overloaded function
     function resizeParent()
       local windowWidth, windowHeight = getMainWindowSize()
@@ -31034,7 +31015,7 @@ end
 
 function grabOppGauge(index)
       local cont,contheight
-      if index == 1 then 
+      if index== 1 then 
         cont = msdpTargetDisplay
         contheight = 25
       else
@@ -31045,7 +31026,7 @@ function grabOppGauge(index)
       OPPGauges[index] = OPPGauges[index] or
           Geyser.Gauge:new({name = "OPPGauges_"..index,  x = "1%", y = 0, width = "98%", height =contheight}, cont)
       OPPGauges[index].front:setStyleSheet(
-        [[background-color: rgba(255, 0, 0,10%);
+        [[background-color: rgba(255, 0, 0,100%);
           border-width: 1px;
           border-color: black;
           border-style: solid;
@@ -31054,7 +31035,7 @@ function grabOppGauge(index)
       ]]
       )
       OPPGauges[index].back:setStyleSheet(
-        [[background-color: rgba(255, 0, 0,30%);
+        [[background-color: rgba(255, 0, 0,50%);
           border-width: 1px;
           border-color: black;
           border-style: solid;
@@ -31063,21 +31044,85 @@ function grabOppGauge(index)
       ]]
       )
       
-      msdpOppDisplay:resize("95%",math.min((table.size(OPPGauges)-1),5)*60 .. "px")
-      OPPLabels[index] = OPPLabels[index] or
-          Geyser.Label:new({name = "OPPLabels_"..index,  x = "1%", y = 0, width = "98%", height =10}, cont)
-      OPPGauges[index]:changeContainer(cont)
-      OPPLabels[index]:changeContainer(cont)   
-      
-      return {label=OPPLabels[index],gauge=OPPGauges[index]}
+      msdpOppDisplay:resize("95%",math.min((table.size(OPPGauges)-1),5)*40 .. "px")
+      --OPPLabels[index] = OPPLabels[index] or
+      --    Geyser.Label:new({name = "OPPLabels_"..index,  x = "1%", y = 0, width = "98%", height =10}, cont)
+      if index &gt; 1 then 
+        OPPGauges[index]:changeContainer(cont)
+        --OPPLabels[index]:changeContainer(cont)   
+        msdpOppDisplay:show()
+      end
+      return {gauge=OPPGauges[index]}
     end
   function hideOppGauges(index)
     local i
-    if index==1 then index = 2 end
+    if index==1 then 
+      OPPGauges[index]:hide()
+      index = 2 
+    end
     
     for i=index,table.size(OPPGauges) do
       OPPGauges[i]:changeContainer(msdpOppExtras)
-      OPPLabels[i]:changeContainer(msdpOppExtras)
+    end
+  end
+  function grabPartyGauge(index)
+      local cont,contheight
+
+      cont = msdpPartyDisplay
+      contheight = 10
+
+      
+      PartyGauges[index] = PartyGauges[index] or
+          Geyser.Gauge:new({name = "PartyGauges_"..index,  x = "1%", y = 0, width = "98%", height =contheight,v_stretch_factor=2.0,h_stretch_factor=2.0}, cont)
+      PartyGauges[index].front:setStyleSheet(
+        [[background-color: rgba(0, 255, 0,10%);
+          border-width: 1px;
+          border-color: black;
+          border-style: solid;
+          border-radius: 7;
+          padding: 3px;
+      ]]
+      )
+      PartyGauges[index].back:setStyleSheet(
+        [[background-color: rgba(0, 255, 0,30%);
+          border-width: 1px;
+          border-color: black;
+          border-style: solid;
+          border-radius: 7;
+          padding: 3px;
+      ]]
+      )
+      PartyManaGauges[index] = PartyManaGauges[index] or
+          Geyser.Gauge:new({name = "PartyManaGauges_"..index,  x = "1%", y = 0, width = "98%", height =contheight}, cont)
+      PartyManaGauges[index].front:setStyleSheet(
+        [[background-color: rgba(0, 0, 255,100%);
+          border-width: 1px;
+          border-color: black;
+          border-style: solid;
+          border-radius: 7;
+          padding: 3px;
+      ]]
+      )
+      PartyManaGauges[index].back:setStyleSheet(
+        [[background-color: rgba(0, 0, 255,50%);
+          border-width: 1px;
+          border-color: black;
+          border-style: solid;
+          border-radius: 7;
+          padding: 3px;
+      ]]
+      )
+     msdpPartyDisplay:resize("95%",math.min((table.size(PartyGauges)),5)*40 .. "px")
+     PartyGauges[index]:changeContainer(cont)
+     PartyManaGauges[index]:changeContainer(cont)
+     return {gauge=PartyGauges[index],managauge=PartyManaGauges[index]}
+    end
+  function hidePartyGauges(index)
+    local i
+    
+    for i=index,table.size(PartyGauges) do
+      PartyGauges[i]:changeContainer(msdpPartyExtras)
+      PartyManaGauges[i]:changeContainer(msdpPartyExtras)
     end
   end
 function createdummygauges()
@@ -31326,6 +31371,97 @@ end
 					</eventHandlerList>
 				</Script>
 				<Script isActive="yes" isFolder="no">
+					<name>grab_IN_ROOM</name>
+					<packageName></packageName>
+					<script>function grab_IN_ROOM()
+
+  
+  if msdp.IN_ROOM == "" then
+    hideOppGauges(1)
+  else
+    local inroom = {}
+    for k,v in pairs(msdp.IN_ROOM) do
+      inroom[k]={}
+      inroom[k].name, inroom[k].hp, inroom[k].move,inroom[k].tid, inroom[k].tname = rex.match(v,[[^(.*)\:(\d+)\:(\d+)\:(\d+)\:(.*)$]])
+    end
+
+    local function isenemy(id)
+      if inroom[id].tname == xaos.charactername then
+        return true
+      else
+        for k,v in pairs(xaos.party.members) do
+          if inroom[id].tname == v.name then
+            return true
+          end
+        end
+      end
+      return false
+    end
+
+    --Get Character
+    local findmember = findTableEntry(inroom,
+      function (item) 
+        return item.name == xaos.charactername 
+      end)
+    display(findmember)
+    
+    --Get Target
+    local targetmember = inroom[findmember.key].tid
+    
+    if tonumber(targetmember) ~= 0 then
+      displayEnemyGauge(targetmember,inroom[targetmember],1) 
+    else
+      hideOppGauges(1)    
+    end
+    
+    --Get Enemies
+    local enemylist = {}
+    local index = 2    
+    for k,v in pairs(inroom) do
+      if isenemy(k) then
+        echo("Setting Enemy")
+        displayEnemyGauge(k,v,index)
+        index = index+1
+      end
+    end
+    
+    
+    hideOppGauges(index)
+  end
+end
+
+function findTableEntry(tbl,func)
+
+  for k,v in pairs(tbl) do
+    if func(v) then
+      return {key=k,value=v}
+    end
+  end
+  return nil
+end
+
+function displayEnemyGauge(oppid,oppstats,index)
+  oppstats = msdp.IN_ROOM[oppid]
+  echo(oppstats)
+  local oppname,opphp,oppmana,oppmove = rex.match(oppstats,[[(\w+):([0-9]{1,3}|-{1,3}):([0-9]{1,3}|-{1,3}):([0-9]+):(.*)]])
+  --echo(opphp)
+  local oppitems = grabOppGauge(index)
+
+  if oppname == "None" then
+    oppitems.gauge:hide()
+  else
+    if opphp ~= "---" then
+      oppitems.gauge:show()
+      oppitems.gauge:setText("&lt;center&gt;" .. opphp .. "% " .. oppname .."&lt;/center&gt;" )
+      oppitems.gauge:setValue(tonumber(opphp), 100, nil)
+    end
+  end
+end</script>
+					<eventHandlerList>
+						<string>msdp.IN_ROOM</string>
+					</eventHandlerList>
+				</Script>
+				<Script isActive="yes" isFolder="no">
 					<name>grab_ITEMS_MAX</name>
 					<packageName></packageName>
 					<script>function grab_ITEMS_MAX()
@@ -31401,27 +31537,35 @@ end</script>
 					<name>grab_OPPONENTS</name>
 					<packageName></packageName>
 					<script>function grab_OPPONENTS()
-  local index = 2
-  for oppname,oppstats in pairs(msdp.OPPONENTS) do
-    local opphp,oppmana,oppmove = rex.match(oppstats,[[([0-9]{1,3}|-{1,3})\s([0-9]{1,3}|-{1,3})\s([0-9]{1,3}|-{1,3})]])
-    --echo(opphp)
-    local oppitems = grabOppGauge(index)
-  
-    if oppname == "None" then
-      oppitems.label:echo("None")
-      oppitems.gauge:setValue(0, 100, nil)
-      oppitems.gauge.back:echo("", nil, "c")
-    else
-      if opphp ~= "---" then
-        oppitems.label:echo(oppname) 
-        oppitems.gauge:setValue(tonumber(opphp), 100, nil)
-        oppitems.gauge.back:echo(opphp, nil, "c")
-      end
-    end
-    index = index + 1
-  end
-  hideOppGauges(index)
 
+  if msdp.OPPONENTS == "" then
+    hideOppGauges(1)
+  else
+  
+  
+
+    local index = 2
+    for oppfullname,oppstats in pairs(msdp.OPPONENTS) do
+      local opphp,oppmana,oppmove = rex.match(oppstats,[[([0-9]{1,3}|-{1,3}):([0-9]{1,3}|-{1,3}):([0-9]{1,3}|-{1,3})]])
+      local oppindex,oppname = rex.match(oppfullname,[[([0-9]+):(.*)]])
+      --echo(opphp)
+      local oppitems = grabOppGauge(index)
+    
+      if oppname == "None" then
+        oppitems.gauge:hide()
+      else
+        if opphp ~= "---" then
+          --oppitems.label:echo(oppname) 
+          oppitems.gauge:show()
+          oppitems.gauge:setText(opphp .. "% " .. oppname)
+          oppitems.gauge:setValue(tonumber(opphp), 100, nil)
+          oppitems.gauge.back:echo("", nil, "c")
+        end
+      end
+      index = index + 1
+    end
+    hideOppGauges(index)
+  end
 end</script>
 					<eventHandlerList>
 						<string>msdp.OPPONENTS</string>
@@ -31431,23 +31575,26 @@ end</script>
 					<name>grab_OPP_TARGET</name>
 					<packageName></packageName>
 					<script>function grab_OPP_TARGET()
-  local oppname, oppstats = next(msdp.OPP_TARGET)
-  local opphp,oppmana,oppmove = rex.match(oppstats,[[([0-9]{1,3}|-{1,3})\s([0-9]{1,3}|-{1,3})\s([0-9]{1,3}|-{1,3})]])
+  local oppfullname, oppstats = next(msdp.OPP_TARGET)
+  local opphp,oppmana,oppmove = rex.match(oppstats,[[([0-9]{1,3}|-{1,3}):([0-9]{1,3}|-{1,3}):([0-9]{1,3}|-{1,3})]])
+  local oppindex,oppname = rex.match(oppfullname,[[([0-9]+):(.*)]])
   --echo(opphp)
   local oppitems = grabOppGauge(1)
 
   if oppname == "None" then
-    oppitems.label:echo("None")
-    oppitems.gauge:setValue(0, 100, nil)
-    oppitems.gauge.back:echo("", nil, "c")
+    --oppitems.label:echo("None")
+    --oppitems.gauge:setValue(0, 100, nil)
+    oppitems.gauge:hide()
   else
     if opphp ~= "---" then
-      oppitems.label:echo(oppname) 
+      --oppitems.label:echo(oppname) 
+      oppitems.gauge:show()
+      oppitems.gauge:setText("&lt;center&gt;" .. opphp .. "% " .. oppname .."&lt;/center&gt;" )
       oppitems.gauge:setValue(tonumber(opphp), 100, nil)
-      oppitems.gauge.back:echo(opphp, nil, "c")
+      --oppitems.gauge.back:echo("", nil, "c")
     end
   end
-
+  hideOppGauges(index)
 end</script>
 					<eventHandlerList>
 						<string>msdp.OPP_TARGET</string>
@@ -31456,30 +31603,55 @@ end</script>
 				<Script isActive="yes" isFolder="no">
 					<name>grab_PARTY_MEM</name>
 					<packageName></packageName>
-					<script>
-
-function grab_PARTY_MEM()
+					<script>function grab_PARTY_MEM()
   local index = 1
-  for partyname,partystats in pairs(msdp.PARTY_MEM) do
-    local partyhp,partymana,partymove = rex.match(partystats,[[([0-9]{1,3}|-{1,3})\s([0-9]{1,3}|-{1,3})\s([0-9]{1,3}|-{1,3})]])
-    --echo(partyhp)
+  local curpartystatus = {}
+  curpartystatus.members = {}
+  for partyid,partystats in pairs(msdp.PARTY_MEM) do
+    local partyname,partyhp,partymana,partymove = rex.match(partystats,[[(\w+):([0-9]{1,3}|-{1,3}):([0-9]{1,3}|-{1,3}):([0-9]{1,3}|-{1,3}):([0-9]+):(.*)]])
+
     local partyitems = grabPartyGauge(index)
   
-    if partyname == "None" then
-      partyitems.label:echo("None")
-      partyitems.gauge:setValue(0, 100, nil)
-      partyitems.gauge.back:echo("", nil, "c")
-    else
-      if partyhp ~= "---" then
-        partyitems.label:echo(partyname) 
-        partyitems.gauge:setValue(tonumber(partyhp), 100, nil)
-        partyitems.gauge.back:echo(partyhp, nil, "c")
-      end
-    end
-    index = index + 1
-  end
+    
   
-
+    if partyname == "None" then 
+      partyitems.gauge:hide()
+      partyitems.managauge:hide()
+    else
+    
+      local missingcount = 0
+      if partyhp == "---" then
+        local findmember = table.n_filter(xaos.party.members,function (item) return item.name == partyname end)
+        if table.size(findmember) ~= 0 then
+          missingcount = tonumber(findmember[1].missingcount) +1
+        end
+      end
+      if partyhp ~= "---" then 
+        partyitems.gauge:setValue(tonumber(partyhp), 100, nil)
+        partyitems.gauge:setText("&lt;center&gt;" .. partyhp .. "% " .. partyname .. "&lt;/center&gt;")
+        partyitems.gauge:show()
+      end
+      if partymana ~= "---" then 
+        partyitems.managauge:setValue(tonumber(partymana), 100, nil)
+        partyitems.managauge:setText("&lt;center&gt;" .. partymana .. "%&lt;/center&gt;")
+        partyitems.managauge:show()
+      end
+      
+      table.insert(curpartystatus.members,
+      {
+        name = partyname,
+        hp = tonumber(partyhp),
+        mana = tonumber(partymana),
+        move = tonumber(partymove),
+        missingcount = missingcount,
+        charmie = rex.match(partyname,[[^([aA] |[tT]he |[aA]n )]]) ~= nil
+      })
+      
+      index = index + 1
+    end
+  end
+  xaos.party.members = curpartystatus.members
+  hidePartyGauges(index)
 end</script>
 					<eventHandlerList>
 						<string>msdp.PARTY_MEM</string>
