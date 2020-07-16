@@ -1686,7 +1686,7 @@ send("wield "..wielded)
 					<regexCodePropertyList />
 					<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
 						<name>Look on no corpse</name>
-						<script>send("get isarti;get fragment;get soul")</script>
+						<script>send("get all.isarti")</script>
 						<triggerType>0</triggerType>
 						<conditonLineDelta>0</conditonLineDelta>
 						<mStayOpen>0</mStayOpen>
@@ -1699,8 +1699,10 @@ send("wield "..wielded)
 						<colorTriggerBgColor>#000000</colorTriggerBgColor>
 						<regexCodeList>
 							<string>^.* crumbles to dust.$</string>
+							<string>explodes into</string>
 						</regexCodeList>
 						<regexCodePropertyList>
+							<integer>1</integer>
 							<integer>1</integer>
 						</regexCodePropertyList>
 					</Trigger>
@@ -14505,7 +14507,7 @@ end</script>
 				<command></command>
 				<packageName></packageName>
 				<time>00:00:00.000</time>
-				<Timer isActive="yes" isFolder="no" isTempTimer="no" isOffsetTimer="no">
+				<Timer isActive="no" isFolder="no" isTempTimer="no" isOffsetTimer="no">
 					<name>hunt listener</name>
 					<script>  --if not statusHunting then
   
@@ -21748,7 +21750,7 @@ echo("\n " .. display(funfurmanual) .. "\n")</script>
 
 if mysettings == nil then mysettings = {} end
 
-mysettings.version = "0.2.0.0"
+mysettings.version = "0.2.0.2"
 
 if io.exists(getMudletHomeDir() .. "/mysettings.dat") then
   table.load(getMudletHomeDir() .. "/mysettings.dat",mysettings)
