@@ -42,6 +42,8 @@ disableTimer("Party Timer")
 disableTimer("User Timer")
 disableTimer("Update Combat")
 disableTimer("XPRate")
+disableTimer("drinkTimer")
+
 retrieveprofiles()
 
 if xaos.config.autologin then
@@ -75,15 +77,22 @@ initialload=true
 updatestats()
 expandAlias("seteq")
 
-enableTimer("Party Grab")
+if not mysettings.features.msdp then
+  enableTimer("Party Grab")
+  enableTimer("Party Timer")
+end
+
 enableTimer("Update Variables")
 enableTimer("Update Score")
 enableTimer("Quest Update")
-enableTimer("Party Timer")
 enableTimer("Update Combat")
 enableTimer("XPRate")
+enableTimer("User Timer")
+enableTimer("drinkTimer")
+feedManager("[ALERT] Logged in to character")
 
-feedManager("[ALERT] Logged in to character")</script>
+raiseEvent("xaos_connect")
+</script>
 					<triggerType>0</triggerType>
 					<conditonLineDelta>0</conditonLineDelta>
 					<mStayOpen>0</mStayOpen>
@@ -103,6 +112,73 @@ feedManager("[ALERT] Logged in to character")</script>
 						<integer>0</integer>
 					</regexCodePropertyList>
 				</Trigger>
+				<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+					<name>CopyOver Start</name>
+					<script>copyoverinprogress=true</script>
+					<triggerType>0</triggerType>
+					<conditonLineDelta>0</conditonLineDelta>
+					<mStayOpen>0</mStayOpen>
+					<mCommand></mCommand>
+					<packageName></packageName>
+					<mFgColor>#ff0000</mFgColor>
+					<mBgColor>#ffff00</mBgColor>
+					<mSoundFile></mSoundFile>
+					<colorTriggerFgColor>#000000</colorTriggerFgColor>
+					<colorTriggerBgColor>#000000</colorTriggerBgColor>
+					<regexCodeList>
+						<string>Performing copyover... Please wait.</string>
+					</regexCodeList>
+					<regexCodePropertyList>
+						<integer>0</integer>
+					</regexCodePropertyList>
+				</Trigger>
+				<TriggerGroup isActive="yes" isFolder="yes" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+					<name>CopyOver In Progress</name>
+					<script></script>
+					<triggerType>0</triggerType>
+					<conditonLineDelta>0</conditonLineDelta>
+					<mStayOpen>0</mStayOpen>
+					<mCommand></mCommand>
+					<packageName></packageName>
+					<mFgColor>#ff0000</mFgColor>
+					<mBgColor>#ffff00</mBgColor>
+					<mSoundFile></mSoundFile>
+					<colorTriggerFgColor>#000000</colorTriggerFgColor>
+					<colorTriggerBgColor>#000000</colorTriggerBgColor>
+					<regexCodeList>
+						<string>return copyoverinprogress</string>
+					</regexCodeList>
+					<regexCodePropertyList>
+						<integer>4</integer>
+					</regexCodePropertyList>
+					<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+						<name>100%</name>
+						<script>
+tempTimer(1,function()
+    raiseEvent("xaos_connect")
+  end
+)
+
+copyoverinprogress=false
+</script>
+						<triggerType>0</triggerType>
+						<conditonLineDelta>0</conditonLineDelta>
+						<mStayOpen>0</mStayOpen>
+						<mCommand></mCommand>
+						<packageName></packageName>
+						<mFgColor>#ff0000</mFgColor>
+						<mBgColor>#ffff00</mBgColor>
+						<mSoundFile></mSoundFile>
+						<colorTriggerFgColor>#000000</colorTriggerFgColor>
+						<colorTriggerBgColor>#000000</colorTriggerBgColor>
+						<regexCodeList>
+							<string>100%</string>
+						</regexCodeList>
+						<regexCodePropertyList>
+							<integer>0</integer>
+						</regexCodePropertyList>
+					</Trigger>
+				</TriggerGroup>
 			</TriggerGroup>
 			<TriggerGroup isActive="yes" isFolder="yes" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
 				<name>Scripting</name>
@@ -257,9 +333,9 @@ xpCollection1 = (xpCollection1 + (xpgained))
 
 
 
-last_xp = current_xp
+--last_xp = current_xp
 last_killedID = killedID
-last_xpDiff = xpDiff
+--last_xpDiff = xpDiff
 
 if killedID and xaos.config.show_killed then
 cecho("data","&lt;medium_turquoise&gt;[Kill " .. getTime(true,"HH.mm") .. "] "..killedID..": ".. string.format("%4.2f",xpgained).."%\n")
@@ -274,13 +350,13 @@ end
     xp_overflow = round(current_xp / 100)
     current_xp = current_xp % 100
     -- xuicom("Bucket has value "..bucket.." xp overflow is "..xp_overflow)
-    xpbar.front:echo(current_xp .. "% with " .. xp_overflow .. " dings in reserve (" .. current_xp + ((xp_overflow-1)*100) .. ")", nil, "c")
+    --xpbar.front:echo(current_xp .. "% with " .. xp_overflow .. " dings in reserve (" .. current_xp + ((xp_overflow-1)*100) .. ")", nil, "c")
     ascstring = ascstring .. " - " .. xp_overflow .. " stored levels"
   else
     --  
-    xpbar.back:echo(current_xp .. "%", nil, "c")
+    --xpbar.back:echo(current_xp .. "%", nil, "c")
   end
-  xpbar:setValue(current_xp, 100, nil)
+  --xpbar:setValue(current_xp, 100, nil)
   --Build a new variable, XP delta, for tracking HP Loss
   
   ascbar:setValue(curasc, 100, nil)
@@ -288,7 +364,7 @@ end
   
  
   
-  ascbar.back:echo(ascstring, nil, "c")
+  ascbar:setText("&lt;center&gt;" .. ascstring .. "&lt;/center&gt;" )
 </script>
 						<triggerType>0</triggerType>
 						<conditonLineDelta>2</conditonLineDelta>
@@ -2052,7 +2128,7 @@ end
 					<colorTriggerFgColor>#000000</colorTriggerFgColor>
 					<colorTriggerBgColor>#000000</colorTriggerBgColor>
 					<regexCodeList>
-						<string>^([\w\s]+) oocs '(.+)'$</string>
+						<string>([\w\s]+) oocs '(.+)'$</string>
 					</regexCodeList>
 					<regexCodePropertyList>
 						<integer>1</integer>
@@ -2080,7 +2156,7 @@ end</script>
 					<colorTriggerFgColor>#000000</colorTriggerFgColor>
 					<colorTriggerBgColor>#000000</colorTriggerBgColor>
 					<regexCodeList>
-						<string>^([\w\s]+) tells you '(.+)'$</string>
+						<string>([\w\s]+) tells you '(.+)'$</string>
 					</regexCodeList>
 					<regexCodePropertyList>
 						<integer>1</integer>
@@ -2202,7 +2278,7 @@ end</script>
 					<colorTriggerFgColor>#000000</colorTriggerFgColor>
 					<colorTriggerBgColor>#000000</colorTriggerBgColor>
 					<regexCodeList>
-						<string>^(.*) tells the group '(.*)'$</string>
+						<string>([\w\s]+) tells the group '(.*)'$</string>
 					</regexCodeList>
 					<regexCodePropertyList>
 						<integer>1</integer>
@@ -2228,7 +2304,7 @@ end
 					<colorTriggerFgColor>#000000</colorTriggerFgColor>
 					<colorTriggerBgColor>#000000</colorTriggerBgColor>
 					<regexCodeList>
-						<string>^([\w\s]+) ICs '(.+)'$</string>
+						<string>([\w\s]+) ICs '(.+)'$</string>
 					</regexCodeList>
 					<regexCodePropertyList>
 						<integer>1</integer>
@@ -2254,8 +2330,8 @@ end
 					<colorTriggerFgColor>#000000</colorTriggerFgColor>
 					<colorTriggerBgColor>#000000</colorTriggerBgColor>
 					<regexCodeList>
-						<string>^([\w\s]+) says '(.+)'$</string>
-						<string>^([\w\s]+) says to you '(.+)'$</string>
+						<string>([\w\s]+) says '(.+)'$</string>
+						<string>([\w\s]+) says to \w+ '(.+)'$</string>
 					</regexCodeList>
 					<regexCodePropertyList>
 						<integer>1</integer>
@@ -2742,223 +2818,6 @@ end
 					</regexCodePropertyList>
 				</Trigger>
 			</TriggerGroup>
-			<TriggerGroup isActive="no" isFolder="yes" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
-				<name>gostEnchanting</name>
-				<script></script>
-				<triggerType>0</triggerType>
-				<conditonLineDelta>0</conditonLineDelta>
-				<mStayOpen>0</mStayOpen>
-				<mCommand></mCommand>
-				<packageName>gostEnchanting</packageName>
-				<mFgColor>#ff0000</mFgColor>
-				<mBgColor>#ffff00</mBgColor>
-				<mSoundFile></mSoundFile>
-				<colorTriggerFgColor>#000000</colorTriggerFgColor>
-				<colorTriggerBgColor>#000000</colorTriggerBgColor>
-				<regexCodeList />
-				<regexCodePropertyList />
-				<TriggerGroup isActive="yes" isFolder="yes" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
-					<name>gostEnchanting</name>
-					<script></script>
-					<triggerType>0</triggerType>
-					<conditonLineDelta>0</conditonLineDelta>
-					<mStayOpen>0</mStayOpen>
-					<mCommand></mCommand>
-					<packageName></packageName>
-					<mFgColor>#ff0000</mFgColor>
-					<mBgColor>#ffff00</mBgColor>
-					<mSoundFile></mSoundFile>
-					<colorTriggerFgColor>#000000</colorTriggerFgColor>
-					<colorTriggerBgColor>#000000</colorTriggerBgColor>
-					<regexCodeList />
-					<regexCodePropertyList />
-					<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
-						<name>doneEnchant</name>
-						<script>enchCount=enchCount+1
-currentlyEnchanting = false
-send("show")</script>
-						<triggerType>0</triggerType>
-						<conditonLineDelta>0</conditonLineDelta>
-						<mStayOpen>0</mStayOpen>
-						<mCommand></mCommand>
-						<packageName></packageName>
-						<mFgColor>#ff0000</mFgColor>
-						<mBgColor>#ffff00</mBgColor>
-						<mSoundFile></mSoundFile>
-						<colorTriggerFgColor>#000000</colorTriggerFgColor>
-						<colorTriggerBgColor>#000000</colorTriggerBgColor>
-						<regexCodeList>
-							<string>table's binding field fades away.</string>
-						</regexCodeList>
-						<regexCodePropertyList>
-							<integer>0</integer>
-						</regexCodePropertyList>
-					</Trigger>
-					<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="yes" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
-						<name>applyStab</name>
-						<script>send("apply stab")</script>
-						<triggerType>0</triggerType>
-						<conditonLineDelta>0</conditonLineDelta>
-						<mStayOpen>0</mStayOpen>
-						<mCommand></mCommand>
-						<packageName></packageName>
-						<mFgColor>#ff0000</mFgColor>
-						<mBgColor>#ffff00</mBgColor>
-						<mSoundFile>C:/Windows/media/chimes.wav</mSoundFile>
-						<colorTriggerFgColor>#000000</colorTriggerFgColor>
-						<colorTriggerBgColor>#000000</colorTriggerBgColor>
-						<regexCodeList>
-							<string>shiver and emit a high pitch whine!</string>
-							<string>You notice a flux within the enchantments upon</string>
-						</regexCodeList>
-						<regexCodePropertyList>
-							<integer>0</integer>
-							<integer>0</integer>
-						</regexCodePropertyList>
-					</Trigger>
-					<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
-						<name>applyHarm</name>
-						<script>send("apply harm")</script>
-						<triggerType>0</triggerType>
-						<conditonLineDelta>0</conditonLineDelta>
-						<mStayOpen>0</mStayOpen>
-						<mCommand></mCommand>
-						<packageName></packageName>
-						<mFgColor>#ff0000</mFgColor>
-						<mBgColor>#ffff00</mBgColor>
-						<mSoundFile></mSoundFile>
-						<colorTriggerFgColor>#000000</colorTriggerFgColor>
-						<colorTriggerBgColor>#000000</colorTriggerBgColor>
-						<regexCodeList>
-							<string>The calibration required exceeds a</string>
-						</regexCodeList>
-						<regexCodePropertyList>
-							<integer>0</integer>
-						</regexCodePropertyList>
-					</Trigger>
-					<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="yes" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
-						<name>Check Level</name>
-						<script>local current = tonumber(string.trim(multimatches[1][2]))
-local max = tonumber(string.trim(multimatches[1][3]))
-local cost = tonumber(string.trim(multimatches[2][2]))
-
-if (not currentlyEnchanting) then
-
-  if ((current+cost) &gt; max) then
-   cecho("&lt;red&gt;  Over enchant")
-   if enchanting.multi then
-     send("done")
-     send("drop '" .. enchantTarget .. "'")
-     send("enchant '" .. enchantTarget .. "' table")
-     startEnchant()
-   end
-   
-  else
-    currentlyEnchanting=true
-    if(enchCount&lt;tableEnchant[tostring(switchCount)].count)then
-      if not enchanting.manual then
-  	   tempTimer(.5,[[send("pro")]])
-      end
-      --enchCount=enchCount+1
-    else
-  	  switchCount=switchCount+1
-  		while(tableEnchant[tostring(switchCount)].count==0)do
-  	    switchCount=switchCount+1
-  		end
-  	  if(tableEnchant[tostring(switchCount)])then
-  			send("enchant "..tableEnchant[tostring(switchCount)].enchant)
-        echo("\n" .. "Ready to Continue." .. "\n")
-        enchCount=0
-  	    if not enchanting.manual then
-          tempTimer(.5,[[send("pro")]])
-        end
-        --enchCount=1
-  		else
-  			send("show")
-  			send("done")
-        cecho("&lt;green&gt;  Complete")
-        
-        --Next
-        if enchantContinue then
-         send("drop '" .. enchantTarget .. "'")
-         --send("done")
-         send("enchant '" .. enchantTarget .. "' table")
-         startEnchant()
-        end
-  	  end
-  	end	
-  end
-end</script>
-						<triggerType>0</triggerType>
-						<conditonLineDelta>6</conditonLineDelta>
-						<mStayOpen>0</mStayOpen>
-						<mCommand></mCommand>
-						<packageName></packageName>
-						<mFgColor>#ff0000</mFgColor>
-						<mBgColor>#ffff00</mBgColor>
-						<mSoundFile></mSoundFile>
-						<colorTriggerFgColor>#000000</colorTriggerFgColor>
-						<colorTriggerBgColor>#000000</colorTriggerBgColor>
-						<regexCodeList>
-							<string>Enchantment level:  (.*)/(.*)</string>
-							<string>Cost:  (.*)</string>
-						</regexCodeList>
-						<regexCodePropertyList>
-							<integer>1</integer>
-							<integer>1</integer>
-						</regexCodePropertyList>
-					</Trigger>
-					<Trigger isActive="no" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
-						<name>missing spark</name>
-						<script>currentlyEnchanting = false
-send("disenchant ember")
-send("disenchant ember")
-send("disenchant ember")
-send("disenchant ember")
-send("disenchant ember")
-tempTimer(2,[[send("pro")]])
-
-</script>
-						<triggerType>0</triggerType>
-						<conditonLineDelta>0</conditonLineDelta>
-						<mStayOpen>0</mStayOpen>
-						<mCommand></mCommand>
-						<packageName></packageName>
-						<mFgColor>#ff0000</mFgColor>
-						<mBgColor>#ffff00</mBgColor>
-						<mSoundFile></mSoundFile>
-						<colorTriggerFgColor>#000000</colorTriggerFgColor>
-						<colorTriggerBgColor>#000000</colorTriggerBgColor>
-						<regexCodeList>
-							<string>You are missing 1x a tiny spark of magic</string>
-						</regexCodeList>
-						<regexCodePropertyList>
-							<integer>0</integer>
-						</regexCodePropertyList>
-					</Trigger>
-					<Trigger isActive="no" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
-						<name>de focus</name>
-						<script>
-send("de focus")</script>
-						<triggerType>0</triggerType>
-						<conditonLineDelta>0</conditonLineDelta>
-						<mStayOpen>0</mStayOpen>
-						<mCommand></mCommand>
-						<packageName></packageName>
-						<mFgColor>#ff0000</mFgColor>
-						<mBgColor>#ffff00</mBgColor>
-						<mSoundFile></mSoundFile>
-						<colorTriggerFgColor>#000000</colorTriggerFgColor>
-						<colorTriggerBgColor>#000000</colorTriggerBgColor>
-						<regexCodeList>
-							<string>A small focus of magic flares brilliantly as the magic erupts from within!</string>
-						</regexCodeList>
-						<regexCodePropertyList>
-							<integer>0</integer>
-						</regexCodePropertyList>
-					</Trigger>
-				</TriggerGroup>
-			</TriggerGroup>
 			<TriggerGroup isActive="yes" isFolder="yes" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
 				<name>Crafting</name>
 				<script></script>
@@ -3444,7 +3303,7 @@ end</script>
 					<regexCodePropertyList />
 					<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
 						<name>StartCheck</name>
-						<script>
+						<script>questgagreadyforreset=true
 xaos.quests={}
 
 questinfo = "\n"</script>
@@ -3548,8 +3407,10 @@ echo (" -- Collected")
 						<regexCodeList>
 							<string>return questgag ~= nil</string>
 							<string>return questgag</string>
+							<string>return questgagreadyforreset</string>
 						</regexCodeList>
 						<regexCodePropertyList>
+							<integer>4</integer>
 							<integer>4</integer>
 							<integer>4</integer>
 						</regexCodePropertyList>
@@ -3724,7 +3585,7 @@ xaos.Level=lvl</script>
 					<colorTriggerBgColor>#000000</colorTriggerBgColor>
 					<regexCodeList>
 						<string>Hero Lvl: ([0-9]+)</string>
-						<string>Level\: (.*)\|</string>
+						<string> Level\: (.*)\|</string>
 					</regexCodeList>
 					<regexCodePropertyList>
 						<integer>1</integer>
@@ -3985,7 +3846,7 @@ end</script>
 					<colorTriggerFgColor>#000000</colorTriggerFgColor>
 					<colorTriggerBgColor>#000000</colorTriggerBgColor>
 					<regexCodeList>
-						<string>Name: ([^-]+)</string>
+						<string>Name: ([^-\s]+)</string>
 					</regexCodeList>
 					<regexCodePropertyList>
 						<integer>1</integer>
@@ -4206,7 +4067,7 @@ currentequipment = {}</script>
 					<colorTriggerFgColor>#000000</colorTriggerFgColor>
 					<colorTriggerBgColor>#000000</colorTriggerBgColor>
 					<regexCodeList>
-						<string>You are wearing:</string>
+						<string>You are wearing</string>
 					</regexCodeList>
 					<regexCodePropertyList>
 						<integer>0</integer>
@@ -4306,6 +4167,267 @@ startequipmentgrab=false</script>
 						<regexCodePropertyList>
 							<integer>4</integer>
 							<integer>4</integer>
+						</regexCodePropertyList>
+					</Trigger>
+				</TriggerGroup>
+			</TriggerGroup>
+			<TriggerGroup isActive="yes" isFolder="yes" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+				<name>Skills</name>
+				<script></script>
+				<triggerType>0</triggerType>
+				<conditonLineDelta>0</conditonLineDelta>
+				<mStayOpen>0</mStayOpen>
+				<mCommand></mCommand>
+				<packageName></packageName>
+				<mFgColor>#ff0000</mFgColor>
+				<mBgColor>#ffff00</mBgColor>
+				<mSoundFile></mSoundFile>
+				<colorTriggerFgColor>#000000</colorTriggerFgColor>
+				<colorTriggerBgColor>#000000</colorTriggerBgColor>
+				<regexCodeList />
+				<regexCodePropertyList />
+				<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+					<name>Start Grab</name>
+					<script>grabskills=true
+xaos.skills = {}
+</script>
+					<triggerType>0</triggerType>
+					<conditonLineDelta>0</conditonLineDelta>
+					<mStayOpen>0</mStayOpen>
+					<mCommand></mCommand>
+					<packageName></packageName>
+					<mFgColor>#ff0000</mFgColor>
+					<mBgColor>#ffff00</mBgColor>
+					<mSoundFile></mSoundFile>
+					<colorTriggerFgColor>#000000</colorTriggerFgColor>
+					<colorTriggerBgColor>#000000</colorTriggerBgColor>
+					<regexCodeList>
+						<string>---------------------------------- Uncategorized ----------------------------------</string>
+					</regexCodeList>
+					<regexCodePropertyList>
+						<integer>0</integer>
+					</regexCodePropertyList>
+				</Trigger>
+				<TriggerGroup isActive="yes" isFolder="yes" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+					<name>Grabbing</name>
+					<script></script>
+					<triggerType>0</triggerType>
+					<conditonLineDelta>0</conditonLineDelta>
+					<mStayOpen>0</mStayOpen>
+					<mCommand></mCommand>
+					<packageName></packageName>
+					<mFgColor>#ff0000</mFgColor>
+					<mBgColor>#ffff00</mBgColor>
+					<mSoundFile></mSoundFile>
+					<colorTriggerFgColor>#000000</colorTriggerFgColor>
+					<colorTriggerBgColor>#000000</colorTriggerBgColor>
+					<regexCodeList>
+						<string>return grabskills</string>
+					</regexCodeList>
+					<regexCodePropertyList>
+						<integer>4</integer>
+					</regexCodePropertyList>
+					<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="yes" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+						<name>Prompt reset - Skills</name>
+						<script>grabskills=false
+</script>
+						<triggerType>0</triggerType>
+						<conditonLineDelta>0</conditonLineDelta>
+						<mStayOpen>0</mStayOpen>
+						<mCommand></mCommand>
+						<packageName></packageName>
+						<mFgColor>#ff0000</mFgColor>
+						<mBgColor>#ffff00</mBgColor>
+						<mSoundFile></mSoundFile>
+						<colorTriggerFgColor>#000000</colorTriggerFgColor>
+						<colorTriggerBgColor>#000000</colorTriggerBgColor>
+						<regexCodeList>
+							<string>return isXaosPrompt()</string>
+						</regexCodeList>
+						<regexCodePropertyList>
+							<integer>4</integer>
+						</regexCodePropertyList>
+					</Trigger>
+					<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+						<name>Header</name>
+						<script>          </script>
+						<triggerType>0</triggerType>
+						<conditonLineDelta>0</conditonLineDelta>
+						<mStayOpen>0</mStayOpen>
+						<mCommand></mCommand>
+						<packageName></packageName>
+						<mFgColor>#ff0000</mFgColor>
+						<mBgColor>#ffff00</mBgColor>
+						<mSoundFile></mSoundFile>
+						<colorTriggerFgColor>#000000</colorTriggerFgColor>
+						<colorTriggerBgColor>#000000</colorTriggerBgColor>
+						<regexCodeList>
+							<string>^\s{10}(.*)</string>
+						</regexCodeList>
+						<regexCodePropertyList>
+							<integer>1</integer>
+						</regexCodePropertyList>
+					</Trigger>
+					<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="yes" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+						<name>Skill</name>
+						<script>if grabskills then
+  local index = 0
+  
+  local k
+  for k=1,7,3 do
+    
+    if matches[k] ~= nil then
+      local temp = string.gsub(matches[k+1],"|","")
+      temp = string.trim(temp)
+      table.insert(xaos.skills,string.lower(temp))
+    end
+    
+  end
+end</script>
+						<triggerType>0</triggerType>
+						<conditonLineDelta>0</conditonLineDelta>
+						<mStayOpen>0</mStayOpen>
+						<mCommand></mCommand>
+						<packageName></packageName>
+						<mFgColor>#ff0000</mFgColor>
+						<mBgColor>#ffff00</mBgColor>
+						<mSoundFile></mSoundFile>
+						<colorTriggerFgColor>#000000</colorTriggerFgColor>
+						<colorTriggerBgColor>#000000</colorTriggerBgColor>
+						<regexCodeList>
+							<string>([^0-9%]+)([0-9]+)\%</string>
+						</regexCodeList>
+						<regexCodePropertyList>
+							<integer>1</integer>
+						</regexCodePropertyList>
+					</Trigger>
+				</TriggerGroup>
+			</TriggerGroup>
+			<TriggerGroup isActive="yes" isFolder="yes" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+				<name>Spells</name>
+				<script></script>
+				<triggerType>0</triggerType>
+				<conditonLineDelta>0</conditonLineDelta>
+				<mStayOpen>0</mStayOpen>
+				<mCommand></mCommand>
+				<packageName></packageName>
+				<mFgColor>#ff0000</mFgColor>
+				<mBgColor>#ffff00</mBgColor>
+				<mSoundFile></mSoundFile>
+				<colorTriggerFgColor>#000000</colorTriggerFgColor>
+				<colorTriggerBgColor>#000000</colorTriggerBgColor>
+				<regexCodeList />
+				<regexCodePropertyList />
+				<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+					<name>Start Grab</name>
+					<script>grabspells=true
+xaos.spells = {}
+</script>
+					<triggerType>0</triggerType>
+					<conditonLineDelta>0</conditonLineDelta>
+					<mStayOpen>0</mStayOpen>
+					<mCommand></mCommand>
+					<packageName></packageName>
+					<mFgColor>#ff0000</mFgColor>
+					<mBgColor>#ffff00</mBgColor>
+					<mSoundFile></mSoundFile>
+					<colorTriggerFgColor>#000000</colorTriggerFgColor>
+					<colorTriggerBgColor>#000000</colorTriggerBgColor>
+					<regexCodeList>
+						<string>-=regular=-</string>
+					</regexCodeList>
+					<regexCodePropertyList>
+						<integer>0</integer>
+					</regexCodePropertyList>
+				</Trigger>
+				<TriggerGroup isActive="yes" isFolder="yes" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+					<name>Grabbing</name>
+					<script></script>
+					<triggerType>0</triggerType>
+					<conditonLineDelta>0</conditonLineDelta>
+					<mStayOpen>0</mStayOpen>
+					<mCommand></mCommand>
+					<packageName></packageName>
+					<mFgColor>#ff0000</mFgColor>
+					<mBgColor>#ffff00</mBgColor>
+					<mSoundFile></mSoundFile>
+					<colorTriggerFgColor>#000000</colorTriggerFgColor>
+					<colorTriggerBgColor>#000000</colorTriggerBgColor>
+					<regexCodeList>
+						<string>return grabspells</string>
+					</regexCodeList>
+					<regexCodePropertyList>
+						<integer>4</integer>
+					</regexCodePropertyList>
+					<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="yes" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+						<name>Prompt reset - Spells</name>
+						<script>grabspells=false
+</script>
+						<triggerType>0</triggerType>
+						<conditonLineDelta>0</conditonLineDelta>
+						<mStayOpen>0</mStayOpen>
+						<mCommand></mCommand>
+						<packageName></packageName>
+						<mFgColor>#ff0000</mFgColor>
+						<mBgColor>#ffff00</mBgColor>
+						<mSoundFile></mSoundFile>
+						<colorTriggerFgColor>#000000</colorTriggerFgColor>
+						<colorTriggerBgColor>#000000</colorTriggerBgColor>
+						<regexCodeList>
+							<string>return isXaosPrompt()</string>
+						</regexCodeList>
+						<regexCodePropertyList>
+							<integer>4</integer>
+						</regexCodePropertyList>
+					</Trigger>
+					<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+						<name>Header</name>
+						<script>          </script>
+						<triggerType>0</triggerType>
+						<conditonLineDelta>0</conditonLineDelta>
+						<mStayOpen>0</mStayOpen>
+						<mCommand></mCommand>
+						<packageName></packageName>
+						<mFgColor>#ff0000</mFgColor>
+						<mBgColor>#ffff00</mBgColor>
+						<mSoundFile></mSoundFile>
+						<colorTriggerFgColor>#000000</colorTriggerFgColor>
+						<colorTriggerBgColor>#000000</colorTriggerBgColor>
+						<regexCodeList>
+							<string>^\s{10}(.*)</string>
+						</regexCodeList>
+						<regexCodePropertyList>
+							<integer>1</integer>
+						</regexCodePropertyList>
+					</Trigger>
+					<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="yes" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+						<name>Spell</name>
+						<script>
+local k
+for k=1,7,3 do
+  
+  if matches[k] ~= nil then
+    local temp = matches[k+1]
+    temp = string.trim(temp)
+    table.insert(xaos.spells,string.lower(temp))
+  end
+  
+end</script>
+						<triggerType>0</triggerType>
+						<conditonLineDelta>0</conditonLineDelta>
+						<mStayOpen>0</mStayOpen>
+						<mCommand></mCommand>
+						<packageName></packageName>
+						<mFgColor>#ff0000</mFgColor>
+						<mBgColor>#ffff00</mBgColor>
+						<mSoundFile></mSoundFile>
+						<colorTriggerFgColor>#000000</colorTriggerFgColor>
+						<colorTriggerBgColor>#000000</colorTriggerBgColor>
+						<regexCodeList>
+							<string>([^0-9]+)([0-9]+)\%  (?:[0-9]+)</string>
+						</regexCodeList>
+						<regexCodePropertyList>
+							<integer>1</integer>
 						</regexCodePropertyList>
 					</Trigger>
 				</TriggerGroup>
@@ -4647,8 +4769,10 @@ end</script>
 						<colorTriggerBgColor>#000000</colorTriggerBgColor>
 						<regexCodeList>
 							<string>(.*) wants to join</string>
+							<string>^\s{0,1}(\w+) has requested to join your party\.$</string>
 						</regexCodeList>
 						<regexCodePropertyList>
+							<integer>1</integer>
 							<integer>1</integer>
 						</regexCodePropertyList>
 					</Trigger>
@@ -4678,8 +4802,10 @@ end</script>
 						<colorTriggerBgColor>#000000</colorTriggerBgColor>
 						<regexCodeList>
 							<string>^(.*) beckons for you to follow.</string>
+							<string>^(.*) beckons you to follow.</string>
 						</regexCodeList>
 						<regexCodePropertyList>
+							<integer>1</integer>
 							<integer>1</integer>
 						</regexCodePropertyList>
 					</Trigger>
@@ -5203,22 +5329,22 @@ end
 						<name>Defeated</name>
 						<script>local mastermind = table.contains(string.split(xaos.traits," "),"mastermind")
 
-if (xaos.buffs.statusBerserk==false and xaos.class.warrior==true and (xaos.config.berserkovercenter or mastermind)) then
+if (xaos.buffs.statusBerserk==false and xaos.class.canberserk() and (xaos.config.berserkovercenter or mastermind)) then
   send("berserk")
 end
-if (xaos.buffs.statusBless==false and (xaos.class.cleric==true or xaos.class.isclass("paladin") or xaos.class.isclass("disciple"))) then
+if (xaos.buffs.statusBless==false and xaos.class.canbless()) then
   send("cast bless")
 end
-if (xaos.buffs.statusWarcry==false and (xaos.class.isclass("knight") or xaos.class.isclass("berserker"))) then
+if (xaos.buffs.statusWarcry==false and xaos.class.canwarcry()) then
   send("warcry")
 end
-if (xaos.buffs.statusResolve==false and xaos.class.barbarian==true and (not xaos.config.berserkovercenter or mastermind)) then
+if (xaos.buffs.statusResolve==false and xaos.class.canresolve() and (not xaos.config.berserkovercenter or mastermind)) then
   send("resolve")
 end
-if (xaos.buffs.statusCenter==false and xaos.class.warrior==true and (not xaos.config.berserkovercenter or mastermind)) then
+if (xaos.buffs.statusCenter==false and xaos.class.cancenter() and (not xaos.config.berserkovercenter or mastermind)) then
   send("center")
 end
-if (xaos.buffs.statusTrance==false and xaos.class.thief==true) then
+if (xaos.buffs.statusTrance==false and xaos.class.cantrance()) then
   send("trance")
 end
 if (xaos.buffs.statusSpellSlip==false and (xaos.class.isclass("rake"))) then
@@ -6173,6 +6299,223 @@ end</script>
 						</regexCodePropertyList>
 					</Trigger>
 				</TriggerGroup>
+				<TriggerGroup isActive="no" isFolder="yes" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+					<name>gostEnchanting</name>
+					<script></script>
+					<triggerType>0</triggerType>
+					<conditonLineDelta>0</conditonLineDelta>
+					<mStayOpen>0</mStayOpen>
+					<mCommand></mCommand>
+					<packageName>gostEnchanting</packageName>
+					<mFgColor>#ff0000</mFgColor>
+					<mBgColor>#ffff00</mBgColor>
+					<mSoundFile></mSoundFile>
+					<colorTriggerFgColor>#000000</colorTriggerFgColor>
+					<colorTriggerBgColor>#000000</colorTriggerBgColor>
+					<regexCodeList />
+					<regexCodePropertyList />
+					<TriggerGroup isActive="yes" isFolder="yes" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+						<name>gostEnchanting</name>
+						<script></script>
+						<triggerType>0</triggerType>
+						<conditonLineDelta>0</conditonLineDelta>
+						<mStayOpen>0</mStayOpen>
+						<mCommand></mCommand>
+						<packageName></packageName>
+						<mFgColor>#ff0000</mFgColor>
+						<mBgColor>#ffff00</mBgColor>
+						<mSoundFile></mSoundFile>
+						<colorTriggerFgColor>#000000</colorTriggerFgColor>
+						<colorTriggerBgColor>#000000</colorTriggerBgColor>
+						<regexCodeList />
+						<regexCodePropertyList />
+						<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+							<name>doneEnchant</name>
+							<script>enchCount=enchCount+1
+currentlyEnchanting = false
+send("show")</script>
+							<triggerType>0</triggerType>
+							<conditonLineDelta>0</conditonLineDelta>
+							<mStayOpen>0</mStayOpen>
+							<mCommand></mCommand>
+							<packageName></packageName>
+							<mFgColor>#ff0000</mFgColor>
+							<mBgColor>#ffff00</mBgColor>
+							<mSoundFile></mSoundFile>
+							<colorTriggerFgColor>#000000</colorTriggerFgColor>
+							<colorTriggerBgColor>#000000</colorTriggerBgColor>
+							<regexCodeList>
+								<string>table's binding field fades away.</string>
+							</regexCodeList>
+							<regexCodePropertyList>
+								<integer>0</integer>
+							</regexCodePropertyList>
+						</Trigger>
+						<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="yes" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+							<name>applyStab</name>
+							<script>send("apply stab")</script>
+							<triggerType>0</triggerType>
+							<conditonLineDelta>0</conditonLineDelta>
+							<mStayOpen>0</mStayOpen>
+							<mCommand></mCommand>
+							<packageName></packageName>
+							<mFgColor>#ff0000</mFgColor>
+							<mBgColor>#ffff00</mBgColor>
+							<mSoundFile>C:/Windows/media/chimes.wav</mSoundFile>
+							<colorTriggerFgColor>#000000</colorTriggerFgColor>
+							<colorTriggerBgColor>#000000</colorTriggerBgColor>
+							<regexCodeList>
+								<string>shiver and emit a high pitch whine!</string>
+								<string>You notice a flux within the enchantments upon</string>
+							</regexCodeList>
+							<regexCodePropertyList>
+								<integer>0</integer>
+								<integer>0</integer>
+							</regexCodePropertyList>
+						</Trigger>
+						<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+							<name>applyHarm</name>
+							<script>send("apply harm")</script>
+							<triggerType>0</triggerType>
+							<conditonLineDelta>0</conditonLineDelta>
+							<mStayOpen>0</mStayOpen>
+							<mCommand></mCommand>
+							<packageName></packageName>
+							<mFgColor>#ff0000</mFgColor>
+							<mBgColor>#ffff00</mBgColor>
+							<mSoundFile></mSoundFile>
+							<colorTriggerFgColor>#000000</colorTriggerFgColor>
+							<colorTriggerBgColor>#000000</colorTriggerBgColor>
+							<regexCodeList>
+								<string>The calibration required exceeds a</string>
+							</regexCodeList>
+							<regexCodePropertyList>
+								<integer>0</integer>
+							</regexCodePropertyList>
+						</Trigger>
+						<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="yes" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+							<name>Check Level</name>
+							<script>local current = tonumber(string.trim(multimatches[1][2]))
+local max = tonumber(string.trim(multimatches[1][3]))
+local cost = tonumber(string.trim(multimatches[2][2]))
+
+if (not currentlyEnchanting) then
+
+  if ((current+cost) &gt; max) then
+   cecho("&lt;red&gt;  Over enchant")
+   if enchanting.multi then
+     send("done")
+     send("drop '" .. enchantTarget .. "'")
+     send("enchant '" .. enchantTarget .. "' table")
+     startEnchant()
+   end
+   
+  else
+    currentlyEnchanting=true
+    if(enchCount&lt;tableEnchant[tostring(switchCount)].count)then
+      if not enchanting.manual then
+  	   tempTimer(.5,[[send("pro")]])
+      end
+      --enchCount=enchCount+1
+    else
+  	  switchCount=switchCount+1
+  		while(tableEnchant[tostring(switchCount)].count==0)do
+  	    switchCount=switchCount+1
+  		end
+  	  if(tableEnchant[tostring(switchCount)])then
+  			send("enchant "..tableEnchant[tostring(switchCount)].enchant)
+        echo("\n" .. "Ready to Continue." .. "\n")
+        enchCount=0
+  	    if not enchanting.manual then
+          tempTimer(.5,[[send("pro")]])
+        end
+        --enchCount=1
+  		else
+  			send("show")
+  			send("done")
+        cecho("&lt;green&gt;  Complete")
+        
+        --Next
+        if enchantContinue then
+         send("drop '" .. enchantTarget .. "'")
+         --send("done")
+         send("enchant '" .. enchantTarget .. "' table")
+         startEnchant()
+        end
+  	  end
+  	end	
+  end
+end</script>
+							<triggerType>0</triggerType>
+							<conditonLineDelta>6</conditonLineDelta>
+							<mStayOpen>0</mStayOpen>
+							<mCommand></mCommand>
+							<packageName></packageName>
+							<mFgColor>#ff0000</mFgColor>
+							<mBgColor>#ffff00</mBgColor>
+							<mSoundFile></mSoundFile>
+							<colorTriggerFgColor>#000000</colorTriggerFgColor>
+							<colorTriggerBgColor>#000000</colorTriggerBgColor>
+							<regexCodeList>
+								<string>Enchantment level:  (.*)/(.*)</string>
+								<string>Cost:  (.*)</string>
+							</regexCodeList>
+							<regexCodePropertyList>
+								<integer>1</integer>
+								<integer>1</integer>
+							</regexCodePropertyList>
+						</Trigger>
+						<Trigger isActive="no" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+							<name>missing spark</name>
+							<script>currentlyEnchanting = false
+send("disenchant ember")
+send("disenchant ember")
+send("disenchant ember")
+send("disenchant ember")
+send("disenchant ember")
+tempTimer(2,[[send("pro")]])
+
+</script>
+							<triggerType>0</triggerType>
+							<conditonLineDelta>0</conditonLineDelta>
+							<mStayOpen>0</mStayOpen>
+							<mCommand></mCommand>
+							<packageName></packageName>
+							<mFgColor>#ff0000</mFgColor>
+							<mBgColor>#ffff00</mBgColor>
+							<mSoundFile></mSoundFile>
+							<colorTriggerFgColor>#000000</colorTriggerFgColor>
+							<colorTriggerBgColor>#000000</colorTriggerBgColor>
+							<regexCodeList>
+								<string>You are missing 1x a tiny spark of magic</string>
+							</regexCodeList>
+							<regexCodePropertyList>
+								<integer>0</integer>
+							</regexCodePropertyList>
+						</Trigger>
+						<Trigger isActive="no" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+							<name>de focus</name>
+							<script>
+send("de focus")</script>
+							<triggerType>0</triggerType>
+							<conditonLineDelta>0</conditonLineDelta>
+							<mStayOpen>0</mStayOpen>
+							<mCommand></mCommand>
+							<packageName></packageName>
+							<mFgColor>#ff0000</mFgColor>
+							<mBgColor>#ffff00</mBgColor>
+							<mSoundFile></mSoundFile>
+							<colorTriggerFgColor>#000000</colorTriggerFgColor>
+							<colorTriggerBgColor>#000000</colorTriggerBgColor>
+							<regexCodeList>
+								<string>A small focus of magic flares brilliantly as the magic erupts from within!</string>
+							</regexCodeList>
+							<regexCodePropertyList>
+								<integer>0</integer>
+							</regexCodePropertyList>
+						</Trigger>
+					</TriggerGroup>
+				</TriggerGroup>
 			</TriggerGroup>
 			<TriggerGroup isActive="yes" isFolder="yes" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
 				<name>XUI</name>
@@ -6196,17 +6539,7 @@ end</script>
 				</regexCodePropertyList>
 				<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="yes" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
 					<name>Prompt eater</name>
-					<script>current_health = tonumber(xPrompt.hp)
-hpbar:setValue(current_health, 100, nil)
-hpbar.front:echo(xPrompt.hp .. "%", nil, "c")
-
-current_mana = tonumber(xPrompt.mana)
-manabar:setValue(current_mana, 100, nil)
-manabar.front:echo(xPrompt.mana .. "%", nil, "c")
-
-current_mvm = tonumber(xPrompt.move)
-mvmbar:setValue(current_mvm, 100, nil)
-mvmbar.front:echo(xPrompt.move .. "%", nil, "c")
+					<script>
 
 current_xp = tonumber(xPrompt.exp)
 
@@ -13537,7 +13870,7 @@ deleteLine()</script>
 				</regexCodePropertyList>
 			</Trigger>
 		</TriggerGroup>
-		<TriggerGroup isActive="yes" isFolder="yes" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+		<TriggerGroup isActive="no" isFolder="yes" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
 			<name>Specific Loot</name>
 			<script></script>
 			<triggerType>0</triggerType>
@@ -14678,7 +15011,7 @@ cecho("CombatList",damageDisplay(TotalCalc))
 					<packageName></packageName>
 					<time>00:00:01.000</time>
 				</Timer>
-				<Timer isActive="yes" isFolder="no" isTempTimer="no" isOffsetTimer="no">
+				<Timer isActive="no" isFolder="no" isTempTimer="no" isOffsetTimer="no">
 					<name>Party Timer</name>
 					<script>
 
@@ -14724,10 +15057,10 @@ partyDisplay2:echo(lblentries[2])</script>
 
 local lbltext = "&lt;div style='white-space: pre-wrap;padding:5px;'&gt;"
 lbltext = lbltext .. xaos.charactername .. "&lt;br/&gt;&lt;br/&gt;"
-lbltext = lbltext .."Level    : " .. xaos.Level .. " (" .. string.format("%2.2f",xaos.LevelPercent) .. "%)" .. "&lt;br/&gt;"
+lbltext = lbltext .."Lev : " .. xaos.Level .. " (" .. string.format("%2.2f",xaos.LevelPercent) .. "%)" .. "&lt;br/&gt;"
 
-lbltext = lbltext .."Tactics  : " .. tostring(xaos.tactics) .. "&lt;br/&gt;"
-lbltext = lbltext .."Style    : " .. tostring(xaos.fightingstyle) .. "&lt;br/&gt;"
+lbltext = lbltext .."Tact: " .. tostring(xaos.tactics) .. "&lt;br/&gt;"
+lbltext = lbltext .."Styl: " .. tostring(xaos.fightingstyle) .. "&lt;br/&gt;"
 
 lbltext = lbltext .. "&lt;/div&gt;"
 userDisplay:echo(lbltext)</script>
@@ -14735,7 +15068,7 @@ userDisplay:echo(lbltext)</script>
 					<packageName></packageName>
 					<time>00:00:00.500</time>
 				</Timer>
-				<Timer isActive="yes" isFolder="no" isTempTimer="no" isOffsetTimer="no">
+				<Timer isActive="no" isFolder="no" isTempTimer="no" isOffsetTimer="no">
 					<name>Party Grab</name>
 					<script>partystatusgrab=true
 send("party",false)
@@ -15396,6 +15729,8 @@ if command == "" then
   hecho("berserkmode\n")
   hecho("minmana\n")
   hecho("minhp\n")
+  hecho("showprompt\n")
+  hecho("autoempower\n")
 end
 
 if command=="berserkovercenter" then
@@ -15421,6 +15756,12 @@ end
 if command == "showprompt" then
   mysettings.showprompt = not mysettings.showprompt
   helpbodyecho("Show Prompt: " .. tostring(mysettings.showprompt))
+  savemysettings()
+end
+
+if command == "autoempower" then
+  xaos.config.autoempower = not xaos.config.autoempower
+  helpbodyecho("Auto Empower: " .. tostring(xaos.config.autoempower))
 end</script>
 					<command></command>
 					<packageName></packageName>
@@ -15453,6 +15794,28 @@ echo("\n\n Beta Mode: " .. tostring(xaos.config.betamode) .. "\n\n")</script>
 					<packageName></packageName>
 					<regex>^betamode</regex>
 				</Alias>
+				<AliasGroup isActive="yes" isFolder="yes">
+					<name>Modules</name>
+					<script></script>
+					<command></command>
+					<packageName></packageName>
+					<regex></regex>
+					<Alias isActive="yes" isFolder="no">
+						<name>enablemodule</name>
+						<script>setFeature(string.lower(string.trim(matches[2])),true)</script>
+						<command></command>
+						<packageName></packageName>
+						<regex>enablemodule(?:\s)?(.*)</regex>
+					</Alias>
+					<Alias isActive="yes" isFolder="no">
+						<name>disablemodule</name>
+						<script>setFeature(string.lower(string.trim(matches[2])),false)
+cecho("\n&lt;cyan&gt;Most modules will not be completly disabled, until you restart mudlet.\n")</script>
+						<command></command>
+						<packageName></packageName>
+						<regex>disablemodule(?:\s)?(.*)</regex>
+					</Alias>
+				</AliasGroup>
 			</AliasGroup>
 			<AliasGroup isActive="yes" isFolder="yes">
 				<name>Quests</name>
@@ -15482,8 +15845,8 @@ for k,v in pairs(queststoturnin) do
       send("quest complete " .. v.name)
       --questinfo = questinfo .. "" .. questname .. "  - Completed\n"
     else
-      --echo("InfoList","\n\n" .. questname .. "  - Not Complete\n\n")
-      echo("\n\n" .. v.name .. "  - Not Complete\n\n")
+      --echo("InfoList","\n\n" .. questname .. "  - Not Complete\n")
+      echo("" .. v.name .. "  - Not Complete\n")
       --questinfo = questinfo .. "" .. questname .. "  - Not Complete\n"
     end
 end
@@ -16426,8 +16789,11 @@ end
 startequipmentgrab=false
 xaos.currentequip = {}
 
-send("eq")
---send("massage")</script>
+if mysettings.features.msdp then
+  grab_EQUIPMENT()
+else
+  send("eq")
+end</script>
 					<command></command>
 					<packageName></packageName>
 					<regex>seteq</regex>
@@ -16494,7 +16860,7 @@ end</script>
 				</Alias>
 				<Alias isActive="yes" isFolder="no">
 					<name>Load Gear Set</name>
-					<script>wearset(string.trim(matches[2]))</script>
+					<script>weargearset(string.trim(matches[2]))</script>
 					<command></command>
 					<packageName></packageName>
 					<regex>loadgear (.*)</regex>
@@ -17345,7 +17711,8 @@ enableScrollBar("combat")</script>
 					<name>Set Score Variables</name>
 					<script>scoregag=true
 scoregrab=true
-send("score")</script>
+send("score")
+</script>
 					<command></command>
 					<packageName></packageName>
 					<regex>scoreeat</regex>
@@ -18492,6 +18859,25 @@ end</script>
 				<name>Help</name>
 				<packageName></packageName>
 				<script>expandAlias("xhelp all")</script>
+				<css></css>
+				<commandButtonUp></commandButtonUp>
+				<commandButtonDown></commandButtonDown>
+				<icon></icon>
+				<orientation>1</orientation>
+				<location>0</location>
+				<posX>0</posX>
+				<posY>0</posY>
+				<mButtonState>1</mButtonState>
+				<sizeX>0</sizeX>
+				<sizeY>0</sizeY>
+				<buttonColumn>1</buttonColumn>
+				<buttonRotation>0</buttonRotation>
+				<buttonColor>#ffffff</buttonColor>
+			</Action>
+			<Action isActive="yes" isFolder="no" isPushButton="no" isFlatButton="no" useCustomLayout="no">
+				<name>Settings</name>
+				<packageName></packageName>
+				<script>setupWin:show()</script>
 				<css></css>
 				<commandButtonUp></commandButtonUp>
 				<commandButtonDown></commandButtonDown>
@@ -21747,10 +22133,11 @@ echo("\n " .. display(funfurmanual) .. "\n")</script>
 			<name>Xaos</name>
 			<packageName></packageName>
 			<script>if xaos == nil then xaos = {} end
-
 if mysettings == nil then mysettings = {} end
 
-mysettings.version = "0.2.0.2"
+local firstload = true
+
+mysettings.version = "0.2.1.0"
 
 if io.exists(getMudletHomeDir() .. "/mysettings.dat") then
   table.load(getMudletHomeDir() .. "/mysettings.dat",mysettings)
@@ -21765,6 +22152,9 @@ if mysettings.feedconsole== nil then mysettings.feedconsole =  "data" end
 if mysettings.UIType== nil then mysettings.UIType =  "XUI" end
 if mysettings.showprompt == nil then mysettings.showprompt = false end
 
+if mysettings.features == nil then mysettings.features = {} end
+if mysettings.features.msdp == nil then mysettings.features.msdp = false end
+
 mysettings.XUI = {
   UIMode = "container",
   feedconsole = "data",
@@ -21776,6 +22166,7 @@ mysettings.XaosUI = {
 function savemysettings()
   table.save(getMudletHomeDir() .. "/mysettings.dat",mysettings)
 end
+
 function changeUI(uiname)
   
   local tempuiname = mysettings.UIType
@@ -21805,13 +22196,58 @@ function changeUI(uiname)
   end
 end
 
-changeUI(mysettings.UIType)</script>
+savemysettings()
+
+function setFeature(name,enable)
+  mysettings.features[name] = enable
+  cecho("\n&lt;yellow&gt;Setting Feature " .. name .. ": " .. (enable and "On" or "Off"))
+  if name == "msdp" then
+    if enable then 
+      enableScript("MSDP")
+      registerMSDPEvents()
+      msdpConnect()
+      loadMSDPUI()
+        
+    else
+      unregisterMSDPEvents()
+      disableScript("MSDP")
+      if not firstload then
+        cecho("\n&lt;yellow&gt;It is recommended to restart Mudlet for full effect")
+      end
+    end
+  end
+  savemysettings()
+end
+
+for k,v in pairs(mysettings.features) do
+  tempTimer(1,
+    function() 
+      setFeature(k,v)
+    end
+  )
+end
+
+firstload = false</script>
 			<eventHandlerList />
 			<ScriptGroup isActive="yes" isFolder="yes">
 				<name>Variables</name>
 				<packageName></packageName>
 				<script></script>
 				<eventHandlerList />
+				<Script isActive="yes" isFolder="no">
+					<name>Helpers</name>
+					<packageName></packageName>
+					<script>function findTableEntry(tbl,func)
+
+  for k,v in pairs(tbl) do
+    if func(v) then
+      return {key=k,value=v}
+    end
+  end
+  return nil
+end</script>
+					<eventHandlerList />
+				</Script>
 				<ScriptGroup isActive="yes" isFolder="yes">
 					<name>Lists</name>
 					<packageName></packageName>
@@ -22147,10 +22583,6 @@ if xaos.LevelPercent == nil then xaos.LevelPercent = "" end
 
 if lootcollector == nil then lootcollector = {} end
 
-
-
-
-
 if xaos.party == nil then xaos.party = {
   leader = "",
   members = {}
@@ -22177,6 +22609,24 @@ xaos.class = {
 
 function xaos.class.isclass(classname) 
   return xaos.class.primary == classname or xaos.class.reborn == classname
+end
+function xaos.class.canberserk()
+  return table.contains(xaos.skills,"berserk")
+end
+function xaos.class.cancenter()
+  return table.contains(xaos.skills,"discipline")
+end
+function xaos.class.cantrance()
+  return table.contains(xaos.skills,"trance")
+end
+function xaos.class.canresolve()
+  return table.contains(xaos.skills,"resolve")
+end
+function xaos.class.canwarcry()
+  return table.contains(xaos.skills,"warcry")
+end
+function xaos.class.canbless()
+  return table.contains(xaos.spells,"bless")
 end</script>
 					<eventHandlerList>
 						<string>sysLoadEvent</string>
@@ -22187,34 +22637,37 @@ end</script>
 				<Script isActive="yes" isFolder="no">
 					<name>Config</name>
 					<packageName></packageName>
-					<script>if xaos.config == nil then xaos.config = {} end
-if xaos.config.afkmode == nil then xaos.config.afkmode = false end
-if xaos.config.berserkovercenter == nil then xaos.config.berserkovercenter = true end
-if xaos.config.debugmode == nil then xaos.config.debugmode = false end
-if xaos.config.show_killed == nil then xaos.config.show_killed = false end
-if xaos.config.betamode == nil then xaos.config.betamode = false end
-if xaos.config.autologin == nil then xaos.config.autologin = false end
-if xaos.config.autologinaction == nil then xaos.config.autologinaction = "" end
-if xaos.config.reconnectaction == nil then xaos.config.reconnectaction = "" end
-if xaos.config.beeptell == nil then xaos.config.beeptell = false end
-if xaos.config.buffmode == nil then xaos.config.buffmode = true end
-if xaos.config.autojoin == nil then xaos.config.autojoin = true end
-if xaos.config.autoguard == nil then xaos.config.autoguard = false end
-if xaos.config.customDrink == nil then xaos.config.customDrink = "" end
-if xaos.config.drinkMode == nil then xaos.config.drinkMode = "soup" end
-if xaos.config.berserkmode == nil then xaos.config.berserkmode = true end
-if xaos.config.scripting == nil then xaos.config.scripting = {} end
-if xaos.config.scripting.findmode == nil then xaos.config.scripting.findmode = false end
-if xaos.config.scripting.scan_mode == nil then xaos.config.scripting.scan_mode = false end
-if xaos.config.scripting.huntwait == nil then xaos.config.scripting.huntwait = 1 end
-if xaos.config.scripting.endcombatwait == nil then xaos.config.scripting.endcombatwait = 2 end
-if xaos.config.scripting.maxmobs == nil then xaos.config.scripting.maxmobs = 10 end
-if xaos.config.scripting.autoLoot == nil then xaos.config.scripting.autoLoot = "" end
-if xaos.config.scripting.autoPickup == nil then xaos.config.scripting.autoPickup = "" end
-if xaos.config.scripting.autoDeathAction == nil then xaos.config.scripting.autoDeathAction = "" end
-if xaos.config.scripting.initialcommand == nil then xaos.config.scripting.initialcommand = "" end
-
-if xaos.config.equipmentsets == nil then xaos.config.equipmentsets = {} end</script>
+					<script>function checkConfigDefaults()
+  if xaos.config == nil then xaos.config = {} end
+  if xaos.config.afkmode == nil then xaos.config.afkmode = false end
+  if xaos.config.berserkovercenter == nil then xaos.config.berserkovercenter = true end
+  if xaos.config.debugmode == nil then xaos.config.debugmode = false end
+  if xaos.config.show_killed == nil then xaos.config.show_killed = false end
+  if xaos.config.betamode == nil then xaos.config.betamode = false end
+  if xaos.config.autologin == nil then xaos.config.autologin = false end
+  if xaos.config.autologinaction == nil then xaos.config.autologinaction = "" end
+  if xaos.config.reconnectaction == nil then xaos.config.reconnectaction = "" end
+  if xaos.config.beeptell == nil then xaos.config.beeptell = false end
+  if xaos.config.buffmode == nil then xaos.config.buffmode = true end
+  if xaos.config.autojoin == nil then xaos.config.autojoin = true end
+  if xaos.config.autoguard == nil then xaos.config.autoguard = false end
+  if xaos.config.customDrink == nil then xaos.config.customDrink = "" end
+  if xaos.config.drinkMode == nil then xaos.config.drinkMode = "soup" end
+  if xaos.config.berserkmode == nil then xaos.config.berserkmode = true end
+  if xaos.config.scripting == nil then xaos.config.scripting = {} end
+  if xaos.config.scripting.findmode == nil then xaos.config.scripting.findmode = false end
+  if xaos.config.scripting.scan_mode == nil then xaos.config.scripting.scan_mode = false end
+  if xaos.config.scripting.huntwait == nil then xaos.config.scripting.huntwait = 1 end
+  if xaos.config.scripting.endcombatwait == nil then xaos.config.scripting.endcombatwait = 2 end
+  if xaos.config.scripting.maxmobs == nil then xaos.config.scripting.maxmobs = 10 end
+  if xaos.config.scripting.autoLoot == nil then xaos.config.scripting.autoLoot = "" end
+  if xaos.config.scripting.autoPickup == nil then xaos.config.scripting.autoPickup = "" end
+  if xaos.config.scripting.autoDeathAction == nil then xaos.config.scripting.autoDeathAction = "" end
+  if xaos.config.scripting.initialcommand == nil then xaos.config.scripting.initialcommand = "" end
+  
+  if xaos.config.equipmentsets == nil then xaos.config.equipmentsets = {} end
+end
+checkConfigDefaults()</script>
 					<eventHandlerList />
 				</Script>
 				<Script isActive="yes" isFolder="no">
@@ -22290,7 +22743,7 @@ end
 
 function loadprofile()
   copyfromprofile() 
-  
+  checkConfigDefaults()
   if xaos.config.drinkmode ~= "" then
     enableTimer("drinkTimer")
   end
@@ -22393,10 +22846,10 @@ function newprofile()
   xaos.config.buffmode = true
   xaos.config.beeptell = false
   xaos.config.customDrink = ""
-  xaos.config.autoempower = true
+  xaos.config.autoempower = false
   xaos.config.betamode = false
 
-
+  checkConfigDefaults()
 
 end
 </script>
@@ -22846,7 +23299,9 @@ function continueempower()
   
   if table.size(xaos.heroempowers) &lt; empoweriterate or empoweriterate == 0 then
     echo("\nEmpowers Complete\n")
+    if not mysettings.features.msdp then
     send("hero empower")
+    end 
     empoweriterate=0
     tempTimer(2,function() startempower() end)
     
@@ -23712,122 +24167,109 @@ end</script>
 return
 end
 
-setBorderBottom(130)
+setBorderBottom(100)
 -- give it a unique name here
-bottom_container =
+bottom_container = bottom_container or
   Geyser.Container:new({name = "bottom_container", x = 0, y = -100, width = "100%", height = 100})
 --setBorderLeft(200)
 -- give it a unique name here
 -- have it start at the top-left corner of mudlet
 -- with a width of 200, and a height of the full screen, hence 100%
-
+bottom_container_back = bottom_container_back or
+  Geyser.Label:new({name = "bottom_container_back", x=0,y=0,width="100%",height="100%"},bottom_container)
+bottom_container_back:lower()
 --HP Gauge
-hpbar =
-  Geyser.Gauge:new({name = "hpbar", x = "20%", y = 0, width = "30%", height = 42}, bottom_container)
+hpbar = hpbar or
+  Geyser.Gauge:new({name = "hpbar", x = "15%", y = "55%", width = "19.5%", height = "40%"}, bottom_container)
 hpbar.front:setStyleSheet(
-  [[background-color: QLinearGradient( x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #f04141, stop: 0.1 #ef2929, stop: 0.49 #cc0000, stop: 0.5 #a40000, stop: 1 #cc0000);
-    border-width: 1px;
-    border-color: black;
-    border-style: solid;
-    border-radius: 7;
-    padding: 3px;
-]]
+	   [[background-color: rgba(0, 149, 0,100%);
+          border-width: 1px;
+          border-color: black;
+          border-style: solid;
+          border-radius: 7;
+          padding: 3px;
+      ]]
 )
 hpbar.back:setStyleSheet(
-  [[background-color: QLinearGradient( x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #bd3333, stop: 0.1 #bd2020, stop: 0.49 #990000, stop: 0.5 #700000, stop: 1 #990000);
-    border-width: 1px;
-    border-color: black;
-    border-style: solid;
-    border-radius: 7;
-    padding: 3px;
-]]
+[[background-color: rgba(255, 0, 0,50%);
+          border-width: 1px;
+          border-color: black;
+          border-style: solid;
+          border-radius: 7;
+          padding: 3px;
+      ]]
 )
+hpbar.text:setToolTip("Percentage of current hp", "10")
+
 --Mana Gauge
-manabar =
-  Geyser.Gauge:new({name = "manabar", x = "50%", y = 0, width = "30%", height = 20}, bottom_container)
+manabar = manabar or
+  Geyser.Gauge:new({name = "manabar", x = "35%", y = "55%", width = "19.5%", height = "40%"}, bottom_container)
 manabar.front:setStyleSheet(
-  [[background-color: QLinearGradient( x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #4e89e8, stop: 0.1 #2d74e5, stop: 0.49 #104599, stop: 0.5 #072a60, stop: 1 #011b44);
-       border-width: 1px;
-    border-color: black;
-    border-style: solid;
-    border-radius: 7;
-    padding: 3px; ]]
+
+  [[background-color: rgba(31, 31, 176, 100%);
+          border-width: 1px;
+          border-color: black;
+          border-style: solid;
+          border-radius: 7;
+          padding: 3px;
+          color: white;
+      ]]
 )
 manabar.back:setStyleSheet(
-  [[background-color: QLinearGradient( x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #040677, stop: 0.1 #040677, stop: 0.49 #040677, stop: 0.5 #040677, stop: 1 #040677);
-        border-width: 1px;
-    border-color: black;
-    border-style: solid;
-    border-radius: 7;
-    padding: 3px;]]
+  [[background-color: rgba(31, 31, 176, 60%);
+          border-width: 1px;
+          border-color: black;
+          border-style: solid;
+          border-radius: 7;
+          padding: 3px;
+          color: white;
+      ]]
 )
-
---background-color: QLinearGradient( x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #b142d6, stop: 0.1 #9d32c1, stop: 0.49 #842ca3, stop: 0.5 #721f8e, stop: 1 #591072);
---QLinearGradient( x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 rgba(177, 66, 214,50%), stop: 0.1 rgba(157, 50, 193,20%), stop: 0.49 rgba(132, 44, 163,20%), stop: 0.5 rgba(114, 31, 142,20%), stop: 1 rgba(89, 16, 114,20%)
---Xp Gauge
-xpbar =
-  Geyser.Gauge:new({name = "xpbar", x = "20%", y = 51, width = "60%", height = 20}, bottom_container)
-xpbar.front:setStyleSheet(
-  [[background-color: rgba(157, 50, 193,40%);
-    border-width: 1px;
-    border-color: purple;
-    border-style: solid;
-    border-radius: 7;
-    padding: 3px;]]
-)
---background-color: rgba(0,0,0,0%);
-xpbar.back:setStyleSheet(
-  [[background-color: QLinearGradient( x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #000000, stop: 0.1 #000000, stop: 0.49 #000000, stop: 0.5 #000000, stop: 1 #000000);
-    border-width: 1px;
-    border-color: purple;
-    border-style: solid;
-    border-radius: 7;
-    padding: 3px;]]
-)
-xpbar:hide()
+manabar.text:setToolTip("Percentage of current mana", "10")
 --Ascend Gauge
 --250, 123, 30,
-ascbar =
-  Geyser.Gauge:new({name = "ascbar",  x = "20%", y = 55, width = "60%", height =25}, bottom_container)
+ascbar = ascbar or
+  Geyser.Gauge:new({name = "ascbar", x = "80%", y = "55%", width = "19.5%", height = "40%"}, bottom_container)
 ascbar.front:setStyleSheet(
-  [[background-color: rgba(7, 221, 204,40%);
+  [[background-color: rgba(121,2,204,100%);
     border-width: 1px;
-    border-color: rgb(7, 221, 204);
     border-style: solid;
     border-radius: 7;
     padding: 3px;]]
 )
 ascbar.back:setStyleSheet(
-  [[background-color: QLinearGradient( x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #000000, stop: 0.1 #000000, stop: 0.49 #000000, stop: 0.5 #000000, stop: 1 #000000);
+  [[background-color: rgba(121,2,204,40%);
     border-width: 1px;
-    border-color: rgb(7, 221, 204);
     border-style: solid;
     border-radius: 7;
     padding: 3px;]]
 )
+ascbar.text:setToolTip("Percentage of current ascend", "10")
 --mvm Gauge
 --background-color: QLinearGradient( x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #efba4f, stop: 0.1 #ba8a2a, stop: 0.49 #966e1e, stop: 0.5 #a3700b, stop: 1 #B89902);
-mvmbar =
-  Geyser.Gauge:new({name = "mvmbar", x = "50%", y = 22, width = "30%", height = 20}, bottom_container)
+mvmbar = mvmbar or
+  Geyser.Gauge:new({name = "mvmbar", x = "55%", y = "55%", width = "19%", height = "40%"}, bottom_container)
+
 mvmbar.front:setStyleSheet(
-  [[background-color: QLinearGradient( x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #efba4f, stop: 0.1 #ba8a2a, stop: 0.49 #966e1e, stop: 0.5 #a3700b, stop: 1 #B89902);
-    border-width: 1px;
-    border-color: black;
-    border-style: solid;
-    border-radius: 7;
-    padding: 3px;
-		]]
+  [[background-color: rgba(	204,97,40, 100%);
+          border-width: 1px;
+          border-color: black;
+          border-style: solid;
+          border-radius: 7;
+          padding: 3px;
+      ]]
 )
 mvmbar.back:setStyleSheet(
-  [[background-color: #000000;
-    
-		border-width: 1px;
-    border-color: black;
-    border-style: solid;
-    border-radius: 7;
-    padding: 0px;]]
+  [[background-color: rgba(	204,97,40, 50%);
+          border-width: 1px;
+          border-color: black;
+          border-style: solid;
+          border-radius: 7;
+          padding: 3px;
+      ]]
 )
-
+--181,175,32
+mvmbar.text:setToolTip("Percentage of current movement", "10")
 
 
 
@@ -24641,7 +25083,7 @@ end</script>
 						<script></script>
 						<eventHandlerList />
 						<Script isActive="yes" isFolder="no">
-							<name>Party Lavel</name>
+							<name>Party Level</name>
 							<packageName></packageName>
 							<script>if mysettings.UIType ~= "XUI" then return end
 
@@ -24671,7 +25113,9 @@ partyDisplay2:setStyleSheet([[
 	background-color: #222233;
 	color: #AACCFF;
   font-family: Courier;
-]])</script>
+]])
+
+</script>
 							<eventHandlerList />
 						</Script>
 						<Script isActive="yes" isFolder="no">
@@ -24683,18 +25127,18 @@ partyDisplay2:setStyleSheet([[
 
 userDisplay = userDisplay or Geyser.Label:new({
   name = "userLabel",
-  x = "1%", y = "0",
-  width = "18%", height = "100%",
+  x = "0%", y = "0",
+  width = "15%", height = "100%",
 }, bottom_container)
 
 userDisplay:setFontSize(10)
 userDisplay:setStyleSheet([[
-	background-color: #222233;
+	background-color: #202020;
 	color: #AACCFF;
   font-family: Courier;
 ]])
-
-</script>
+userDisplay:raise()
+--#222233;</script>
 							<eventHandlerList />
 						</Script>
 					</ScriptGroup>
@@ -24822,6 +25266,73 @@ questStatusWin:hide()
 menu.setdoubleclick("Quests",function() questStatusWin:show() end)
 
 
+
+
+</script>
+							<eventHandlerList />
+						</Script>
+						<Script isActive="yes" isFolder="no">
+							<name>Setup Window</name>
+							<packageName></packageName>
+							<script>if mysettings.UIType ~= "XUI" then return end
+
+setupWin = setupWin or Geyser.UserWindow:new({
+  name="setupWin",
+  x="25%", y="25%",
+  autowrap=true,
+  fgColor = "white",
+  color = "grey",
+  width="50%", height="50%",
+  fontSize=mysettings.questfontsize,
+  scrollBar = false,
+})
+
+ setupWin:setBgColor (10,10,10)
+ setupWin:setFgColor (255,255,255)
+
+setupWin.buttons = setupWinbuttons or {}
+
+setupWin.buttons.msdp = 
+  setupWin.buttons.msdp or Geyser.Label:new({
+    name = "setupmsdplabel",
+    x = "10%", y ="10%",
+    width = "200px", height ="50px",
+    fgColor = "blue",
+    color = "white",
+  },setupWin)
+  
+ setupWin.buttons.msdp:setStyleSheet([[
+      background-color: blue;
+      color: white;
+      margin-right: 1px;
+      margin-left: 1px;
+      border-top: 1px solid white;
+    ]])
+  
+ setupWin.buttons.msdp:echo("MSDP: " .. tostring(mysettings.features.msdp),"white","c16")
+ 
+  setupWin.buttons.msdp:setClickCallback("setupWinMSDPClick")
+ 
+  function setupWinMSDPClick()
+    setFeature("msdp",not mysettings.features.msdp)
+    setupWin.buttons.msdp:echo("MSDP: " .. tostring(mysettings.features.msdp),"white","c16")
+  end 
+ 
+--xpWinCon = Geyser.Container:new({
+--  name="xpWinCon",
+--  x="0%", y="0%",
+--  autowrap=true,
+--  fgColor = "white",
+--  color = "black",
+--  width="100%", height="100%",
+--  fontSize=mysettings.questfontsize,
+--  scrollBar = false,
+--},xpWin)
+
+--xpWin:resetAutoWrap()
+setupWin:disableAutoDock() 
+setupWin:hide()
+--menu.setdoubleclick("Score",function() setupWin:show() end)
 
 
 </script>
@@ -25079,15 +25590,22 @@ end
 
 
 function updatestats() 
-  statcount=0
-  maxstatcount=4
-  gagmode=true
-  expandAlias("questeat",false)
-  --expandAlias("scoreeat",false)
-  send("aff",false)
-  send("tactics",false)
-  send("hero empower",false)
-  send("uipulse",false)
+  if mysettings.features.msdp then
+    statcount=0
+    maxstatcount=1
+    gagmode=true
+    expandAlias("questeat",false)
+  else
+    statcount=0
+    maxstatcount=5
+    gagmode=true
+    expandAlias("questeat",false)
+    expandAlias("scoreeat",false)
+    send("aff",false)
+    send("tactics",false)
+    send("hero empower",false)
+    send("uipulse",false)
+  end 
 end
 
 
@@ -30511,38 +31029,46 @@ function isXaosPrompt()
       [[^HP (\d+)\% Mana (\d+)\% Move (\d+)\% Exp (\d+)\%\, Style\: (.*?) Room\: (.*?) Exits\: (.*?)$]]
     ) ~= nil
   then
-    xPrompt.hp,
-    xPrompt.mana,
-    xPrompt.move,
-    xPrompt.exp,
-    xPrompt.style,
-    xPrompt.room,
-    xPrompt.room,
-    xPrompt.exits =
-      rex.match(
-        tostring(line),
-        [[^HP (\d+)\% Mana (\d+)\% Move (\d+)\% Exp (\d+)\%\, Style\: (.*?) Room\: (.*?) Exits\: (.*?)$]]
-      )
+    if not mysettings.features.msdp then
+      xPrompt.hp,
+      xPrompt.mana,
+      xPrompt.move,
+      xPrompt.exp,
+      xPrompt.style,
+      xPrompt.room,
+      xPrompt.room,
+      xPrompt.exits =
+        rex.match(
+          tostring(line),
+          [[^HP (\d+)\% Mana (\d+)\% Move (\d+)\% Exp (\d+)\%\, Style\: (.*?) Room\: (.*?) Exits\: (.*?)$]]
+        )
+    end
     return true
     --Xaos builtin Syntax 'prompt newbie'
   elseif
     rex.match(tostring(line), [[^\&lt;(\d+)\%\/ hp (\d+)\%\/ m (\d+)\%\/ mv\&gt; \[(\d+)\%\]$]]) ~= nil
   then
-    xPrompt.hp, xPrompt.mana, xPrompt.move, xPrompt.exp =
-      rex.match(tostring(line), [[^\&lt;(\d+)\%\/ hp (\d+)\%\/ m (\d+)\%\/ mv\&gt; \[(\d+)\%\]$]])
+    if not mysettings.features.msdp then
+      xPrompt.hp, xPrompt.mana, xPrompt.move, xPrompt.exp =
+        rex.match(tostring(line), [[^\&lt;(\d+)\%\/ hp (\d+)\%\/ m (\d+)\%\/ mv\&gt; \[(\d+)\%\]$]])
+    end
     return true
     --Xaos builtin Syntax 'prompt all'
   elseif rex.match(tostring(line), [[^\&lt;(\d+)\%hp (\d+)\%m (\d+)\%mv\&gt;$]]) ~= nil then
-    xPrompt.hp, xPrompt.mana, xPrompt.move =
-      rex.match(tostring(line), [[^\&lt;(\d+)\%hp (\d+)\%m (\d+)\%mv\&gt; $]])
-    xPrompt.exp = 0
+    if not mysettings.features.msdp then
+      xPrompt.hp, xPrompt.mana, xPrompt.move =
+        rex.match(tostring(line), [[^\&lt;(\d+)\%hp (\d+)\%m (\d+)\%mv\&gt; $]])
+      xPrompt.exp = 0
+    end
     return true
     --Xaos builtin at craracter creation
   elseif
     rex.match(tostring(line), [[^(\d+)\% Life (\d+)\% Mana (\d+)\% Moves,(\d+)\% XP\/lvl\&gt;$]]) ~= nil
   then
-    xPrompt.hp, xPrompt.mana, xPrompt.move, xPrompt.exp =
-      rex.match(tostring(line), [[^(\d+)\% Life (\d+)\% Mana (\d+)\% Moves,(\d+)\% XP\/lvl\&gt;$]])
+    if not mysettings.features.msdp then
+      xPrompt.hp, xPrompt.mana, xPrompt.move, xPrompt.exp =
+        rex.match(tostring(line), [[^(\d+)\% Life (\d+)\% Mana (\d+)\% Moves,(\d+)\% XP\/lvl\&gt;$]])
+    end
     return true
     --Marcho's XUI Prompt Syntax 'prompt HEALTH %h MANA %m MVM %v STIL %C XP %X Directions  %e  Hungry  %B %c'
   elseif
@@ -30551,17 +31077,19 @@ function isXaosPrompt()
       [[^HEALTH (\d+)\% MANA (\d+)\% MVM (\d+)\% STIL (.*) XP (\d+)\% Directions  (.*) Hungry  (.*) $]]
     ) ~= nil
   then
-    xPrompt.hp,
-    xPrompt.mana,
-    xPrompt.move,
-    xPrompt.style,
-    xPrompt.exp,
-    xPrompt.exits,
-    xPrompt.hunger =
-      rex.match(
-        tostring(line),
-        [[^HEALTH (\d+)\% MANA (\d+)\% MVM (\d+)\% STIL (.*) XP (\d+)\% Directions  (.*) Hungry  (.*) $]]
-      )
+    if not mysettings.features.msdp then
+      xPrompt.hp,
+      xPrompt.mana,
+      xPrompt.move,
+      xPrompt.style,
+      xPrompt.exp,
+      xPrompt.exits,
+      xPrompt.hunger =
+        rex.match(
+          tostring(line),
+          [[^HEALTH (\d+)\% MANA (\d+)\% MVM (\d+)\% STIL (.*) XP (\d+)\% Directions  (.*) Hungry  (.*) $]]
+        )
+    end
     return true
     --Obscillesk Prompt Syntax 'prompt &lt;%hhp %mmn %vmv&gt; &lt;%t&gt; &lt;%C&gt; &lt;%X&gt;'
   elseif
@@ -30569,17 +31097,21 @@ function isXaosPrompt()
       tostring(line), [[^\&lt;(\d+)\%hp (\d+)\%mn (\d+)\%mv\&gt; \&lt;(.*)\&gt; \&lt;(.*)\&gt; \&lt;(\d+)\%\&gt; $]]
     ) ~= nil
   then
-    xPrompt.hp, xPrompt.mana, xPrompt.move, xPrompt.time, xPrompt.style, xPrompt.exp =
-      rex.match(
-        tostring(line), [[^\&lt;(\d+)\%hp (\d+)\%mn (\d+)\%mv\&gt; \&lt;(.*)\&gt; \&lt;(.*)\&gt; \&lt;(\d+)\%\&gt; $]]
-      )
+    if not mysettings.features.msdp then
+      xPrompt.hp, xPrompt.mana, xPrompt.move, xPrompt.time, xPrompt.style, xPrompt.exp =
+        rex.match(
+          tostring(line), [[^\&lt;(\d+)\%hp (\d+)\%mn (\d+)\%mv\&gt; \&lt;(.*)\&gt; \&lt;(.*)\&gt; \&lt;(\d+)\%\&gt; $]]
+        )
+    end
     return true
     --Solious Prompt (%r)(%e)%c(%Xxp)(%t)%c(%hhp %mm %vmv)
   elseif rex.match(tostring(line), [[^\((\d+)\%hp (\d+)\%m (\d+)\%mv\) $]]) ~= nil then
-    xPrompt.hp, xPrompt.mana, xPrompt.move =
-      rex.match(tostring(line), [[^\((\d+)\%hp (\d+)\%m (\d+)\%mv\) $]])
-    xPrompt.exp = 0
-    acom("Your Prompt sucks")
+    if not mysettings.features.msdp then
+      xPrompt.hp, xPrompt.mana, xPrompt.move =
+        rex.match(tostring(line), [[^\((\d+)\%hp (\d+)\%m (\d+)\%mv\) $]])
+      xPrompt.exp = 0
+      acom("Your Prompt sucks")
+    end
     return true
   else
     return false
@@ -30827,6 +31359,1293 @@ function weargearset(name)
 end</script>
 				<eventHandlerList />
 			</Script>
+			<ScriptGroup isActive="yes" isFolder="yes">
+				<name>MSDP</name>
+				<packageName></packageName>
+				<script></script>
+				<eventHandlerList />
+				<Script isActive="yes" isFolder="no">
+					<name>MSDP Register Functions</name>
+					<packageName></packageName>
+					<script>
+
+function disableMSDP()
+  local timer = 0
+  for k,v in pairs(msdp.REPORTABLE_VARIABLES) do
+    tempTimer(timer,function() sendMSDP("UNREPORT",v) end)
+    timer = timer + 0.01
+  end
+  tempTimer(timer, function () 
+    sendMSDP("LIST","REPORTED_VARIABLES")
+    echo("MSDP Unreporting Complete: " .. timer)
+  end)
+end
+function enableMSDP()
+  local timer = 0
+  for k,v in pairs(msdp.REPORTABLE_VARIABLES) do
+    tempTimer(timer,function() sendMSDP("REPORT",v) end)
+    timer = timer + 0.01
+  end
+  tempTimer(timer, function () 
+    sendMSDP("LIST","REPORTED_VARIABLES")
+    echo("MSDP Reporting Complete: " .. timer)
+  end)
+end
+function reportMSDP()
+-- ask for a list of commands, lists, and reportable variables that the server supports
+sendMSDP("LIST", "COMMANDS", "LISTS", "REPORTABLE_VARIABLES")
+sendMSDP("LIST", "COMMANDS", "LISTS", "REPORTED_VARIABLES")
+end
+
+function msdpConnect(event, arg, profile)
+  reportMSDP()
+  tempTimer(1,function() enableMSDP() end)
+end
+
+msdpevents = {}
+
+function registerMSDPEvents()
+
+  echo("Registering Event Handler")
+  -- Register the event handler.
+  msdpevents.xaos_connect = registerAnonymousEventHandler("xaos_connect", "msdpConnect")
+  
+end
+
+function unregisterMSDPEvents()
+
+  if msdpevents.xaos_connect ~= nil then
+    killAnonymousEventHandler(msdpevents.xaos_connect)
+  end
+  
+end</script>
+					<eventHandlerList />
+				</Script>
+				<Script isActive="yes" isFolder="no">
+					<name>MSDP Update Functions</name>
+					<packageName></packageName>
+					<script>
+
+function msdpUpdateEQ()
+  
+  if msdp.ITEMS == nil or msdp.ITEMS_MAX == nil or msdp.EQ_WEIGHT == nil or msdp.EQ_WEIGHT_MAX then
+    return
+  end
+
+  local itemcur = tonumber(msdp.ITEMS)
+  local itemmax = tonumber(msdp.ITEMS_MAX)
+  local eqcur = tonumber(msdp.EQ_WEIGHT)
+  local eqmax = tonumber(msdp.EQ_WEIGHT_MAX)
+
+  local ratio = .95
+  
+  if (itemcur/itemmax) &gt; ratio then
+    feedManager("Items dangerously full, could miss an artifact: " .. math.floor(itemmax*ratio),true)
+    statusOverloaded=true
+  elseif (eqcur/eqmax) &gt; ratio then
+    feedManager("Weight dangerously full, could miss an artifact: ".. math.floor(eqmax*ratio),true)
+    statusOverloaded=true
+  else
+    statusOverloaded=false
+  end
+
+end
+
+function msdpUpdateClass()
+
+  if msdp.CLASS == nil or msdp.SECOND_CLASS == nil then
+    return
+  end
+
+--Update Class Details
+      
+    xaos.class.cleric = false
+    xaos.class.mage = false
+    xaos.class.warrior = false
+    xaos.class.thief = false
+    xaos.class.barbarian=false
+    
+    local classtable = {}
+    classtable = {"warrior","gladiator","knight","berserker","paladin","geomancer"}
+    if table.contains(classtable,xaos.class.primary) or table.contains(classtable,xaos.class.reborn) then
+      xaos.class.warrior = true
+    end
+    
+    
+    classtable = {"cleric","bishop","monk","druid"}
+    if table.contains(classtable,xaos.class.primary) or table.contains(classtable,xaos.class.reborn) then
+      xaos.class.cleric = true
+    end
+    
+    classtable = {"barbarian","spirit champion","witch doctor","rift binder","journeyman"}
+    if table.contains(classtable,xaos.class.primary) or table.contains(classtable,xaos.class.reborn) then
+      xaos.class.barbarian = true
+    end
+    
+    classtable = {"thief","rake","assassin","disciple"}
+    if table.contains(classtable,xaos.class.primary) or table.contains(classtable,xaos.class.reborn) then
+      xaos.class.thief = true
+    end
+    
+    classtable = {"mage","invoker","illusionist","elementalist","mentalist","necromancer"}
+    if table.contains(classtable,xaos.class.primary) or table.contains(classtable,xaos.class.reborn) then
+      xaos.class.mage = true
+    end
+    
+end</script>
+					<eventHandlerList />
+				</Script>
+				<Script isActive="yes" isFolder="no">
+					<name>MSDP UI Items</name>
+					<packageName></packageName>
+					<script>
+function loadMSDPUI()
+  if msdpUIloaded == nil or not msdpUIloaded then
+    msdpUIloaded = true
+    partyDisplay:hide()
+    partyDisplay2:hide()
+    
+    
+    
+    right_container = right_container or Geyser.Container:new({
+      name = "right_container",
+      x = "-150px", y = "0",
+      width = "150px", height = "100%",
+    })
+    right_container_back = right_container_back or
+      Geyser.Label:new({name = "right_container_back", x=0,y=0,width="100%",height="100%"},right_container)
+    right_container_back:lower()
+
+    msdpPartyDisplay = msdpPartyDisplay or Geyser.VBox:new({
+      name = "msdpPartyDisplay",
+      x = "2%", y = "0",
+      width = "96%", height = "40%",
+    }, right_container)
+    
+    msdpOppDisplay = msdpOppDisplay or Geyser.VBox:new({
+      name = "msdpOppDisplay",
+      x = "2%", y = "45%",
+      width = "95%", height = "40%",
+    }, right_container)
+    
+    msdpTargetDisplay = msdpTargetDisplay or Geyser.VBox:new({
+      name = "msdpTargetDisplay",
+      x = "68%", y = "0%",
+      width = "30%", height = "90%",
+    }, bottom_container)
+    
+    
+    msdpOppExtras = msdpOppExtras or Geyser.VBox:new({
+      name = "msdpOppExtras",
+      x = "2%", y = "45%",
+      width = "95%", height = "40%",
+    }, right_container)
+    msdpOppExtras:hide()
+    
+    msdpPartyExtras = msdpPartyExtras or Geyser.VBox:new({
+      name = "msdpPartyExtras",
+      x = "2%", y = "0",
+      width = "96%", height = "40%",
+    }, right_container)
+    msdpPartyExtras:hide()
+    
+    OPPGauges = OPPGauges or {} 
+    --OPPLabels = OPPLabels or {}
+    
+    OPPGauges[1] = OPPGauges[1] or
+          Geyser.Gauge:new({name = "OPPGauges_"..index,  x = "20%", y = "1%", width = "50%", height ="40%"}, bottom_container)
+    
+    
+    PartyGauges = PartyGauges or {}
+    PartyManaGauges = PartyManaGauges or {} 
+    --PartyLabels = PartyLabels or {}
+    
+
+    --Overloaded function
+    function resizeParent()
+      local windowWidth, windowHeight = getMainWindowSize()
+      --local userwindowWidth, userwindowHeight = getUserWindowSize("menu.back")
+     --echo(userwindowWidth)
+      local userwindowWidth = menu.window.get_width()
+     --echo(userwindowWidth)
+      
+      bottom_container:resize(windowWidth-userwindowWidth-BORDER_WIDTH .. "px","100px")
+      
+      right_container:move("-" .. userwindowWidth+BORDER_WIDTH+150 .. "px","0px")
+      
+      setBorderRight(userwindowWidth+BORDER_WIDTH+150)
+    
+    end
+    
+    resizeParent()
+  end
+end
+
+function grabOppGauge(index,targetme)
+      local cont,contheight
+      if index== 1 then 
+        cont = bottom_container
+        contheight = 25
+      else
+        cont = msdpOppDisplay
+        contheight = 10
+      end
+      
+      OPPGauges[index] = OPPGauges[index] or
+          Geyser.Gauge:new({name = "OPPGauges_"..index,  x = "1%", y = 0, width = "98%", height ="100%"}, cont)
+      
+      if not targetme then
+        OPPGauges[index].front:setStyleSheet(
+          [[background-color: rgba(0,159,255,100%);
+            border-width: 1px;
+            border-color: black;
+            border-style: solid;
+            border-radius: 7;
+            padding: 3px;
+        ]]
+        )
+        OPPGauges[index].back:setStyleSheet(
+          [[background-color: rgba(0,159,255,50%);
+            border-width: 1px;
+            border-color: black;
+            border-style: solid;
+            border-radius: 7;
+            padding: 3px;
+        ]]
+        )
+      else
+        OPPGauges[index].front:setStyleSheet(
+          [[background-color: rgba(255, 0, 0,100%);
+            border-width: 1px;
+            border-color: black;
+            border-style: solid;
+            border-radius: 7;
+            padding: 3px;
+        ]]
+        )
+        OPPGauges[index].back:setStyleSheet(
+          [[background-color: rgba(255, 0, 0,50%);
+            border-width: 1px;
+            border-color: black;
+            border-style: solid;
+            border-radius: 7;
+            padding: 3px;
+        ]]
+        )
+      end
+      
+      msdpOppDisplay:resize("95%",math.min(table.size(msdpOppDisplay.windows),5)*40 .. "px")
+      msdpOppDisplay:organize()
+      OPPGauges[index]:reposition()
+      if index &gt; 1 then 
+        OPPGauges[index]:changeContainer(cont)
+        msdpOppDisplay:show()
+      end
+      return {gauge=OPPGauges[index]}
+    end
+  function hideOppGauges(index)
+    local i
+    if index==1 then 
+      OPPGauges[index]:hide()
+      index = 2 
+    end
+    
+    for i=index,table.size(OPPGauges) do
+      OPPGauges[i]:changeContainer(msdpOppExtras)
+    end
+  end
+  function grabPartyGauge(index)
+      local cont,contheight
+
+      cont = msdpPartyDisplay
+      contheight = 10
+    
+      
+      PartyGauges[index] = PartyGauges[index] or
+          Geyser.Gauge:new({name = "PartyGauges_"..index,  x = "1%", y = 0, width = "98%", height =contheight,v_stretch_factor=2.0,h_stretch_factor=2.0}, cont)
+      PartyGauges[index].front:setStyleSheet(
+        [[background-color: rgba(0, 255, 0,10%);
+          border-width: 1px;
+          border-color: black;
+          border-style: solid;
+          border-radius: 7;
+          padding: 3px;
+      ]]
+      )
+      PartyGauges[index].back:setStyleSheet(
+        [[background-color: rgba(0, 255, 0,30%);
+          border-width: 1px;
+          border-color: black;
+          border-style: solid;
+          border-radius: 7;
+          padding: 3px;
+      ]]
+      )
+      PartyManaGauges[index] = PartyManaGauges[index] or
+          Geyser.Gauge:new({name = "PartyManaGauges_"..index,  x = "1%", y = 0, width = "98%", height =contheight}, cont)
+      PartyManaGauges[index].front:setStyleSheet(
+        [[background-color: rgba(0, 0, 255,100%);
+          border-width: 1px;
+          border-color: black;
+          border-style: solid;
+          border-radius: 7;
+          padding: 3px;
+      ]]
+      )
+      PartyManaGauges[index].back:setStyleSheet(
+        [[background-color: rgba(0, 0, 255,50%);
+          border-width: 1px;
+          border-color: black;
+          border-style: solid;
+          border-radius: 7;
+          padding: 3px;
+      ]]
+      )
+     msdpPartyDisplay:resize("95%",math.min((table.size(PartyGauges)),5)*40 .. "px")
+     msdpPartyDisplay:organize()
+     PartyGauges[index]:changeContainer(cont)
+     PartyManaGauges[index]:changeContainer(cont)
+     PartyGauges[index]:show()
+     PartyManaGauges[index]:show()
+     
+     msdpPartyDisplay:show()
+     
+     return {gauge=PartyGauges[index],managauge=PartyManaGauges[index]}
+    end
+  function hidePartyGauges(index)
+    local i
+    
+    for i=index,table.size(PartyGauges) do
+      PartyGauges[i]:changeContainer(msdpPartyExtras)
+      PartyManaGauges[i]:changeContainer(msdpPartyExtras)
+    end
+  end
+function createdummygauges()
+ msdp.PARTY_MEM = {}
+ msdp.PARTY_MEM.Jim = "100 100 100"
+ msdp.PARTY_MEM.Bob = "80 100 100"
+ msdp.PARTY_MEM.Ray = "100 100 100"
+ msdp.PARTY_MEM.Sally = "100 100 100"
+ grab_PARTY_MEM()
+ msdp.OPPONENTS = {}
+ msdp.OPPONENTS.Jim = "100 100 100"
+ msdp.OPPONENTS.Bob = "80 100 100"
+ msdp.OPPONENTS.Ray = "100 100 100"
+ msdp.OPPONENTS.Sally = "100 100 100"
+ msdp.OPPONENTS.Jim2 = "100 100 100"
+ msdp.OPPONENTS.Bob2 = "80 100 100"
+ msdp.OPPONENTS.Ray2 = "100 100 100"
+ msdp.OPPONENTS.Sally2 = "100 100 100"
+ msdp.OPPONENTS.Jim3 = "100 100 100"
+ msdp.OPPONENTS.Bob3 = "80 100 100"
+ msdp.OPPONENTS.Ray3 = "100 100 100"
+ msdp.OPPONENTS.Sally3 = "100 100 100"
+ --msdp.OPPONENTS.Jim4 = "100 100 100"
+ --msdp.OPPONENTS.Bob4 = "80 100 100"
+ --msdp.OPPONENTS.Ray4 = "100 100 100"
+ --msdp.OPPONENTS.Sally4 = "100 100 100"
+ grab_OPPONENTS()
+end
+
+</script>
+					<eventHandlerList />
+				</Script>
+				<Script isActive="yes" isFolder="no">
+					<name>grab_REPORTED_VARIABLES</name>
+					<packageName></packageName>
+					<script>function grab_REPORTED_VARIABLES()
+
+end</script>
+					<eventHandlerList>
+						<string>msdp.REPORTED_VARIABLES</string>
+					</eventHandlerList>
+				</Script>
+				<Script isActive="yes" isFolder="no">
+					<name>grab_AFFECTS</name>
+					<packageName></packageName>
+					<script>function grab_AFFECTS()
+  debugecho("MSDP:AFFECTS")
+  xaos.bufflist = {}
+  for k,v in pairs(msdp.AFFECTS) do
+    table.insert(xaos.bufflist,k)
+  end
+  
+  xaos.statusResolve = table.contains(xaos.bufflist,"resolve")
+  xaos.statusBerserk = table.contains(xaos.bufflist,"berserk")
+  xaos.statusWarcry = table.contains(xaos.bufflist,"warcry")
+  xaos.statusCenter = table.contains(xaos.bufflist,"center")
+  xaos.statusTrance = table.contains(xaos.bufflist,"trance")
+  xaos.statusBless = table.contains(xaos.bufflist,"bless")
+end</script>
+					<eventHandlerList>
+						<string>msdp.AFFECTS</string>
+					</eventHandlerList>
+				</Script>
+				<Script isActive="yes" isFolder="no">
+					<name>grab_ASCEND_EXP</name>
+					<packageName></packageName>
+					<script>function grab_ASCEND_EXP()
+  debugecho("MSDP:ASCEND")
+  local curasc = 100*tonumber(msdp.ASCEND_EXP)/10000
+  local ascstring = string.format("%2.2f",curasc) .. "%"
+  ascbar:setValue(curasc, 100, nil)
+  --ascbar.back:echo(ascstring, nil, "c")
+  ascbar:setText("&lt;center&gt;" .. ascstring .. "&lt;/center&gt;")
+  xaos.ascendcount = msdp.ASCEND_EXP
+end</script>
+					<eventHandlerList>
+						<string>msdp.ASCEND_EXP</string>
+					</eventHandlerList>
+				</Script>
+				<Script isActive="yes" isFolder="no">
+					<name>grab_CHARACTER_NAME</name>
+					<packageName></packageName>
+					<script>function grab_CHARACTER_NAME()
+  debugecho("MSDP:CHARACTER_NAME")
+  xaos.charactername = msdp.CHARACTER_NAME
+
+end
+
+
+</script>
+					<eventHandlerList>
+						<string>msdp.CHARACTER_NAME</string>
+					</eventHandlerList>
+				</Script>
+				<Script isActive="yes" isFolder="no">
+					<name>grab_CLASS</name>
+					<packageName></packageName>
+					<script>function grab_CLASS()
+  xaos.primary = string.trim(msdp.CLASS)
+  msdpUpdateClass()
+end
+
+</script>
+					<eventHandlerList>
+						<string>msdp.CLASS</string>
+					</eventHandlerList>
+				</Script>
+				<Script isActive="yes" isFolder="no">
+					<name>grab_EQ_WEIGHT_MAX</name>
+					<packageName></packageName>
+					<script>function grab_EQ_WEIGHT_MAX()
+  msdpUpdateEQ()
+end
+</script>
+					<eventHandlerList>
+						<string>msdp.EQ_WEIGHT_MAX</string>
+					</eventHandlerList>
+				</Script>
+				<Script isActive="yes" isFolder="no">
+					<name>grab_EQ_WEIGHT</name>
+					<packageName></packageName>
+					<script>function grab_EQ_WEIGHT()
+
+  msdpUpdateEQ()
+
+end
+
+
+</script>
+					<eventHandlerList>
+						<string>msdp.EQ_WEIGHT</string>
+					</eventHandlerList>
+				</Script>
+				<Script isActive="yes" isFolder="no">
+					<name>grab_EQUIPMENT</name>
+					<packageName></packageName>
+					<script>function grab_EQUIPMENT()
+  currentequipment = {}
+  for wear,item in pairs(msdp.EQUIPMENT) do
+  
+    item = rex.match(item,"^(?:an |the |a )?(.*)")
+  
+    item = string.gsub(item,"'s","")
+    --item = string.gsub(item,"'","")
+    item = string.gsub(item," of "," ")
+    item = string.gsub(item," the "," ")
+    --item = rex.gsub(item,[['(.*)']],"")
+    --item = rex.gsub(item,[["(.*)"]],"")
+    item = string.gsub(item,"'","")
+    item = string.gsub(item,"\"","")
+    
+    item = string.trim(item)
+    
+    if wear == "16" then
+      wielded = item
+    end
+    
+    if wear == "17" then
+      held = item
+    end
+    
+    if wear == "12" then
+      xaos.backpack = item
+    end
+    if equipmentgrab then
+      table.insert(xaos.currentequip,{location=getWearName(wear),index=wear,item=item})
+    end
+    
+    table.insert(currentequipment,{location=getWearName(wear),index=wear,item=item})
+  
+  end
+  equipmentgrab=false
+end 
+function getWearSlot(index)
+    index = tonumber(index)
+    if index == 1 then
+      return "left finger"
+    elseif index == 2 then
+      return "right finter"
+    elseif index == 3 or index == 4 then
+      return "neck"
+    elseif index == 5 then 
+      return "chest"
+    elseif index == 6 then 
+      return "head"
+    elseif index == 7 then
+      return "legs"
+    elseif index == 8 then
+      return "feet"
+    elseif index == 9 then
+      return "hands"
+    elseif index == 12 then
+      return "body"
+    elseif index == 13 then
+      return "waist"
+    elseif index == 14 then
+      return "left wrist"    
+    elseif index == 15 then
+      return "right wrist"
+    elseif index == 16 then
+      return "wield"
+    elseif index == 17 then
+      return "hold"
+    elseif index == 19 then
+      return "float"
+    elseif index == 24 then
+      return "lower hold"
+    elseif index == 25 then
+      return "lower wield"
+    elseif index == 27 then
+      return "kinetic"
+    elseif index == 28 then
+      return "kinetic"
+    end
+end  
+
+function getWearName(index)
+    index = tonumber(index)
+    if index == 1 then
+      return "worn on finger"
+    elseif index == 2 then
+      return "worn on finger"
+    elseif index == 3 or index == 4 then
+      return "worn on neck"
+    elseif index == 5 then 
+      return "worn on torso"
+    elseif index == 6 then 
+      return "worn on head"
+    elseif index == 7 then
+      return "worn on legs"
+    elseif index == 8 then
+      return "worn on feet"
+    elseif index == 9 then
+      return "worn on hands"
+    elseif index == 12 then
+      return "worn about body"
+    elseif index == 13 then
+      return "worn on waist"
+    elseif index == 14 then
+      return "worn on wrist"    
+    elseif index == 15 then
+      return "worn on wrist"
+    elseif index == 16 then
+      return "held in right hand"
+    elseif index == 17 then
+      return "held in left hand"
+    elseif index == 19 then
+      return "floating nearby"
+    elseif index == 24 then
+      return "lower left hand"
+    elseif index == 25 then
+      return "lower right hand"
+    elseif index == 27 then
+      return "floating nearby"
+    elseif index == 28 then
+      return "floating nearby"
+    end
+end  
+    
+  
+
+
+</script>
+					<eventHandlerList>
+						<string>msdp.EQUIPMENT</string>
+					</eventHandlerList>
+				</Script>
+				<Script isActive="yes" isFolder="no">
+					<name>grab_EMPOWERS</name>
+					<packageName></packageName>
+					<script>function grab_EMPOWERS()
+  xaos.heroempowers = 
+  {
+    {name="mana",current=0,cost=40},
+    {name="hit roll",current=0,cost=40},
+    {name="resist fire",current=0,cost=40},
+    {name="resist mental",current=0,cost=40},
+    {name="resist acid",current=0,cost=40},
+    {name="regen mana",current=0,cost=40},
+    {name="invocational casting",current=0,cost=40},
+    {name="resist light",current=0,cost=40},
+    {name="speed",current=0,cost=40},
+    {name="hitpoints",current=0,cost=40},
+    {name="damage roll",current=0,cost=40},
+    {name="resist cold",current=0,cost=40},
+    {name="resist magic",current=0,cost=40},
+    {name="resist blunt",current=0,cost=40},
+    {name="conjurational casting",current=0,cost=40},
+    {name="resist holy",current=0,cost=40},
+    {name="resist slash",current=0,cost=40},
+    {name="resist unholy",current=0,cost=40},
+    {name="armor class",current=0,cost=40},
+    {name="saves",current=0,cost=40},
+    {name="resist lightning",current=0,cost=40},
+    {name="resist poison",current=0,cost=40},
+    {name="regen hp",current=0,cost=40},
+    {name="enchantment casting",current=0,cost=40},
+    {name="resist negative",current=0,cost=40},
+    {name="resist pierce",current=0,cost=40},
+    {name="warding",current=0,cost=40}
+  }
+  for name,v in pairs(msdp.EMPOWERS) do
+    if name ~= "none" then
+      local tempitem = findTableEntry(xaos.heroempowers,
+        function (item) 
+          return item.name == name 
+        end)
+      --table.insert(xaos.heroempowers,{cost=40*(1+tonumber(v)/getEmpowerCost(name)),name=name,current=tonumber(v)/getEmpowerCost(name)})
+      tempitem.value.cost = 40*(1+tonumber(v)/getEmpowerCost(name))
+      tempitem.value.current = tonumber(v)/getEmpowerCost(name)
+    end
+  end
+end
+
+function getEmpowerCost(spell)
+  if spell == "armor class" then return -25 end
+  if spell == "conjurational casting" then return 2 end
+  if spell == "damage roll" then return 3 end
+  if spell == "enchantment casting" then return 2 end
+  if spell == "hit roll" then return 2 end
+  if spell == "hitpoints" then return 50 end
+  if spell == "invocational casting" then return 2 end
+  if spell == "mana" then return 50 end
+  if spell == "regen hp" then return 10 end
+  if spell == "regen mana" then return 10 end
+  if spell == "resist acid" then return 3 end
+  if spell == "resist blunt" then return 2 end
+  if spell == "resist cold" then return 3 end
+  if spell == "resist disease" then return 3 end
+  if spell == "resist fire" then return 3 end
+  if spell == "resist holy" then return 3 end
+  if spell == "resist light" then return 3 end
+  if spell == "resist lightning" then return 3 end
+  if spell == "resist magic" then return 2 end
+  if spell == "resist mental" then return 3 end
+  if spell == "resist negative" then return 3 end
+  if spell == "resist pierce" then return 2 end
+  if spell == "resist poison" then return 3 end
+  if spell == "resist slash" then return 2 end
+  if spell == "resist sound" then return 3 end
+  if spell == "resist unholy" then return 3 end
+  if spell == "saves" then return -2 end
+  if spell == "speed" then return 3 end
+  if spell == "warding" then return -25 end
+ end</script>
+					<eventHandlerList>
+						<string>msdp.EMPOWERS</string>
+					</eventHandlerList>
+				</Script>
+				<Script isActive="yes" isFolder="no">
+					<name>grab_EXPERIENCE</name>
+					<packageName></packageName>
+					<script>function grab_EXPERIENCE()
+  
+  if msdp.HEALTH == nil or msdp.HEALTH_MAX == nil then
+    return
+  end
+  
+  xPrompt.exp = math.floor(msdp.EXPERIENCE/1000)
+  current_xp = xPrompt.exp
+end</script>
+					<eventHandlerList>
+						<string>msdp.EXPERIENCE</string>
+					</eventHandlerList>
+				</Script>
+				<Script isActive="yes" isFolder="no">
+					<name>grab_FRAGS</name>
+					<packageName></packageName>
+					<script>function grab_FRAGS()
+  xaos.currency.frags=tonumber(msdp.FRAGS)
+end
+</script>
+					<eventHandlerList>
+						<string>msdp.FRAGS</string>
+					</eventHandlerList>
+				</Script>
+				<Script isActive="yes" isFolder="no">
+					<name>grab_HEALTH</name>
+					<packageName></packageName>
+					<script>function grab_HEALTH()
+  
+  if msdp.HEALTH == nil or msdp.HEALTH_MAX == nil then
+    return
+  end
+  
+  xPrompt.hp = 100*tonumber(msdp.HEALTH)/tonumber(msdp.HEALTH_MAX)
+  
+  current_health = tonumber(xPrompt.hp)
+  hpbar:setValue(current_health, 100, nil)
+  --hpbar.front:echo(string.format("%2.1f",xPrompt.hp) .. "%", nil, "c")
+  hpbar:setText("&lt;center&gt;" .. string.format("%2.1f",current_health) .. "%" .. "&lt;/center&gt;")
+end</script>
+					<eventHandlerList>
+						<string>msdp.HEALTH</string>
+					</eventHandlerList>
+				</Script>
+				<Script isActive="yes" isFolder="no">
+					<name>grab_HEALTH_MAX</name>
+					<packageName></packageName>
+					<script>function grab_HEALTH_MAX()
+  debugecho("Health Max grabbed")
+  
+  if msdp.HEALTH == nil or msdp.HEALTH_MAX == nil then
+    return
+  end
+  
+  xPrompt.hp = 100*tonumber(msdp.HEALTH)/tonumber(msdp.HEALTH_MAX)
+  
+  current_health = tonumber(xPrompt.hp)
+  hpbar:setValue(current_health, 100, nil)
+  hpbar:setText("&lt;center&gt;" .. string.format("%2.1f",current_health) .. "%" .. "&lt;/center&gt;")
+end</script>
+					<eventHandlerList>
+						<string>msdp.HEALTH_MAX</string>
+					</eventHandlerList>
+				</Script>
+				<Script isActive="yes" isFolder="no">
+					<name>grab_HERO_EXP_TNL</name>
+					<packageName></packageName>
+					<script>function grab_HERO_EXP_TNL()
+  if msdp.HERO_EXP == nil or msdp.HERO_EXP_TNL == nil then
+    return
+  end
+  xaos.LevelPercent = 100*msdp.HERO_EXP / msdp.HERO_EXP_TNL
+end
+</script>
+					<eventHandlerList>
+						<string>msdp.HERO_EXP_TNL</string>
+					</eventHandlerList>
+				</Script>
+				<Script isActive="yes" isFolder="no">
+					<name>grab_HERO_EXP</name>
+					<packageName></packageName>
+					<script>function grab_HERO_EXP()
+  if msdp.HERO_EXP == nil or msdp.HERO_EXP_TNL == nil then
+    return
+  end
+  xaos.LevelPercent = 100*msdp.HERO_EXP / msdp.HERO_EXP_TNL
+end
+</script>
+					<eventHandlerList>
+						<string>msdp.HERO_EXP</string>
+					</eventHandlerList>
+				</Script>
+				<Script isActive="yes" isFolder="no">
+					<name>grab_HERO_LEVEL</name>
+					<packageName></packageName>
+					<script>function grab_HERO_LEVEL()
+  xaos.Level = tonumber(msdp.HERO_LEVEL)
+end
+</script>
+					<eventHandlerList>
+						<string>msdp.HERO_LEVEL</string>
+					</eventHandlerList>
+				</Script>
+				<Script isActive="yes" isFolder="no">
+					<name>grab_HERO_POINTS</name>
+					<packageName></packageName>
+					<script>function grab_HERO_POINTS()
+  xaos.heropoints=tonumber(msdp.HERO_POINTS)  
+end
+</script>
+					<eventHandlerList>
+						<string>msdp.HERO_POINTS</string>
+					</eventHandlerList>
+				</Script>
+				<Script isActive="no" isFolder="no">
+					<name>grab_HUNGER_MAX</name>
+					<packageName></packageName>
+					<script>function grab_HUNGER_MAX()
+
+end
+</script>
+					<eventHandlerList>
+						<string>msdp.HUNGER_MAX</string>
+					</eventHandlerList>
+				</Script>
+				<Script isActive="no" isFolder="no">
+					<name>grab_HUNGER</name>
+					<packageName></packageName>
+					<script>function grab_HUNGER()
+  if tonumber(msdp.HUNGER) &lt; tonumber(msdp.HUNGER_MAX) then
+    send("drink soup")
+  end
+end
+</script>
+					<eventHandlerList>
+						<string>msdp.HUNGER</string>
+					</eventHandlerList>
+				</Script>
+				<Script isActive="yes" isFolder="no">
+					<name>grab_IN_ROOM</name>
+					<packageName></packageName>
+					<script>function grab_IN_ROOM()
+
+  
+  if msdp.IN_ROOM == "" then
+    hideOppGauges(1)
+  else
+    local inroom = {}
+    for k,v in pairs(msdp.IN_ROOM) do
+      inroom[k]={}
+      inroom[k].name, inroom[k].hp, inroom[k].move,inroom[k].tid, inroom[k].tname = 
+        rex.match(v,[[^(.*)\:(\d+)\:(\d+)\:(\d+)?\:(.*)$]])
+      inroom[k].id = tonumber(k)
+    end
+
+    local function isenemy(id)
+      if inroom[id].tname == xaos.charactername then
+        return true
+      else
+        for k,v in pairs(xaos.party.members) do
+          if inroom[id].tname == v.name then
+            return true
+          end
+        end
+      end
+      return false
+    end
+
+    --Get Character
+    local findmember = findTableEntry(inroom,
+      function (item) 
+        return item.name == xaos.charactername 
+      end)
+    --display(findmember)
+    
+    --Get Target
+    local targetmember = inroom[findmember.key].tid
+    
+    if tonumber(targetmember) ~= 0 then --No Target
+      if tonumber(targetmember) ~= -1 then --Blind
+        displayEnemyGauge(targetmember,inroom[targetmember],1,findmember.value.id == tonumber(inroom[targetmember].tid))
+      end 
+    else
+      hideOppGauges(1)    
+    end
+    --display(inroom[targetmember])
+    
+    --Get Enemies
+    local enemylist = {}
+    local index = 2    
+    for k,v in pairs(inroom) do
+      if targetmember ~= k and isenemy(k) then
+        displayEnemyGauge(k,v,index,findmember.value.id == tonumber(v.tid))
+        index = index+1
+      end
+    end
+    
+    
+    hideOppGauges(index)
+  end
+end
+
+
+
+function displayEnemyGauge(oppid,oppstats,index,targetme)
+
+  --inroom[k].name, inroom[k].hp, inroom[k].move,inroom[k].tid, inroom[k].tname
+  --oppstats = msdp.IN_ROOM[oppid]
+  if oppstats == nil then 
+    return
+  end
+  --local oppname,opphp,oppmana,oppmove = rex.match(oppstats,[[(\D+):(-?[0-9]{1,3}):(-?[0-9]{1,3}):(-?[0-9]+):(.*)]])
+  --echo(opphp)
+  local oppitems = grabOppGauge(index,targetme)
+
+  if oppstats.name == "None" then
+    oppitems.gauge:hide()
+  else
+    if tonumber(oppstats.hp) ~= -1 then
+      oppitems.gauge:show()
+      oppitems.gauge:setText("&lt;center&gt;" .. oppstats.hp .. "% " .. oppstats.name .."&lt;/center&gt;" )
+      oppitems.gauge:setValue(tonumber(oppstats.hp), 100, nil)
+    end
+  end
+end</script>
+					<eventHandlerList>
+						<string>msdp.IN_ROOM</string>
+					</eventHandlerList>
+				</Script>
+				<Script isActive="yes" isFolder="no">
+					<name>grab_ITEMS_MAX</name>
+					<packageName></packageName>
+					<script>function grab_ITEMS_MAX()
+  msdpUpdateEQ()
+end
+</script>
+					<eventHandlerList>
+						<string>msdp.ITEMS_MAX</string>
+					</eventHandlerList>
+				</Script>
+				<Script isActive="yes" isFolder="no">
+					<name>grab_ITEMS</name>
+					<packageName></packageName>
+					<script>function grab_ITEMS()
+  msdpUpdateEQ()
+end
+</script>
+					<eventHandlerList>
+						<string>msdp.ITEMS</string>
+					</eventHandlerList>
+				</Script>
+				<Script isActive="yes" isFolder="no">
+					<name>grab_MANA</name>
+					<packageName></packageName>
+					<script>function grab_MANA()
+  debugecho("grabbed")
+  
+  if msdp.MANA == nil or msdp.MANA_MAX == nil then
+    return
+  end
+  
+  xPrompt.mana = 100*tonumber(msdp.MANA)/tonumber(msdp.MANA_MAX)
+  
+  --current_mana = tonumber(xPrompt.mana)
+  manabar:setValue(xPrompt.mana, 100, nil)
+  manabar:setText("&lt;center&gt;" .. string.format("%2.1f",xPrompt.mana) .. "% &lt;/center&gt;" )
+  
+
+end</script>
+					<eventHandlerList>
+						<string>msdp.MANA</string>
+					</eventHandlerList>
+				</Script>
+				<Script isActive="yes" isFolder="no">
+					<name>grab_MANA_MAX</name>
+					<packageName></packageName>
+					<script>function grab_MANA_MAX()
+  debugecho("grabbed")
+  xPrompt.mana = 100*tonumber(msdp.MANA)/tonumber(msdp.MANA_MAX)
+  
+  --current_mana = tonumber(xPrompt.mana)
+  manabar:setValue(xPrompt.mana, 100, nil)
+  --manabar.front:echo(string.format("%2.1f",xPrompt.mana) .. "%", nil, "c")
+  manabar:setText("&lt;center&gt;" .. string.format("%2.1f",xPrompt.mana) .. "% &lt;/center&gt;" )
+end</script>
+					<eventHandlerList>
+						<string>msdp.MANA_MAX</string>
+					</eventHandlerList>
+				</Script>
+				<Script isActive="yes" isFolder="no">
+					<name>grab_MOVEMENT</name>
+					<packageName></packageName>
+					<script>function grab_MOVEMENT()
+  debugecho("grabbed")
+  
+  if msdp.MOVEMENT == nil or msdp.MOVEMENT_MAX == nil then
+    return
+  end
+  
+  xPrompt.move = 100*tonumber(msdp.MOVEMENT)/tonumber(msdp.MOVEMENT_MAX)
+  
+  current_mvm = tonumber(xPrompt.move)
+  mvmbar:setValue(current_mvm, 100, nil)
+  --mvmbar.front:echo(string.format("%2.1f",xPrompt.move) .. "%", nil, "c")
+  mvmbar:setText("&lt;center&gt;" .. string.format("%2.1f",current_mvm) .. "%" .. "&lt;/center&gt;")
+end</script>
+					<eventHandlerList>
+						<string>msdp.MOVEMENT</string>
+					</eventHandlerList>
+				</Script>
+				<Script isActive="yes" isFolder="no">
+					<name>grab_MOVEMENT_MAX</name>
+					<packageName></packageName>
+					<script>function grab_MOVEMENT_MAX()
+  debugecho("grabbed")
+  
+  if msdp.MOVEMENT == nil or msdp.MOVEMENT_MAX == nil then
+    return
+  end
+  
+  xPrompt.move = 100*tonumber(msdp.MOVEMENT)/tonumber(msdp.MOVEMENT_MAX)
+  
+  current_mvm = tonumber(xPrompt.move)
+  mvmbar:setValue(current_mvm, 100, nil)
+  --mvmbar.front:echo(string.format("%2.1f",xPrompt.move) .. "%", nil, "c")
+  mvmbar:setText("&lt;center&gt;" .. string.format("%2.1f",current_mvm) .. "%" .. "&lt;/center&gt;")
+end</script>
+					<eventHandlerList>
+						<string>msdp.MOVEMENT_MAX</string>
+					</eventHandlerList>
+				</Script>
+				<Script isActive="no" isFolder="no">
+					<name>grab_OPPONENTS</name>
+					<packageName></packageName>
+					<script>function grab_OPPONENTS()
+
+  if msdp.OPPONENTS == "" then
+    hideOppGauges(1)
+  else
+  
+  
+
+    local index = 2
+    for oppfullname,oppstats in pairs(msdp.OPPONENTS) do
+      local opphp,oppmana,oppmove = rex.match(oppstats,[[([0-9]{1,3}|-{1,3}):([0-9]{1,3}|-{1,3}):([0-9]{1,3}|-{1,3})]])
+      local oppindex,oppname = rex.match(oppfullname,[[([0-9]+):(.*)]])
+      --echo(opphp)
+      local oppitems = grabOppGauge(index)
+    
+      if oppname == "None" then
+        oppitems.gauge:hide()
+      else
+        if opphp ~= "---" then
+          --oppitems.label:echo(oppname) 
+          oppitems.gauge:show()
+          oppitems.gauge:setText(opphp .. "% " .. oppname)
+          oppitems.gauge:setValue(tonumber(opphp), 100, nil)
+          oppitems.gauge.back:echo("", nil, "c")
+        end
+      end
+      index = index + 1
+    end
+    hideOppGauges(index)
+  end
+end</script>
+					<eventHandlerList>
+						<string>msdp.OPPONENTS</string>
+					</eventHandlerList>
+				</Script>
+				<Script isActive="no" isFolder="no">
+					<name>grab_OPP_TARGET</name>
+					<packageName></packageName>
+					<script>function grab_OPP_TARGET()
+  local oppfullname, oppstats = next(msdp.OPP_TARGET)
+  local opphp,oppmana,oppmove = rex.match(oppstats,[[([0-9]{1,3}|-{1,3}):([0-9]{1,3}|-{1,3}):([0-9]{1,3}|-{1,3})]])
+  local oppindex,oppname = rex.match(oppfullname,[[([0-9]+):(.*)]])
+  --echo(opphp)
+  local oppitems = grabOppGauge(1)
+
+  if oppname == "None" then
+    --oppitems.label:echo("None")
+    --oppitems.gauge:setValue(0, 100, nil)
+    oppitems.gauge:hide()
+  else
+    if opphp ~= "---" then
+      --oppitems.label:echo(oppname) 
+      oppitems.gauge:show()
+      oppitems.gauge:setText("&lt;center&gt;" .. opphp .. "% " .. oppname .."&lt;/center&gt;" )
+      oppitems.gauge:setValue(tonumber(opphp), 100, nil)
+      --oppitems.gauge.back:echo("", nil, "c")
+    end
+  end
+  hideOppGauges(index)
+end</script>
+					<eventHandlerList>
+						<string>msdp.OPP_TARGET</string>
+					</eventHandlerList>
+				</Script>
+				<Script isActive="yes" isFolder="no">
+					<name>grab_PARTY_MEM</name>
+					<packageName></packageName>
+					<script>function grab_PARTY_MEM()
+  local index = 1
+  local curpartystatus = {}
+  curpartystatus.members = {}
+  for partyid,partystats in pairs(msdp.PARTY_MEM) do
+    local partyname,partyhp,partymana,partymove = rex.match(partystats,[[(\w+):(-?[0-9]{1,3}):(-?[0-9]{1,3}):(-?[0-9]{1,3}):(-?[0-9]+):(.*)]])
+
+    local partyitems = grabPartyGauge(index)
+  
+    if partyname == "None" then 
+      partyitems.gauge:hide()
+      partyitems.managauge:hide()
+    else
+      partyitems.gauge:show()
+      partyitems.managauge:show()
+      local missingcount = 0
+      if partyhp == -1 then
+        local findmember = table.n_filter(xaos.party.members,function (item) return item.name == partyname end)
+        if table.size(findmember) ~= 0 then
+          missingcount = tonumber(findmember[1].missingcount) +1
+        end
+      end
+      if partyhp ~= -1 then 
+        partyitems.gauge:setValue(tonumber(partyhp), 100, nil)
+        partyitems.gauge:setText("&lt;center&gt;" .. partyhp .. "% " .. partyname .. "&lt;/center&gt;")
+      end
+      if partymana ~= -1 then 
+        partyitems.managauge:setValue(tonumber(partymana), 100, nil)
+        partyitems.managauge:setText("&lt;center&gt;" .. partymana .. "%&lt;/center&gt;")
+      end
+      
+      table.insert(curpartystatus.members,
+      {
+        name = partyname,
+        hp = tonumber(partyhp),
+        mana = tonumber(partymana),
+        move = tonumber(partymove),
+        missingcount = missingcount,
+        charmie = rex.match(partyname,[[^([aA] |[tT]he |[aA]n )]]) ~= nil
+      })
+      index = index + 1
+    end
+  end
+  xaos.party.members = curpartystatus.members
+  
+  hidePartyGauges(index)
+end</script>
+					<eventHandlerList>
+						<string>msdp.PARTY_MEM</string>
+					</eventHandlerList>
+				</Script>
+				<Script isActive="yes" isFolder="no">
+					<name>grab_PARTY_LEAD</name>
+					<packageName></packageName>
+					<script>function grab_PARTY_LEAD()
+  if msdp.PARTY_LEAD == "No Party" or msdp.PARTY_LEAD == "Your Party" then
+    xaos.party.leader = "Your"
+  else
+    xaos.party.leader = rex.match(msdp.PARTY_LEAD,[[(.*)'s Party]])
+  end
+end</script>
+					<eventHandlerList>
+						<string>msdp.PARTY_LEAD</string>
+					</eventHandlerList>
+				</Script>
+				<Script isActive="yes" isFolder="no">
+					<name>grab_SECOND_CLASS</name>
+					<packageName></packageName>
+					<script>function grab_SECOND_CLASS()
+  xaos.reborn = string.trim(msdp.SECOND_CLASS)
+  msdpUpdateClass()
+end
+</script>
+					<eventHandlerList>
+						<string>msdp.SECOND_CLASS</string>
+					</eventHandlerList>
+				</Script>
+				<Script isActive="yes" isFolder="no">
+					<name>grab_SOULS</name>
+					<packageName></packageName>
+					<script>function grab_SOULS()
+  xaos.currency.souls=tonumber(msdp.SOULS)
+end
+</script>
+					<eventHandlerList>
+						<string>msdp.SOULS</string>
+					</eventHandlerList>
+				</Script>
+				<Script isActive="yes" isFolder="no">
+					<name>grab_SPELLS</name>
+					<packageName></packageName>
+					<script>function grab_SPELLS()
+  xaos.spells = {}
+  for k,v in pairs(msdp.SPELLS) do
+    table.insert(xaos.spells,v)
+  end
+end
+</script>
+					<eventHandlerList>
+						<string>msdp.SPELLS</string>
+					</eventHandlerList>
+				</Script>
+				<Script isActive="yes" isFolder="no">
+					<name>grab_SKILLS</name>
+					<packageName></packageName>
+					<script>function grab_SKILLS()
+  xaos.skills = {}
+  for k,v in pairs(msdp.SKILLS) do
+    table.insert(xaos.skills,v)
+  end
+end
+</script>
+					<eventHandlerList>
+						<string>msdp.SKILLS</string>
+					</eventHandlerList>
+				</Script>
+				<Script isActive="yes" isFolder="no">
+					<name>grab_STYLE</name>
+					<packageName></packageName>
+					<script>function grab_STYLE()
+  xaos.fightingstyle = string.trim(msdp.STYLE)
+  xPrompt.style = string.trim(msdp.STYLE)
+end
+</script>
+					<eventHandlerList>
+						<string>msdp.STYLE</string>
+					</eventHandlerList>
+				</Script>
+				<Script isActive="yes" isFolder="no">
+					<name>grab_TACTICS</name>
+					<packageName></packageName>
+					<script>function grab_TACTICS()
+  xaos.tactics = string.trim(msdp.TACTICS)
+end
+</script>
+					<eventHandlerList>
+						<string>msdp.TACTICS</string>
+					</eventHandlerList>
+				</Script>
+				<Script isActive="no" isFolder="no">
+					<name>grab_THIRST_MAX</name>
+					<packageName></packageName>
+					<script>function grab_THIRST_MAX()
+
+end
+</script>
+					<eventHandlerList>
+						<string>msdp.THIRST_MAX</string>
+					</eventHandlerList>
+				</Script>
+				<Script isActive="no" isFolder="no">
+					<name>grab_THIRST</name>
+					<packageName></packageName>
+					<script>function grab_THIRST()
+  if tonumber(msdp.THIRST) &lt; tonumber(msdp.THIRST_MAX) then
+    send("drink soup")
+  end
+end
+</script>
+					<eventHandlerList>
+						<string>msdp.THIRST</string>
+					</eventHandlerList>
+				</Script>
+				<Script isActive="yes" isFolder="no">
+					<name>grab_TRAITS</name>
+					<packageName></packageName>
+					<script>function grab_TRAITS()
+  xaos.traits = string.trim(msdp.TRAITS)
+end
+</script>
+					<eventHandlerList>
+						<string>msdp.TRAITS</string>
+					</eventHandlerList>
+				</Script>
+			</ScriptGroup>
 		</ScriptGroup>
 	</ScriptPackage>
 	<KeyPackage>
