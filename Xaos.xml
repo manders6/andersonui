@@ -2092,7 +2092,8 @@ end</script>
 				<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
 					<name>Clean Capture</name>
 					<script>
-captureOOC("&lt;cadet_blue&gt;","OOC","&lt;gray&gt;",matches[2], "&lt;cadet_blue&gt;", matches[3])
+--captureOOC("&lt;cadet_blue&gt;","OOC","&lt;gray&gt;",matches[2], "&lt;cadet_blue&gt;", matches[3])
+feedManager("[OOC] &lt;gray&gt;" .. matches[2] .. ": &lt;cadet_blue&gt;" .. matches[3]) 
 if gagging then
 	deleteLine()
 end
@@ -6577,11 +6578,14 @@ end
 					<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
 						<name>End Round</name>
 						<script>if (RoundCalc.mine.damage&gt;0 or RoundCalc.opp.damage&gt;0) then
+  local tempdamage = "&lt;cyan&gt;" .. "My Dam: " .. RoundCalc.mine.damage .. ", Opp Dam: " .. RoundCalc.opp.damage
+  tempTimer(.01,function() cecho(tempdamage) end)
+
   TotalCalc.Combine(RoundCalc)
   RoundCalc.Clear()  
   --TotalCalc.Display()
 end
---echo(RoundCalc.damage .. " a: " .. string.format("%5.2f",TotalCalc.damage/TotalCalc.count))
+--
 </script>
 						<triggerType>0</triggerType>
 						<conditonLineDelta>0</conditonLineDelta>
@@ -8167,40 +8171,7 @@ cecho("CombatList",damageDisplay(TotalCalc))
 				</Timer>
 				<Timer isActive="no" isFolder="no" isTempTimer="no" isOffsetTimer="no">
 					<name>Party Timer</name>
-					<script>
-
-local lbltext = "" --"Party&lt;br/&gt;"
-local lbltext2 = ""
-local maxsize = 6
-
-local lblentries = {}
-table.insert(lblentries,"")
-table.insert(lblentries,"")
-
-local index = 1
-for k,v in pairs(xaos.party.members) do
-  if k&gt;maxsize then
-    index=2
-  end
-
-  local lblhp = "   " .. string.trim(tostring(v.hp))
-  lblhp = string.sub(lblhp,string.len(lblhp)-2,string.len(lblhp))
-  lblhp = string.gsub(lblhp," ","&amp;nbsp;")
-  
-  local tmplbl = string.sub(v.name.."   ",1,4) .. "   " .. lblhp 
-  tmplbl = string.gsub(tmplbl," ","&amp;nbsp;")
-  --tmplbl = tmplbl .. "&lt;br/&gt;"
-  tmplbl = tmplbl .. "&lt;br/&gt;"
-  
-  lblentries[index] = lblentries[index] .. tmplbl
-end
-for k=1,5 do
-  for j=1,2 do
-    lblentries[j] = lblentries[j] .. "&lt;br/&gt;"
-  end
-end
-partyDisplay:echo(lblentries[1])
-partyDisplay2:echo(lblentries[2])</script>
+					<script>fillPartyBox()</script>
 					<command></command>
 					<packageName></packageName>
 					<time>00:00:00.500</time>
@@ -11827,7 +11798,7 @@ end</script>
 		</AliasGroup>
 	</AliasPackage>
 	<ActionPackage>
-		<ActionGroup isActive="yes" isFolder="yes" isPushButton="no" isFlatButton="no" useCustomLayout="no">
+		<ActionGroup isActive="no" isFolder="yes" isPushButton="no" isFlatButton="no" useCustomLayout="no">
 			<name>Left</name>
 			<packageName></packageName>
 			<script></script>
@@ -15147,6 +15118,8 @@ if mysettings.features.msdp == nil then mysettings.features.msdp = false end
 
 if mysettings.uicomponents == nil then mysettings.uicomponents = {} end
 if mysettings.uicomponents.partybar == nil then mysettings.uicomponents.partybar = "off" end
+if mysettings.uicomponents.partybox == nil then mysettings.uicomponents.partybox = "on" end
+
 
 function savemysettings()
   table.save(getMudletHomeDir() .. "/mysettings.dat",mysettings)
@@ -15201,6 +15174,82 @@ firstload = false</script>
     end
   end
   return nil
+end
+
+function getDimensions(name,adjusted)
+  if name == "main" then
+    local windowwidth,windowheight = getMainWindowSize()
+    local windowx = 0
+    local windowy = 0
+    if adjusted then
+      windowwidth = windowwidth-getBorderLeft()-getBorderRight()
+      windowheight = windowheight-getBorderTop()-getBorderBottom()
+      windowx = getBorderLeft()
+      windowy = getBorderTop()
+    end
+    return {width=windowwidth,height=windowheight,x=windowx,y=windowy}
+  elseif name.name ~= nil then
+    --Geyser
+    
+    local windowwidth = name.get_width()
+    local windowheight = name.get_height()
+    local windowx = name.get_x()
+    local windowy = name.get_y()
+    
+    return {width=windowwidth,height=windowheight,x=windowx,y=windowy}
+
+  else
+    local windowwidth,windowheight = getUserWindowSize(name)
+    local windowx = 0
+    local windowy = 0
+    if adjusted then
+      windowwidth = windowwidth-getBorderLeft()-getBorderRight()
+      windowheight = windowheight-getBorderTop()-getBorderBottom()
+      windowx = getBorderLeft()
+      windowy = getBorderTop()
+    end
+    return {width=windowwidth,height=windowheight,x=windowx,y=windowy}
+  end
+  
+  
+end
+
+function getRelativeDimensions(name,adjusted)
+  if name == "main" then
+    local windowwidth,windowheight = getMainWindowSize()
+    local windowx = 0
+    local windowy = 0
+    if adjusted then
+      windowwidth = windowwidth-getBorderLeft()-getBorderRight()
+      windowheight = windowheight-getBorderTop()-getBorderBottom()
+      windowx = getBorderLeft()
+      windowy = getBorderTop()
+    end
+    return {width=windowwidth,height=windowheight,x=windowx,y=windowy}
+  elseif name.name ~= nil then
+    --Geyser
+    
+    local windowwidth = name.width
+    local windowheight = name.height
+    local windowx = name.x
+    local windowy = name.y
+    
+    return {width=windowwidth,height=windowheight,x=windowx,y=windowy}
+
+  else
+    local windowwidth,windowheight = getUserWindowSize(name)
+    local windowx = 0
+    local windowy = 0
+    if adjusted then
+      windowwidth = windowwidth-getBorderLeft()-getBorderRight()
+      windowheight = windowheight-getBorderTop()-getBorderBottom()
+      windowx = getBorderLeft()
+      windowy = getBorderTop()
+    end
+    return {width=windowwidth,height=windowheight,x=windowx,y=windowy}
+  end
+  
+  
 end</script>
 					<eventHandlerList />
 				</Script>
@@ -16927,10 +16976,7 @@ tempTimer(5,[[raiseEvent("layer1")]])</script>
 			<ScriptGroup isActive="yes" isFolder="yes">
 				<name>XUI</name>
 				<packageName></packageName>
-				<script>if mysettings.UIType ~= "XaosUI" then return end
-
-
-
+				<script>
 </script>
 				<eventHandlerList />
 				<ScriptGroup isActive="yes" isFolder="yes">
@@ -16946,19 +16992,12 @@ tempTimer(5,[[raiseEvent("layer1")]])</script>
 					<ScriptGroup isActive="yes" isFolder="yes">
 						<name>Parent</name>
 						<packageName></packageName>
-						<script>-------------------------------------------------
---         Put your Lua functions here.        --
---                                             --
--- Note that you can also use external scripts --
--------------------------------------------------
-</script>
+						<script>if focusonlywindows == nil then focusonlywindows = {} end</script>
 						<eventHandlerList />
 						<Script isActive="yes" isFolder="no">
-							<name>Create Tabbed Layout</name>
+							<name>Sidebar and Top Buttons</name>
 							<packageName></packageName>
-							<script>if mysettings.UIType ~= "XUI" then
-return
-end
+							<script>
 
 function menu_addtab(v)
     if table.contains(menu.tabs,v) then
@@ -16975,15 +17014,22 @@ function menu_addtab(v)
       margin-right: 1px;
       margin-left: 1px;
       border-top: 1px solid white;
+      border-right: 1px solid white;
     ]])
-    menu[v.."tab"]:echo("&lt;center&gt;"..v)
+    local tempname = ""
+    local i
+    for i=1,string.len(v) do
+      tempname = tempname .. string.sub(v,i,i) .. "&lt;br&gt;"
+    end
+    tempname=v
+    menu[v.."tab"]:echo("&lt;center&gt;"..tempname)
     menu[v.."tab"]:setClickCallback("menu.click",v)
     menu[v.."tab"]:setDoubleClickCallback("menu.doubleclick",v)
     menu[v] = Geyser.Container:new({
       name = "menu."..v,
       x = 0, y = 0,
       width = "100%",
-      height = "80%",
+      height = "100%",
     },menu.footer)
     
     menu[v .. "back"] = Geyser.Label:new({
@@ -17028,25 +17074,117 @@ if mysettings.XUI.UIMode == "userwindow" then
 else
   menu.window = Geyser.Container:new({
     name = "menu.back",
-    x="-600px",y="0px",
-    width="600px",height="100%",
+    x="-600px",y="30px",
+    width="600px",height=getDimensions("main").height-130 .. "px",
   })
 end
   
+  local buttonoffset = 0
+  
+ -- lua menu.displaybutton:resize("100px","30px");lua menu.displaybutton:move("-100px","0px");lua menu.displaybutton:raise()
+  menu.displaybutton = Geyser.Label:new({
+    name="menu.displaybutton",
+    x = "-" .. buttonoffset + 100 .. "px", y = "0px",
+    width = "100px",
+    height = "30px",
+  })
+  menu.displaybutton:setStyleSheet([[
+      background-color: ]]..menu.color1..[[;
+      border: 1px solid white;
+    ]])
+  menu.displaybutton:echo("&lt;&lt;")
+  
+  menu.displaybutton:setClickCallback("menu_displaybutton_click",v)
+  
+  function menu_displaybutton_click()
+    if menu.window.visible then
+      hideMenu()
+    else
+      showMenu()
+    end
+  end
+  buttonoffset = buttonoffset + 110
+
+  menu.settingsbutton = Geyser.Label:new({
+    name="menu.settingsbutton",
+    x = "-" .. buttonoffset + 100 .. "px", y = "0px",
+    width = "100px",
+    height = "30px",
+  })
+  menu.settingsbutton:setStyleSheet([[
+      background-color: ]]..menu.color1..[[;
+      border: 1px solid white;
+    ]])
+  menu.settingsbutton:echo("&lt;center&gt;Settings&lt;/center&gt;")
+  
+  menu.settingsbutton:setClickCallback("menu_settingsbutton_click",v)
+  
+  function menu_settingsbutton_click()
+    setupWin:show()
+  end
+  buttonoffset = buttonoffset + 110
+
+  menu.helpbutton = Geyser.Label:new({
+    name="menu.helpbutton",
+    x = "-" .. buttonoffset + 100 .. "px", y = "0px",
+    width = "100px",
+    height = "30px",
+  })
+  menu.helpbutton:setStyleSheet([[
+      background-color: ]]..menu.color1..[[;
+      border: 1px solid white;
+    ]])
+  menu.helpbutton:echo("&lt;center&gt;Help&lt;/center&gt;")
+  
+  menu.helpbutton:setClickCallback("menu_helpbutton_click",v)
+  
+  function menu_helpbutton_click()
+    expandAlias("xhelp all")
+  end
+  buttonoffset = buttonoffset + 110
+  
+  menu.scriptbutton = Geyser.Label:new({
+    name="menu.scriptbutton",
+    x = "-" .. buttonoffset + 100 .. "px", y = "0px",
+    width = "100px",
+    height = "30px",
+  })
+  menu.scriptbutton:setStyleSheet([[
+      background-color: ]]..menu.color1..[[;
+      border: 1px solid white;
+    ]])
+  menu.scriptbutton:echo("&lt;center&gt;Start Script&lt;/center&gt;")
+  
+  menu.scriptbutton:setClickCallback("menu_scriptbutton_click",v)
+  
+  function menu_scriptbutton_click()
+    if auto_hunt then
+      auto_hunt = false
+      xuicom("You will no longer attempt to automatically hunt targets")
+      
+      combat = false
+      hunting = false
+      menu.scriptbutton:echo("&lt;center&gt;Stop Script&lt;/center&gt;")
+    else
+      expandAlias("startscripting")
+      menu.scriptbutton:echo("&lt;center&gt;Start Script&lt;/center&gt;")
+    end
+  end
+  buttonoffset = buttonoffset + 110
+  
   menu.container = Geyser.Container:new({
     name = "menu.backcontainer",
-    x = "0%", y = "50%",
+    x = "0%", y = "0%",
     width = "100%",
-    height = "50%",
+    height = "100%",
   },menu.window)
   
   menu.header = Geyser.VBox:new({
     name = "menu.header",
-    x = 0, y = 0,
+    x = "0%", y = "0%",
     width = "15%",
-    height = "80%",
+    height = "100%",
   },menu.container)
-  
   menu.footer = Geyser.Label:new({
     name = "menu.footer",
     x = "15%", y = "0%",
@@ -17070,14 +17208,25 @@ end
     border-radius: 10px;
     margin: 1px;
   ]])
-  --local defaulttabs = {"Quests","Variable","Combat","XP"}
-  --for k,v in pairs(defaulttabs) do 
-  --  menu_addtab(v)  
-  --end
-  
-  
+
+
 end
 
+function hideMenu()
+  menu.window.visible = false
+  menu.container:hide()
+  resizeParent()
+  mMenuHDrag:hide()
+  menu.displaybutton:echo("&lt;center&gt;Sidebar&lt;/center&gt;")
+end
+
+function showMenu()
+  menu.window.visible = true
+  menu.container:show()
+  resizeParent()
+  mMenuHDrag:show()
+  menu.displaybutton:echo("&lt;center&gt;Sidebar&lt;/center&gt;")
+end
 
 </script>
 							<eventHandlerList />
@@ -17090,9 +17239,10 @@ return
 end
 
 function menu.click(tab,evt)
-  dataBackCon:move("0%","80%")
-  dataBackCon:resize("100%","20%")
-  dataConOverlay:show()
+
+  for k,v in pairs(focusonlywindows) do 
+    v()
+  end
   
   menu[menu.current]:hide()
   menu.current = tab
@@ -17125,18 +17275,20 @@ end
 
 setBorderBottom(100)
 -- give it a unique name here
-bottom_container = bottom_container or
+ bottom_container = bottom_container or
   Geyser.Container:new({name = "bottom_container", x = 0, y = -100, width = "100%", height = 100})
---setBorderLeft(200)
--- give it a unique name here
--- have it start at the top-left corner of mudlet
--- with a width of 200, and a height of the full screen, hence 100%
+
+
 bottom_container_back = bottom_container_back or
   Geyser.Label:new({name = "bottom_container_back", x=0,y=0,width="100%",height="100%"},bottom_container)
 bottom_container_back:lower()
+
+gauge_container = gauge_container or
+  Geyser.Container:new({name = "gauge_container", x = "11%", y = 0, width = "50%", height = "100%"},bottom_container)
+
 --HP Gauge
 hpbar = hpbar or
-  Geyser.Gauge:new({name = "hpbar", x = "15%", y = "15%", width = "19.5%", height = "40%"}, bottom_container)
+  Geyser.Gauge:new({name = "hpbar", x = "0%", y = "15%", width = "29.5%", height = "40%"}, gauge_container)
 hpbar.front:setStyleSheet(
 	   [[background-color: rgba(0, 149, 0,100%);
           border-width: 1px;
@@ -17159,7 +17311,7 @@ hpbar.text:setToolTip("Percentage of current hp", "10")
 
 --Mana Gauge
 manabar = manabar or
-  Geyser.Gauge:new({name = "manabar", x = "35%", y = "15%", width = "19.5%", height = "40%"}, bottom_container)
+  Geyser.Gauge:new({name = "manabar", x = "30%", y = "15%", width = "29.5%", height = "40%"}, gauge_container)
 manabar.front:setStyleSheet(
 
   [[background-color: rgba(31, 31, 176, 100%);
@@ -17185,7 +17337,7 @@ manabar.text:setToolTip("Percentage of current mana", "10")
 --Ascend Gauge
 --250, 123, 30,
 ascbar = ascbar or
-  Geyser.Gauge:new({name = "ascbar", x = "15%", y = "65%", width = "59.5%", height = "20%"}, bottom_container)
+  Geyser.Gauge:new({name = "ascbar", x = "0%", y = "65%", width = "89.5%", height = "20%"}, gauge_container)
 ascbar.front:setStyleSheet(
   [[background-color: rgba(121,2,204,100%);
     border-width: 1px;
@@ -17204,7 +17356,7 @@ ascbar.text:setToolTip("Percentage of current ascend", "10")
 --mvm Gauge
 --background-color: QLinearGradient( x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #efba4f, stop: 0.1 #ba8a2a, stop: 0.49 #966e1e, stop: 0.5 #a3700b, stop: 1 #B89902);
 mvmbar = mvmbar or
-  Geyser.Gauge:new({name = "mvmbar", x = "55%", y = "15%", width = "19.5%", height = "40%"}, bottom_container)
+  Geyser.Gauge:new({name = "mvmbar", x = "60%", y = "15%", width = "29.5%", height = "40%"}, gauge_container)
 
 mvmbar.front:setStyleSheet(
   [[background-color: rgba(	204,97,40, 100%);
@@ -17227,16 +17379,89 @@ mvmbar.back:setStyleSheet(
 --181,175,32
 mvmbar.text:setToolTip("Percentage of current movement", "10")
 
+partyDisplay = partyDisplay or Geyser.Label:new({
+  name = "partyLabel",
+  x = "57%", y = "0",
+  width = "7%", height = "100%",
+}, bottom_container)
+
+partyDisplay:setFontSize(10)
+partyDisplay:setStyleSheet([[
+	background-color: #202020;
+	color: #AACCFF;
+  font-family: Courier;
+]])
+
+partyDisplay2 = partyDisplay2 or Geyser.Label:new({
+  name = "partyLabel2",
+  x = "64%", y = "0",
+  width = "7%", height = "100%",
+}, bottom_container)
+
+partyDisplay2:setFontSize(10)
+partyDisplay2:setStyleSheet([[
+	background-color: #202020;
+	color: #AACCFF;
+  font-family: Courier;
+]])
 
 
---images maybe
 
--- hpBarHeart = Geyser.Label:new({
-  -- name = "hpBarHeart",
-  -- x = 0, y = 0,
-  -- width = "16px", height = "14px",
--- }, bottom_container)
--- picture_label:setBackgroundImage([[XUI_assets/8-bit parts/P_Red05.png]]) </script>
+userDisplay = userDisplay or Geyser.Label:new({
+  name = "userLabel",
+  x = "0%", y = "0",
+  width = "10%", height = "100%",
+}, bottom_container)
+
+userDisplay:setFontSize(10)
+userDisplay:setStyleSheet([[
+	background-color: #202020;
+	color: #AACCFF;
+  font-family: Courier;
+]])
+userDisplay:raise()
+--#222233;
+
+
+function repositionBottomContainer()
+  local userdisplaysize = {
+    height = 100,
+    x = 0,
+    y = 0,
+    width = 10
+  }
+  local gaugecontainersize =  {
+    height = 100,
+    x = 11,
+    y = 0,
+    width = 50
+  }
+  local partydisplaysize = {
+    height = 100,
+    x = 57,
+    y = 0,
+    width = 7
+  }
+  local partydisplay2size = {
+    height = 100,
+    x = 64,
+    y =  0,
+    width = 7
+  }
+  if mysettings.uicomponents.partybox == "on" then
+    partyDisplay:show()
+    partyDisplay2:show()
+    gauge_container:resize(gaugecontainersize.width .. "%",gaugecontainersize.height .. "%")
+  else
+    partyDisplay:hide()
+    partyDisplay2:hide()
+    gauge_container:resize(gaugecontainersize.width + partydisplaysize.width + partydisplay2size.width .. "%",gaugecontainersize.height .. "%")
+    
+  end
+  
+end
+
+repositionBottomContainer()</script>
 							<eventHandlerList />
 						</Script>
 						<Script isActive="yes" isFolder="no">
@@ -17246,9 +17471,12 @@ mvmbar.text:setToolTip("Percentage of current movement", "10")
 
 --sysWindowMousePressEvent
 function onMainWindowClickHandler( event, button, x, y )
-  dataBackCon:move("0%","80%")
-  dataBackCon:resize("100%","20%")
-  dataConOverlay:show()
+  --dataBackCon:move("0%","80%")
+  --dataBackCon:resize("100%","20%")
+  --dataConOverlay:show()
+  for k,v in pairs(focusonlywindows) do 
+    v()
+  end
 end
 
 registerAnonymousEventHandler("sysWindowMousePressEvent", "onMainWindowClickHandler")
@@ -17256,79 +17484,34 @@ registerAnonymousEventHandler("sysWindowMousePressEvent", "onMainWindowClickHand
 							<eventHandlerList />
 						</Script>
 						<Script isActive="yes" isFolder="no">
-							<name>Resizors Mid</name>
+							<name>Right and Left Main UI</name>
 							<packageName></packageName>
-							<script>
-mMenuVDrag = mMenuVDrag or Geyser.Label:new({
-  name = "mMenuVDrag",
-  x = "0%", y = "-50%",
-  width = "100%", height = 5,
-  fgColor = "black",
-  color = "white",
-}, menu.window)
-mMenuVDrag:setStyleSheet([[
-  background-color: white;
-]])
- 
-MIN_HEIGHT = 100
- 
- setLabelCursor("mMenuVDrag",5)
---
--- Callback functions.
---
-function onMenuVDragTimer()
-  -- Get mouse position
-  local x, y = getMousePosition()
-  local windowWidth, windowHeight 
-  
-  if mysettings.XUI.UIMode == "container" then
-    windowWidth = menu.window.get_width()
-    windowHeight = menu.window.get_height()
-  else
-    windowWidth,windowHeight = getUserWindowSize("menu.back")
-  end
-  local height
-  
-  -- Substract the top of the label  to get the new height.
-  height = y
-  if height &lt; MIN_HEIGHT then
-    -- Height is too small.
-    height = MIN_HEIGHT
-  end
+							<script>right_container = right_container or Geyser.Container:new({
+  name = "right_container",
+  x = "-150px", y = "30px",
+  width = "0px", height=getDimensions("main").height-130 .. "px"
+})
+right_container_back = right_container_back or
+  Geyser.Label:new({name = "right_container_back", x=0,y=0,width="100%",height="100%"},right_container)
+right_container_back:lower()
 
-    mMenuVDrag:move("0px",height-BORDER_WIDTH.."px")
-     -- Set the new size and restart timer.
-    OOCCon:resize(windowWidth.."px", height.."px")
-    OOCCon:reposition()
-  
-    menu.container:set_constraints({x="5px",y=height.."px",width=windowWidth.."px", height=(windowHeight-height).."px"})
+left_container = left_container or Geyser.Container:new({
+  name = "left_container",
+  x = "0px", y = "30px",
+  width = "0px", height=getDimensions("main").height-130 .. "px"
+})
+left_container_back = left_container_back or
+  Geyser.Label:new({name = "left_container_back", x=0,y=0,width="100%",height="100%"},left_container)
+left_container_back:lower()
 
+if mysettings.uicomponents.partybar == "left" then
+  left_container:resize("150px","100%")
+end
+if mysettings.uicomponents.partybar == "right" then
+  right_container:resize("150px","100%")
+end
   
-end
- 
-function onMenuVDragClick()
-  -- The user clicked the drag label.
-  -- Start a temp timer to update the size of the label.
-  if  exists("vMenudragtimer", "timer") == 0 then
-    vdragtimer = permTimer("vMenudragtimer", "", .016, [[onMenuVDragTimer()]])
-    echo("timer created")
-  end
 
-  enableTimer("vMenudragtimer")
-  debugecho("timer enabled")
-end
- 
-function onMenuVDragRelease()
-  -- Button is release so stop timer and updates.
-  disableTimer("vMenudragtimer")
-  debugecho("released")
-end
- 
---
--- Set mouse event callbacks.
---
-setLabelClickCallback("mMenuVDrag", "onMenuVDragClick")
-setLabelReleaseCallback("mMenuVDrag", "onMenuVDragRelease")
 </script>
 							<eventHandlerList />
 						</Script>
@@ -17411,65 +17594,12 @@ function onMenuHDragRelease()
   resizeParent()
 end
  
-function resizeParent()
-  local windowWidth, windowHeight = getMainWindowSize()
-  local userwindowWidth = menu.window.get_width()
 
-  local extraright = 0
-  local extraleft = 0
-
-  if mysettings.uicomponents.partybar == "right" then
-    extraright = extraright + 150
-  elseif mysettings.uicomponents.partybar == "left" then
-    extraleft = extraleft + 150
-  end
-  
-  bottom_container:resize(windowWidth-userwindowWidth-BORDER_WIDTH .. "px","100px")
-  
-  right_container:move("-" .. userwindowWidth+BORDER_WIDTH+extraright .. "px","0px")
-  
-  setBorderRight(userwindowWidth+BORDER_WIDTH+extraright)
-  setBorderLeft(extraleft)
-end
- 
-resizeParent()
 --
 -- Set mouse event callbacks.
 --
 setLabelClickCallback("mMenuHDrag", "onMenuHDragClick")
 setLabelReleaseCallback("mMenuHDrag", "onMenuHDragRelease")
-</script>
-							<eventHandlerList />
-						</Script>
-						<Script isActive="yes" isFolder="no">
-							<name>Right and Left Main UI</name>
-							<packageName></packageName>
-							<script>right_container = right_container or Geyser.Container:new({
-  name = "right_container",
-  x = "-150px", y = "0",
-  width = "0px", height = "100%",
-})
-right_container_back = right_container_back or
-  Geyser.Label:new({name = "right_container_back", x=0,y=0,width="100%",height="100%"},right_container)
-right_container_back:lower()
-
-left_container = left_container or Geyser.Container:new({
-  name = "left_container",
-  x = "0px", y = "0",
-  width = "0px", height = "100%",
-})
-left_container_back = left_container_back or
-  Geyser.Label:new({name = "left_container_back", x=0,y=0,width="100%",height="100%"},left_container)
-left_container_back:lower()
-
-if mysettings.uicomponents.partybar == "left" then
-  left_container:resize("150px","100%")
-end
-if mysettings.uicomponents.partybar == "right" then
-  right_container:resize("150px","100%")
-end
-  
-
 </script>
 							<eventHandlerList />
 						</Script>
@@ -17857,29 +17987,58 @@ end</script>
 						<Script isActive="yes" isFolder="no">
 							<name>Chat Window</name>
 							<packageName></packageName>
-							<script>if mysettings.UIType ~= "XUI" then return end
-
-
-local windowWidth, windowHeight = getMainWindowSize()
+							<script>local windowWidth, windowHeight = getMainWindowSize()
 if chatFontSize == nil then chatFontSize = 8 end
 if chatWidth == nil then chatWidth = 650 end
 if chatWrap == nil then chatWrap = 80 end
 
 OOCCon = OOCCon or Geyser.MiniConsole:new({
   name="OOC",
-  x=BORDER_WIDTH, y=0,
+  x="-25%", y="80%",
   autoWrap = true,
-  width="100%",
-  height="50%",
+  width="25%",
+  height="10%",
   fgColor = "white",
   color = "red",
+  
+})
 
-},menu.window)
-OOCCon:setColor("black")
+
+OOCCon:setColor(100,100,100,100)
+OOCCon:setBgColor(100,100,100)
+
 OOCCon:setFontSize(mysettings.oocchatsize)
 enableScrollBar("OOC")
 OOCCon:resetAutoWrap()
 
+
+OOCConOverlay = OOCConOverlay or Geyser.Label:new({
+  name = "OOCConOverlay",
+  x = 0, y = 0,
+  x="-25%", y="80%",
+  width="25%", height="10%",
+})
+OOCConOverlay:setStyleSheet([[
+  background-color: rgba(0,0,0,25%);
+]])
+
+
+OOCConOverlay:setClickCallback("OOCCon_click",OOCCon)
+function OOCCon_click(tab)
+  OOCCon:resize("25%","50%")
+  OOCCon:move("-25%","30%")
+  OOCConOverlay:hide()
+end
+
+function OOCCon_hide(tab)
+  OOCCon:resize("25%","20%")
+  OOCCon:move("-25%","80%")
+  OOCConOverlay:show()
+end
+
+ table.insert(focusonlywindows, function() OOCCon_hide() end)
+
+OOCCon:hide()
 
 
 </script>
@@ -17888,14 +18047,14 @@ OOCCon:resetAutoWrap()
 						<Script isActive="yes" isFolder="no">
 							<name>DataCollection</name>
 							<packageName></packageName>
-							<script>if mysettings.UIType ~= "XUI" then return end
+							<script>
 
 dataBackCon = dataBackCon or Geyser.Label:new({
   name="dataBackCon",
-  x="0%", y="80%",
+  x="-30%", y="90%",
   color="black",
-  width="100%", height="20%",
-},menu.container)
+  width="30%", height="10%",
+})
 
 dataBackCon:setStyleSheet([[
   border-top: 1px solid white;
@@ -17906,7 +18065,7 @@ dataCon = dataCon or Geyser.MiniConsole:new({
   name="data",
   x="4%", y="5%",
   width="96%", height="95%",
-    wrapAt = 100,
+  wrapAt = 100,
 },dataBackCon)
 
 dataCon:setFontSize(mysettings.datafontsize)
@@ -17916,23 +18075,36 @@ dataCon:bg("black")
 dataCon:setColor("black")
 enableScrollBar("data")
 
+local width,height = calcFontSize(getFontSize("data"))
+local wrap = math.floor(dataCon:get_width()/width)-2
+dataCon:setWrap(wrap)
+
 
 dataConOverlay = dataConOverlay or Geyser.Label:new({
   name = "dataConOverlay",
   x = 0, y = 0,
-  x="0%", y="80%",
-  width="100%", height="20%",
-},menu.container)
+  x="-25%", y="90%",
+  width="25%", height="10%",
+})
 dataConOverlay:setStyleSheet([[
   background-color: rgba(0,0,0,25%);
 ]])
 
 dataConOverlay:setClickCallback("dataCon_click",dataCon)
 function dataCon_click(tab)
-  dataBackCon:move("0%","10%")
-  dataBackCon:resize("100%","90%")
+  dataBackCon:move("-30%","30%")
+  dataBackCon:resize("30%","70%")
   dataConOverlay:hide()
 end
+
+function dataCon_hide(tab)
+  dataBackCon:move("-30%","-100px")
+  dataBackCon:resize("30%","100px")
+  dataConOverlay:show()
+end
+
+ table.insert(focusonlywindows, function() dataCon_hide() end)
+  
 
 
 --createMiniConsole("tab1Center", "data", 1, 1, 500, 500)</script>
@@ -18083,35 +18255,49 @@ end</script>
 						<Script isActive="yes" isFolder="no">
 							<name>Party Level</name>
 							<packageName></packageName>
-							<script>if mysettings.UIType ~= "XUI" then return end
+							<script>function fillPartyBox()
 
---bottom_container
 
-partyDisplay = partyDisplay or Geyser.Label:new({
-  name = "partyLabel",
-  x = "81%", y = "0",
-  width = "9%", height = "100%",
-}, bottom_container)
 
-partyDisplay:setFontSize(10)
-partyDisplay:setStyleSheet([[
-	background-color: #202020;
-	color: #AACCFF;
-  font-family: Courier;
-]])
+  local lbltext = "" --"Party&lt;br/&gt;"
+  local lbltext2 = ""
+  local maxsize = 6
+  
+  local lblentries = {}
+  table.insert(lblentries,"")
+  table.insert(lblentries,"")
+  if table.size(xaos.party.members) == 0 then
+    lblentries[1] = "Not in a Party"
+  end
+  local index = 1
+  for k,v in pairs(xaos.party.members) do
+    if k&gt;maxsize then
+      index=2
+    end
+  
+    local lblhp = "   " .. string.trim(tostring(v.hp))
+    lblhp = string.sub(lblhp,string.len(lblhp)-2,string.len(lblhp))
+    lblhp = string.gsub(lblhp," ","&amp;nbsp;")
+    
+    local tmplbl = string.sub(v.name.."   ",1,4) .. "   " .. lblhp 
+    tmplbl = string.gsub(tmplbl," ","&amp;nbsp;")
+    --tmplbl = tmplbl .. "&lt;br/&gt;"
+    tmplbl = tmplbl .. "&lt;br/&gt;"
+    
+    lblentries[index] = lblentries[index] .. tmplbl
+  end
+  for k=1,5 do
+    for j=1,2 do
+      lblentries[j] = lblentries[j] .. "&lt;br/&gt;"
+    end
+  end
+  
+  partyDisplay:echo(lblentries[1])
+  partyDisplay2:echo(lblentries[2])
 
-partyDisplay2 = partyDisplay2 or Geyser.Label:new({
-  name = "partyLabel2",
-  x = "90%", y = "0",
-  width = "9%", height = "100%",
-}, bottom_container)
+end
 
-partyDisplay2:setFontSize(10)
-partyDisplay2:setStyleSheet([[
-	background-color: #202020;
-	color: #AACCFF;
-  font-family: Courier;
-]])
+
 
 </script>
 							<eventHandlerList />
@@ -18123,20 +18309,7 @@ partyDisplay2:setStyleSheet([[
 
 --bottom_container
 
-userDisplay = userDisplay or Geyser.Label:new({
-  name = "userLabel",
-  x = "0%", y = "0",
-  width = "15%", height = "100%",
-}, bottom_container)
-
-userDisplay:setFontSize(10)
-userDisplay:setStyleSheet([[
-	background-color: #202020;
-	color: #AACCFF;
-  font-family: Courier;
-]])
-userDisplay:raise()
---#222233;</script>
+</script>
 							<eventHandlerList />
 						</Script>
 					</ScriptGroup>
@@ -18290,11 +18463,19 @@ setupWin = setupWin or Geyser.UserWindow:new({
 
 setupWin.buttons = setupWinbuttons or {}
 
+local row = 1
+local col = 1
+
+local btnheight = 100
+local btnwidth  = 200
+
+
+
 setupWin.buttons.msdp = 
   setupWin.buttons.msdp or Geyser.Label:new({
     name = "setupmsdplabel",
-    x = "10%", y ="10%",
-    width = "200px", height ="50px",
+    x = btnwidth*col .. "px", y = btnheight*row .. "px",
+    width = btnwidth-10 .. "px", height = btnheight-10 .. "px",
     fgColor = "blue",
     color = "white",
   },setupWin)
@@ -18316,21 +18497,141 @@ setupWin.buttons.msdp =
     setupWin.buttons.msdp:echo("MSDP: " .. tostring(mysettings.features.msdp),"white","c16")
   end 
  
---xpWinCon = Geyser.Container:new({
---  name="xpWinCon",
---  x="0%", y="0%",
---  autowrap=true,
---  fgColor = "white",
---  color = "black",
---  width="100%", height="100%",
---  fontSize=mysettings.questfontsize,
---  scrollBar = false,
---},xpWin)
+ row = row + 1
+ col = 1
+ 
+ setupWin.buttons.partybox = 
+  setupWin.buttons.partybox or Geyser.Label:new({
+    name = "setuppartyboxlabel",
+    x = btnwidth*col .. "px", y = btnheight*row .. "px",
+    width = btnwidth-10 .. "px", height = btnheight-10 .. "px",
+    fgColor = "blue",
+    color = "white",
+  },setupWin)
+  
+ setupWin.buttons.partybox:setStyleSheet([[
+      background-color: blue;
+      color: white;
+      margin-right: 1px;
+      margin-left: 1px;
+      border-top: 1px solid white;
+    ]])
+  
+ setupWin.buttons.partybox:echo("Bottom Party: " .. tostring(mysettings.uicomponents.partybox),"white","c16")
+ 
+  setupWin.buttons.partybox:setClickCallback("setupWinpartyboxClick")
+ 
+  function setupWinpartyboxClick()
+    if mysettings.uicomponents.partybox == "on" then
+      mysettings.uicomponents.partybox = "off"
+    else
+      mysettings.uicomponents.partybox = "on"
+    end
+    savemysettings()
+    setupWin.buttons.partybox:echo("Bottom Party: " .. tostring(mysettings.uicomponents.partybox),"white","c16")
+    repositionBottomContainer()
+  end 
+ 
+  row = row + 1
+ col = 1
+ 
+ setupWin.buttons.partybarleft = 
+  setupWin.buttons.partybarleft or Geyser.Label:new({
+    name = "setuppartybarleftlabel",
+    x = btnwidth*col .. "px", y = btnheight*row .. "px",
+    width = btnwidth-10 .. "px", height = btnheight-10 .. "px",
+    fgColor = "blue",
+    color = "white",
+  },setupWin)
+  
+ setupWin.buttons.partybarleft:setStyleSheet([[
+      background-color: blue;
+      color: white;
+      margin-right: 1px;
+      margin-left: 1px;
+      border-top: 1px solid white;
+    ]])
+  
+ setupWin.buttons.partybarleft:echo("Side Party: Left" .. tostring(mysettings.uicomponents.partybarleft),"white","c16")
+ 
+  setupWin.buttons.partybarleft:setClickCallback("setupWinpartybarleftClick")
+ 
+  function setupWinpartybarleftClick()
+    
+    mysettings.uicomponents.partybar = "left"
+    savemysettings()
+    switchMSDPsidepanel()
+	
+  end 
+ 
+ col = col + 1
+ 
+ setupWin.buttons.partybarright = 
+  setupWin.buttons.partybarright or Geyser.Label:new({
+    name = "setuppartybarrightlabel",
+    x = btnwidth*col .. "px", y = btnheight*row .. "px",
+    width = btnwidth-10 .. "px", height = btnheight-10 .. "px",
+    fgColor = "blue",
+    color = "white",
+  },setupWin)
+  
+ setupWin.buttons.partybarright:setStyleSheet([[
+      background-color: blue;
+      color: white;
+      margin-right: 1px;
+      margin-right: 1px;
+      border-top: 1px solid white;
+    ]])
+  
+ setupWin.buttons.partybarright:echo("Side Party: right" .. tostring(mysettings.uicomponents.partybarright),"white","c16")
+ 
+  setupWin.buttons.partybarright:setClickCallback("setupWinpartybarrightClick")
+ 
+  function setupWinpartybarrightClick()
+    
+    mysettings.uicomponents.partybar = "right"
+    savemysettings()
+    switchMSDPsidepanel()
+	
+  end 
+  
+  col = col + 1
+  
+   setupWin.buttons.partybaroff = 
+  setupWin.buttons.partybaroff or Geyser.Label:new({
+    name = "setuppartybarofflabel",
+    x = btnwidth*col .. "px", y = btnheight*row .. "px",
+    width = btnwidth-10 .. "px", height = btnheight-10 .. "px",
+    fgColor = "blue",
+    color = "white",
+  },setupWin)
+  
+ setupWin.buttons.partybaroff:setStyleSheet([[
+      background-color: blue;
+      color: white;
+      margin-off: 1px;
+      margin-off: 1px;
+      border-top: 1px solid white;
+    ]])
+  
+ setupWin.buttons.partybaroff:echo("Side Party: off" .. tostring(mysettings.uicomponents.partybaroff),"white","c16")
+ 
+  setupWin.buttons.partybaroff:setClickCallback("setupWinpartybaroffClick")
+ 
+  function setupWinpartybaroffClick()
+    
+    mysettings.uicomponents.partybar = "off"
+    savemysettings()
+    switchMSDPsidepanel()
+	
+  end 
+ 
+ 
+ 
 
---xpWin:resetAutoWrap()
 setupWin:disableAutoDock() 
 setupWin:hide()
---menu.setdoubleclick("Score",function() setupWin:show() end)
+
 
 
 </script>
@@ -18340,8 +18641,9 @@ setupWin:hide()
 					<Script isActive="yes" isFolder="no">
 						<name>Fix Layering</name>
 						<packageName></packageName>
-						<script>mMenuVDrag:raise()
+						<script>--mMenuVDrag:raise()
 mMenuHDrag:raise()
+menu.displaybutton:raise()
 
 if mysettings.UIType ~= "XUI" then
 return
@@ -18362,6 +18664,43 @@ end
 resetWindows() </script>
 						<eventHandlerList />
 					</Script>
+					<Script isActive="yes" isFolder="no">
+						<name>ResizeParent</name>
+						<packageName></packageName>
+						<script>function resizeParent()
+  local windowWidth, windowHeight = getMainWindowSize()
+  local userwindowWidth 
+  if menu.window.visible then
+    userwindowWidth = menu.window.get_width()
+  else
+    userwindowWidth = 0
+  end
+
+  local extraright = 0
+  local extraleft = 0
+
+  if mysettings.uicomponents.partybar == "right" then
+    extraright = extraright + 150
+  elseif mysettings.uicomponents.partybar == "left" then
+    extraleft = extraleft + 150
+  end
+  
+  --bottom_container:resize(windowWidth-userwindowWidth-BORDER_WIDTH .. "px","100px")
+  bottom_container:resize(windowWidth-BORDER_WIDTH .. "px","100px")
+  
+  right_container:move("-" .. userwindowWidth+BORDER_WIDTH+extraright .. "px","30px")
+  
+  setBorderRight(userwindowWidth+BORDER_WIDTH+extraright)
+  setBorderLeft(extraleft)
+end
+ 
+resizeParent()
+
+hideMenu()
+
+</script>
+						<eventHandlerList />
+					</Script>
 				</ScriptGroup>
 				<ScriptGroup isActive="yes" isFolder="yes">
 					<name>UI Helpers</name>
@@ -18376,9 +18715,7 @@ resetWindows() </script>
 					<Script isActive="yes" isFolder="no">
 						<name>UI Helpers</name>
 						<packageName></packageName>
-						<script>if mysettings.UIType ~= "XUI" then return end
-
-function updateDisplayTime()
+						<script>function updateDisplayTime()
 
   updateXPbars(displaytimespan)
   updateKillbars(displaytimespan)
@@ -19272,7 +19609,7 @@ end
 
 function captureOOC(color1,channel,color2,name, color3, message)
 
-	cecho("OOC", "["..color1..channel.."&lt;gray&gt; " .. getTime(true,"HH.mm") .. "] "..color2..name..": "..color3..message.."\n")
+	cecho("data", "["..color1..channel.."&lt;gray&gt; " .. getTime(true,"HH.mm") .. "] "..color2..name..": "..color3..message.."\n")
 	if spacing then
 		cecho("OOC","\n")
 	end
@@ -19478,14 +19815,13 @@ customDrink = customDrink or "skin"</script>
 							<Script isActive="yes" isFolder="no">
 								<name>reloadUI</name>
 								<packageName></packageName>
-								<script>if mysettings.UIType ~= "XUI" then return end
-
+								<script>
 function reloadUI()
   --createChatConsole()
-  OOCCon:resetAutoWrap()
+  --OOCCon:resetAutoWrap()
   questStatusCon:resetAutoWrap()
-  dataCon:resetAutoWrap()
-  OOCCon:resetAutoWrap()
+  --dataCon:resetAutoWrap()
+  --OOCCon:resetAutoWrap()
   
   local width,height = calcFontSize(getFontSize("main"))
   local windowWidth, windowHeight = getMainWindowSize()
@@ -19494,7 +19830,11 @@ function reloadUI()
   setWindowWrap("main", wrap)
   
   mainWindowWrap = wrap
-end</script>
+
+  menu.window:resize(menu.window.width,getDimensions("main").height-130 .. "px")
+end
+
+</script>
 								<eventHandlerList>
 									<string>sysWindowResizeEvent</string>
 								</eventHandlerList>
@@ -20070,19 +20410,40 @@ function switchMSDPsidepanel()
       msdpOppDisplay:changeContainer(left_container)
       msdpOppExtras:changeContainer(left_container)
       msdpPartyExtras:changeContainer(left_container)
-      if table.size(right_container.windows) == 1 then
-        right_container:resize("0px","150%")
-      end
-      left_container:resize("150px","150%")
+      
+      msdpPartyDisplay:show()
+      msdpOppDisplay:show()
+      
+      left_container:resize("150px",getDimensions("main").height-130 .. "px")
+      left_container:show()
+      
     elseif mysettings.uicomponents.partybar == "right" then
       msdpPartyDisplay:changeContainer(right_container)
       msdpOppDisplay:changeContainer(right_container)
       msdpOppExtras:changeContainer(right_container)
       msdpPartyExtras:changeContainer(right_container)
-      if table.size(left_container.windows) == 1 then
-        left_container:resize("0px","150%")
-      end
-      right_container:resize("150px","150%")
+
+      msdpPartyDisplay:show()
+      msdpOppDisplay:show()
+
+      right_container:resize("150px",getDimensions("main").height-130 .. "px")
+      right_container:show()
+    else
+      msdpPartyDisplay:hide()
+      msdpOppDisplay:hide()
+      
+      msdpPartyDisplay:changeContainer("main")
+      msdpOppDisplay:changeContainer("main")
+      msdpOppExtras:changeContainer("main")
+      msdpPartyExtras:changeContainer("main")
+
+
+    end
+    if table.size(right_container.windows) == 1 then
+      right_container:hide()
+    end
+    if table.size(left_container.windows) == 1 then
+      left_container:hide()
     end
     resizeParent()
 end
@@ -20093,17 +20454,15 @@ function loadMSDPUI()
     partyDisplay:hide()
     partyDisplay2:hide()
     
-    hpbar:move("15%","55%")
-    manabar:move("35%","55%")
-    mvmbar:move("55%","55%")
-    ascbar:move("80%","55%")
-    ascbar:resize("19.5%","40%")
-    
-    hpbar:move("15%","55%")
-    manabar:move("35%","55%")
-    mvmbar:move("55%","55%")
-    ascbar:move("80%","55%")
-    ascbar:resize("19.5%","40%")
+    hpbar:move("0%","45%")
+    manabar:move("30%","45%")
+    mvmbar:move("60%","45%")
+    ascbar:move("0%","87.5%")
+
+    hpbar:resize("29.5%","40%")
+    manabar:resize("29.5%","40%")
+    mvmbar:resize("29.5%","40%")
+    ascbar:resize("89.5%","10%")
     
     local sidecont
     if mysettings.uicomponents.partybar == "left" then
@@ -20150,7 +20509,7 @@ function loadMSDPUI()
     --OPPLabels = OPPLabels or {}
     
     OPPGauges[1] = OPPGauges[1] or
-          Geyser.Gauge:new({name = "OPPGauges_"..index,  x = "20%", y = "1%", width = "50%", height ="40%"}, bottom_container)
+          Geyser.Gauge:new({name = "OPPGauges_"..index,  x = "10%", y = "1%", width = "69.5%", height ="40%"}, gauge_container)
     
     
     PartyGauges = PartyGauges or {}
@@ -20300,32 +20659,7 @@ function grabOppGauge(index,targetme)
       PartyManaGauges[i]:changeContainer(msdpPartyExtras)
     end
   end
-function createdummygauges()
- msdp.PARTY_MEM = {}
- msdp.PARTY_MEM.Jim = "100 100 100"
- msdp.PARTY_MEM.Bob = "80 100 100"
- msdp.PARTY_MEM.Ray = "100 100 100"
- msdp.PARTY_MEM.Sally = "100 100 100"
- grab_PARTY_MEM()
- msdp.OPPONENTS = {}
- msdp.OPPONENTS.Jim = "100 100 100"
- msdp.OPPONENTS.Bob = "80 100 100"
- msdp.OPPONENTS.Ray = "100 100 100"
- msdp.OPPONENTS.Sally = "100 100 100"
- msdp.OPPONENTS.Jim2 = "100 100 100"
- msdp.OPPONENTS.Bob2 = "80 100 100"
- msdp.OPPONENTS.Ray2 = "100 100 100"
- msdp.OPPONENTS.Sally2 = "100 100 100"
- msdp.OPPONENTS.Jim3 = "100 100 100"
- msdp.OPPONENTS.Bob3 = "80 100 100"
- msdp.OPPONENTS.Ray3 = "100 100 100"
- msdp.OPPONENTS.Sally3 = "100 100 100"
- --msdp.OPPONENTS.Jim4 = "100 100 100"
- --msdp.OPPONENTS.Bob4 = "80 100 100"
- --msdp.OPPONENTS.Ray4 = "100 100 100"
- --msdp.OPPONENTS.Sally4 = "100 100 100"
- grab_OPPONENTS()
-end
+  
 
 </script>
 					<eventHandlerList />
@@ -20793,7 +21127,14 @@ end
 					<packageName></packageName>
 					<script>function grab_IN_ROOM()
 
+  showInRoomPartyBar()
   
+end
+
+function showInRoomPartyBar()
+
+
+
   if msdp.IN_ROOM == "" then
     hideOppGauges(1)
   else
@@ -20823,9 +21164,7 @@ end
       function (item) 
         return item.name == xaos.charactername 
       end)
-    --display(findmember)
-    --echo(targetmember)
-    --display(inroom[targetmember])
+
     --Get Target
     local targetmember = inroom[findmember.key].tid
     
@@ -20836,24 +21175,28 @@ end
     else
       hideOppGauges(1)    
     end
-    --display(inroom[targetmember])
     
-    --Get Enemies
-    local enemylist = {}
-    local index = 2    
-    for k,v in pairs(inroom) do
-      if targetmember ~= k and isenemy(k) then
-        displayEnemyGauge(k,v,index,findmember.value.id == tonumber(v.tid))
-        index = index+1
+    
+    if mysettings.uicomponents.partybar ~= "off" then
+      
+    
+      --Get Enemies
+      local enemylist = {}
+      local index = 2    
+      for k,v in pairs(inroom) do
+        if targetmember ~= k and isenemy(k) then
+          displayEnemyGauge(k,v,index,findmember.value.id == tonumber(v.tid))
+          index = index+1
+        end
       end
+    
+      hideOppGauges(index)
     end
     
     
-    hideOppGauges(index)
   end
+  
 end
-
-
 
 function displayEnemyGauge(oppid,oppstats,index,targetme)
 
@@ -21059,44 +21402,56 @@ end</script>
   for partyid,partystats in pairs(msdp.PARTY_MEM) do
     local partyname,partyhp,partymana,partymove = rex.match(partystats,[[(\w+):(-?[0-9]{1,3}):(-?[0-9]{1,3}):(-?[0-9]{1,3}):(-?[0-9]+):(.*)]])
 
-    local partyitems = grabPartyGauge(index)
-  
-    if partyname == "None" then 
-      partyitems.gauge:hide()
-      partyitems.managauge:hide()
-    else
-      partyitems.gauge:show()
-      partyitems.managauge:show()
-      local missingcount = 0
-      if partyhp == -1 then
-        local findmember = table.n_filter(xaos.party.members,function (item) return item.name == partyname end)
-        if table.size(findmember) ~= 0 then
-          missingcount = tonumber(findmember[1].missingcount) +1
+
+    if mysettings.uicomponents.partybar ~= "off" then
+      local partyitems = grabPartyGauge(index)
+    
+      if partyname == "None" then 
+        partyitems.gauge:hide()
+        partyitems.managauge:hide()
+      else
+        partyitems.gauge:show()
+        partyitems.managauge:show()
+        local missingcount = 0
+        if partyhp == -1 then
+          local findmember = table.n_filter(xaos.party.members,function (item) return item.name == partyname end)
+          if table.size(findmember) ~= 0 then
+            missingcount = tonumber(findmember[1].missingcount) +1
+          end
         end
+        if partyhp ~= -1 then 
+          partyitems.gauge:setValue(tonumber(partyhp), 100, nil)
+          partyitems.gauge:setText("&lt;center&gt;" .. partyhp .. "% " .. partyname .. "&lt;/center&gt;")
+        end
+        if partymana ~= -1 then 
+          partyitems.managauge:setValue(tonumber(partymana), 100, nil)
+          partyitems.managauge:setText("&lt;center&gt;" .. partymana .. "%&lt;/center&gt;")
+        end
+
       end
-      if partyhp ~= -1 then 
-        partyitems.gauge:setValue(tonumber(partyhp), 100, nil)
-        partyitems.gauge:setText("&lt;center&gt;" .. partyhp .. "% " .. partyname .. "&lt;/center&gt;")
-      end
-      if partymana ~= -1 then 
-        partyitems.managauge:setValue(tonumber(partymana), 100, nil)
-        partyitems.managauge:setText("&lt;center&gt;" .. partymana .. "%&lt;/center&gt;")
-      end
-      
-      table.insert(curpartystatus.members,
-      {
-        name = partyname,
-        hp = tonumber(partyhp),
-        mana = tonumber(partymana),
-        move = tonumber(partymove),
-        missingcount = missingcount,
-        charmie = rex.match(partyname,[[^([aA] |[tT]he |[aA]n )]]) ~= nil
-      })
-      index = index + 1
     end
+
+    if partyname ~= "None" then
+    table.insert(curpartystatus.members,
+        {
+          name = partyname,
+          hp = tonumber(partyhp),
+          mana = tonumber(partymana),
+          move = tonumber(partymove),
+          missingcount = missingcount,
+          charmie = rex.match(partyname,[[^([aA] |[tT]he |[aA]n )]]) ~= nil
+        })
+      end
+      index = index + 1
   end
   xaos.party.members = curpartystatus.members
   
+  if mysettings.uicomponents.partybox ~= "off" then
+    
+    fillPartyBox()
+    
+  end
+    
   hidePartyGauges(index)
 end</script>
 					<eventHandlerList>
