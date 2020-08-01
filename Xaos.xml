@@ -3899,6 +3899,26 @@ end
 						<integer>1</integer>
 					</regexCodePropertyList>
 				</Trigger>
+				<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+					<name>Race Grab</name>
+					<script>xaos.characterrace = string.lower(string.trim(matches[2]))</script>
+					<triggerType>0</triggerType>
+					<conditonLineDelta>0</conditonLineDelta>
+					<mStayOpen>0</mStayOpen>
+					<mCommand></mCommand>
+					<packageName></packageName>
+					<mFgColor>#ff0000</mFgColor>
+					<mBgColor>#ffff00</mBgColor>
+					<mSoundFile></mSoundFile>
+					<colorTriggerFgColor>#000000</colorTriggerFgColor>
+					<colorTriggerBgColor>#000000</colorTriggerBgColor>
+					<regexCodeList>
+						<string>Race: (.*) Class: </string>
+					</regexCodeList>
+					<regexCodePropertyList>
+						<integer>1</integer>
+					</regexCodePropertyList>
+				</Trigger>
 				<TriggerGroup isActive="yes" isFolder="yes" isTempTrigger="no" isMultiline="yes" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
 					<name>Score Grab</name>
 					<script></script>
@@ -8186,7 +8206,9 @@ lbltext = lbltext .."Lev : " .. xaos.Level .. " (" .. string.format("%2.2f",xaos
 
 lbltext = lbltext .."Tact: " .. tostring(xaos.tactics) .. "&lt;br/&gt;"
 lbltext = lbltext .."Styl: " .. tostring(xaos.fightingstyle) .. "&lt;br/&gt;"
-
+if xaos.config.show_race then
+  lbltext = lbltext .."Race: " .. tostring(xaos.characterrace) .. "&lt;br/&gt;"
+end
 lbltext = lbltext .. "&lt;/div&gt;"
 userDisplay:echo(lbltext)</script>
 					<command></command>
@@ -8297,7 +8319,7 @@ cecho("ScoreList","Ascend %            : " .. tostring(string.format("%2.2f",cal
 --cecho("ScoreList","Ascend %            : " .. tostring(ratiomax) .. "\n")
 cecho("ScoreList","\n&lt;white&gt;Score\n")
 cecho("ScoreList","Fragments           : " .. tostring(xaos.currency.frags) .. "\n")
-
+cecho("ScoreList","Race                : " .. tostring(xaos.characterrace) .. "\n")
 --cecho("ScoreList",damageDisplay(TotalCalc))
 
 </script>
@@ -8692,26 +8714,32 @@ if command == "" then
   hecho("minhp\n")
   hecho("showprompt\n")
   hecho("autoempower\n")
+  hecho("showrace\n")
+  hecho("showkillsxp\n")
 end
 
 if command=="berserkovercenter" then
   xaos.config.berserkovercenter = not xaos.config.berserkovercenter
   echo("Berserk Over Center: " .. tostring(xaos.config.berserkovercenter))
+  copytoprofile()
 end
 
 if command == "berserkmode" then
   xaos.config.berserkmode = not xaos.config.berserkmode
   echo("Berserk Mode: " .. tostring(xaos.config.berserkmode))
+  copytoprofile()
 end
 
 if command == "minmana" then
   xaos.config.scripting.minmana = tonumber(args)
   echo("Min Mana: " .. tostring(xaos.config.scripting.minmana))
+  copytoprofile()
 end
 
 if command == "minhp" then
   xaos.config.scripting.minhp = tonumber(args)
   echo("Min HP: " .. tostring(xaos.config.scripting.minhp))
+  copytoprofile()
 end
 
 if command == "showprompt" then
@@ -8723,6 +8751,19 @@ end
 if command == "autoempower" then
   xaos.config.autoempower = not xaos.config.autoempower
   helpbodyecho("Auto Empower: " .. tostring(xaos.config.autoempower))
+  copytoprofile()
+end
+
+if command == "showrace" then
+  xaos.config.show_race = not xaos.config.show_race
+  helpbodyecho("Show Race: " .. tostring(xaos.config.show_race))
+  copytoprofile()
+end
+
+if command == "showkillsxp" then
+  xaos.config.show_killed = not xaos.config.show_killed
+  helpbodyecho("Show Killed XP: " .. tostring(xaos.config.show_killed))
+  copytoprofile()
 end</script>
 					<command></command>
 					<packageName></packageName>
@@ -15671,6 +15712,8 @@ end</script>
   if xaos.config.scripting.initialcommand == nil then xaos.config.scripting.initialcommand = "" end
   
   if xaos.config.equipmentsets == nil then xaos.config.equipmentsets = {} end
+  
+  if xaos.config.show_race == nil then xaos.config.show_race = false end
 end
 checkConfigDefaults()</script>
 					<eventHandlerList />
@@ -17561,8 +17604,8 @@ function onMenuHDragTimer()
     width = MIN_WIDTH
   end
   
-  OOCCon:resize(windowWidth-BORDER_WIDTH.."px", OOCCon.height)
-  OOCCon:reposition()
+  --OOCCon:resize(windowWidth-BORDER_WIDTH.."px", OOCCon.height)
+  --OOCCon:reposition()
   
   -- Set the new size and restart timer.
   --menu.window:move("-" .. width .. "px","0px")
@@ -20094,6 +20137,8 @@ function parsePulse(pulsetext)
         enableTimer("User Timer")
         expandAlias(xaos.config.reconnectaction)
       end
+    elseif (attrname=="chRace") then
+      xaos.characterrace = string.trim(attrvalue)
       
     elseif (attrname=="chHeroLevel") then
       --Level
@@ -21470,6 +21515,21 @@ end</script>
 end</script>
 					<eventHandlerList>
 						<string>msdp.PARTY_LEAD</string>
+					</eventHandlerList>
+				</Script>
+				<Script isActive="yes" isFolder="no">
+					<name>grab_RACE</name>
+					<packageName></packageName>
+					<script>function grab_RACE()
+  debugecho("MSDP:RACE")
+  xaos.characterrace = msdp.RACE
+
+end
+
+
+</script>
+					<eventHandlerList>
+						<string>msdp.RACE</string>
 					</eventHandlerList>
 				</Script>
 				<Script isActive="yes" isFolder="no">
