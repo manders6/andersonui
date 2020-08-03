@@ -15140,7 +15140,7 @@ if mysettings == nil then mysettings = {} end
 
 local firstload = true
 
-mysettings.version = "0.2.1.0"
+mysettings.version = "0.2.0.2"
 
 if io.exists(getMudletHomeDir() .. "/mysettings.dat") then
   table.load(getMudletHomeDir() .. "/mysettings.dat",mysettings)
@@ -15230,10 +15230,14 @@ end
 
 function indexTableEntry(tbl,name,value)
 
-   table.index_of(tbl,findTableEntry(tbl,  
-    function (item) 
-      return item[name] == value 
-    end))
+    
+    for k,v in pairs(tbl) do
+    
+      if v[name] == value then
+        return k
+      end
+    
+    end
 
 end
 

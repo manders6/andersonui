@@ -38,8 +38,8 @@ downloadUpdate()</script>
 updateWin.displaylabel = 
   updateWin.displaylabel or Geyser.Label:new({
     name = "setupdisplaylabellabel",
-    x = "80%", y = "-10%",
-    width = "8%", height = "10%",
+    x = "10%", y = "10%",
+    width = "80%", height = "80%",
   },updateWin)
   
  updateWin.displaylabel:setStyleSheet([[
@@ -137,19 +137,21 @@ function checkVersions()
 	if mysettings ~= nil and mysettings.version~=nil then
 		version = mysettings.version
 	end
-  display(versions)
+  --display(versions)
 	--local pos = table.index_of(versions, version) or 0
   local pos = indexTableEntry(versions,"version",version) or 0
+  echo (pos .. " " .. #versions)
 	if pos ~= #versions then
 		enableAlias("installui")
 		--cecho("\n&lt;BlueViolet&gt;&lt;DarkSlateGrey&gt; - UI is ready to install, enter &lt;white&gt;installui&lt;DarkSlateGrey&gt; to install!")
-    echo(versions[table.size(versions)].notes) 
+    echo(versions[table.size(versions)].version) 
     if not containsTableEntry(xaos.alertlist,"text","UI Update Available") then
       table.insert(xaos.alertlist,
       {
         text="UI Update Available",
         func=function () 
-          updateWin.displaylabel:echo(versions[table.size(versions)].notes,"white","c16")
+          local newver = versions[table.size(versions)]
+          updateWin.displaylabel:echo("&lt;strong&gt;Version: " .. newver.version .. "&lt;/strong&gt;&lt;br&gt;&lt;br&gt;" .. string.gsub(newver.notes,"\n","&lt;br&gt;"),"black","c16")
           updateWin:show()
         end,
       }
