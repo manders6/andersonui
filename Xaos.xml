@@ -1263,7 +1263,8 @@ if auto_hunt then
             end
           end)
     end
-
+  else
+    
 	end
 end</script>
 						<triggerType>0</triggerType>
@@ -2170,7 +2171,7 @@ tellTimer = tempTimer(600, [[ tellCoolDown = false ]])
 					<colorTriggerFgColor>#000000</colorTriggerFgColor>
 					<colorTriggerBgColor>#000000</colorTriggerBgColor>
 					<regexCodeList>
-						<string>^You tell the group '(.+)'$</string>
+						<string>You tell the group '(.+)'$</string>
 					</regexCodeList>
 					<regexCodePropertyList>
 						<integer>1</integer>
@@ -8050,7 +8051,7 @@ end</script>
   
     if auto_hunt then 
   
-  			expandAlias("auto_hunt") 
+  			expandAlias("auto_hunt",false) 
   
   	end
   	
@@ -9889,7 +9890,7 @@ end</script>
 --If already hunting, do nothing
 --If neither in combat, nor hunting, hunt
 if not combat and not hunting and not restingMode then
-	send("hunt "..huntTarget.."\n")
+	send("hunt "..huntTarget.."\n",false)
 	hunting = true
 	debugc("[ Debug ] &lt;light_blue&gt;auto_hunt is being invoked. Hunt target is "..huntTarget.."\n")
 
@@ -15149,7 +15150,7 @@ if mysettings.oocchatsize == nil then mysettings.oocchatsize = 12 end
 if mysettings.questfontsize == nil then mysettings.questfontsize = 10 end
 if mysettings.variablefontsize == nil then mysettings.variablefontsize =  10 end
 if mysettings.scorefontsize== nil then mysettings.scorefontsize =  10 end
-if mysettings.datafontsize== nil then mysettings.datafontsize = 10 end
+if mysettings.datafontsize== nil then mysettings.datafontsize = 12 end
 if mysettings.feedconsole== nil then mysettings.feedconsole =  "data" end
 if mysettings.UIType== nil then mysettings.UIType =  "XUI" end
 if mysettings.showprompt == nil then mysettings.showprompt = false end
@@ -15160,7 +15161,8 @@ if mysettings.features.msdp == nil then mysettings.features.msdp = false end
 if mysettings.uicomponents == nil then mysettings.uicomponents = {} end
 if mysettings.uicomponents.partybar == nil then mysettings.uicomponents.partybar = "off" end
 if mysettings.uicomponents.partybox == nil then mysettings.uicomponents.partybox = "on" end
-
+if mysettings.uicomponents.opponentbar == nil then mysettings.uicomponents.opponentbar = "off" end
+if mysettings.uicomponents.debuffbar == nil then mysettings.uicomponents.debuffbar = "off" end
 
 function savemysettings()
   table.save(getMudletHomeDir() .. "/mysettings.dat",mysettings)
@@ -15215,6 +15217,15 @@ firstload = false</script>
     end
   end
   return nil
+end
+
+function containsTableEntry(tbl,name,value)
+
+  return findTableEntry(tbl,  
+    function (item) 
+      return item[name] == value 
+    end) ~= nil
+
 end
 
 function getDimensions(name,adjusted)
@@ -15640,8 +15651,9 @@ if overnight == nil then overnight = {} end
 
 if killcapture == nil then killcapture = {} end
 
-
-
+if xaos.alertlist == nil then xaos.alertlist = {} end
+if xaos.bufflist == nil then xaos.bufflist = {} end
+if xaos.debufflist == nil then xaos.debufflist = {} end
 
 xaos.class = {
    primary = primary
@@ -17124,7 +17136,7 @@ end
   
   local buttonoffset = 0
   
- -- lua menu.displaybutton:resize("100px","30px");lua menu.displaybutton:move("-100px","0px");lua menu.displaybutton:raise()
+ 
   menu.displaybutton = Geyser.Label:new({
     name="menu.displaybutton",
     x = "-" .. buttonoffset + 100 .. "px", y = "0px",
@@ -17272,6 +17284,134 @@ function showMenu()
 end
 
 </script>
+							<eventHandlerList />
+						</Script>
+						<Script isActive="yes" isFolder="no">
+							<name>Alert  Bar</name>
+							<packageName></packageName>
+							<script>menu.alertbar = menu.alertbar or 
+  Geyser.HBox:new({
+    name = "menu.alertbar",
+    x="0px",y="0px",
+    width=menu.scriptbutton.get_x() .. "px", height="30px",
+  })
+  
+
+AlertLabels = AlertLabels or {}
+
+menu.alertbarExtras = menu.alertbarExtras or 
+  Geyser.HBox:new({
+    name = "menu.alertbarExtras",
+    x="0px",y="0px",
+    width=menu.scriptbutton.get_x() .. "px", height="30px",
+  })
+  
+menu.alertbarExtras:hide()
+
+function handleAlertClick(alert)
+  if alert ~= nil then
+    alert()
+  end
+end
+
+function grabAlertLabel(index,color,func)
+
+  AlertLabels[index] = AlertLabels[index] or
+      Geyser.Label:new({name = "AlertLabels_"..index, width = "100px", height ="30px", h_policy=Geyser.Fixed,}, menu.alertbar)
+  AlertLabels[index]:setStyleSheet([[
+    background-color: ]]..color..[[;
+    border: 1px solid white;
+  ]])
+  
+  if func ~= nil then
+    AlertLabels[index]:setClickCallback("handleAlertClick",func)
+  else
+    AlertLabels[index]:setClickCallback("handleAlertClick",nil)
+  end
+  
+  AlertLabels[index]:changeContainer(menu.alertbar)
+  menu.alertbar:show()
+  return {label=AlertLabels[index]}
+end
+function hideAlertLabels(index)
+  local i
+  for i=index,table.size(AlertLabels) do
+    AlertLabels[i]:changeContainer(menu.alertbarExtras)
+  end
+end
+
+xaos.alertlist = {}
+
+
+function showAlertLabels()
+  local index = 1
+  for k,v in pairs(xaos.alertlist) do
+      grabAlertLabel(index,"rgb(0,0,255)",v.func).label:echo("&lt;center&gt;" .. v.text .. "&lt;/center&gt;")
+      index = index + 1
+  end
+  if mysettings.uicomponents.debuffbar == "on" then
+      for k,v in pairs(xaos.debufflist) do
+          grabAlertLabel(index,"rgb(255,0,0)").label:echo("&lt;center&gt;" .. v .. "&lt;/center&gt;")
+          index = index + 1
+      end
+  end
+  hideAlertLabels(index)
+end
+
+ debuffspelllist = {
+    --Cleric
+    "blindness",
+    "poison",
+    "plague",
+    "soften defense",
+    "silence",
+    "curse",
+    "grey rot",
+    
+    --Mage
+    "sleep",
+    "slow",
+    "weaken",
+    "acid blast",
+    "ice sphere",
+    "cold hands",
+    "faerie fire",
+
+    --Mentalist
+    "ego whip",
+    "divided will",
+    "malison",
+    
+    --Necro
+    "bone blight",
+    "essence harvest",
+    "wither",
+    "blackmantle",
+    
+    --WD
+    "blood curdle" ,
+    "Contagion",
+    "energy drain",
+    "fog of gnats",
+    "sulfuric wave",
+    "orange blight",
+    "putrefy",
+    
+    --Thief
+    "nerve strike" ,
+    
+    --Warrior
+    "dirt kicking",
+    "taunt",
+    
+    --Other
+    "fire breath",
+    "cryoblast",
+    
+  }
+  function isDebuff(spellname)
+    return table.contains(debuffspelllist,spellname)
+  end</script>
 							<eventHandlerList />
 						</Script>
 						<Script isActive="yes" isFolder="no">
@@ -18079,9 +18219,10 @@ function OOCCon_hide(tab)
   OOCConOverlay:show()
 end
 
- table.insert(focusonlywindows, function() OOCCon_hide() end)
+--table.insert(focusonlywindows, function() OOCCon_hide() end)
 
 OOCCon:hide()
+OOCConOverlay:hide()
 
 
 </script>
@@ -18094,9 +18235,9 @@ OOCCon:hide()
 
 dataBackCon = dataBackCon or Geyser.Label:new({
   name="dataBackCon",
-  x="-30%", y="90%",
+  x="-30%", y="-100px",
   color="black",
-  width="30%", height="10%",
+  width="30%", height="100px",
 })
 
 dataBackCon:setStyleSheet([[
@@ -18111,26 +18252,31 @@ dataCon = dataCon or Geyser.MiniConsole:new({
   wrapAt = 100,
 },dataBackCon)
 
-dataCon:setFontSize(mysettings.datafontsize)
+
 dataCon:setBufferSize (10000, 1000)
 dataCon:fg("white")
 dataCon:bg("black")
 dataCon:setColor("black")
 enableScrollBar("data")
 
-local width,height = calcFontSize(getFontSize("data"))
-local wrap = math.floor(dataCon:get_width()/width)-2
-dataCon:setWrap(wrap)
+function updateDataFont()
+  dataCon:setFontSize(mysettings.datafontsize)
+  local width,height = calcFontSize(getFontSize("data"))
+  local wrap = math.floor(dataCon:get_width()/width)-2
+  dataCon:setWrap(wrap)
+end
+
+updateDataFont()
 
 
 dataConOverlay = dataConOverlay or Geyser.Label:new({
   name = "dataConOverlay",
   x = 0, y = 0,
-  x="-25%", y="90%",
-  width="25%", height="10%",
+  x="-25%", y="-100px",
+  width="25%", height="100px",
 })
 dataConOverlay:setStyleSheet([[
-  background-color: rgba(0,0,0,25%);
+  background-color: rgba(0,0,0,0%);
 ]])
 
 dataConOverlay:setClickCallback("dataCon_click",dataCon)
@@ -18394,7 +18540,10 @@ combatWin = combatWin or Geyser.UserWindow:new({
 --},xpWin)
 
 --xpWin:resetAutoWrap()
-combatWin:disableAutoDock() 
+
+if combatWin.autoDock then
+  combatWin:disableAutoDock() 
+end
 enableScrollBar("combatWin")
 combatWin:hide()
 
@@ -18433,7 +18582,10 @@ xpWin = xpWin or Geyser.UserWindow:new({
 --},xpWin)
 
 --xpWin:resetAutoWrap()
-xpWin:disableAutoDock() 
+
+if xpWin.autoDock then
+  xpWin:disableAutoDock() 
+end
 enableScrollBar("xpWin")
 xpWin:hide()
 --menu.setdoubleclick("XP",function() xpWin:show() end)
@@ -18449,7 +18601,7 @@ xpWin:hide()
 return
 end
 
-questStatusWin = Geyser.UserWindow:new({
+questStatusWin = questStatusWin or Geyser.UserWindow:new({
   name="queststatuswin",
   x="2%", y="2%",
   autowrap=true,
@@ -18472,7 +18624,10 @@ questStatusWin = Geyser.UserWindow:new({
 --},questStatusWin)
 
 questStatusWin:resetAutoWrap()
-questStatusWin:disableAutoDock() 
+
+if questStatusWin.autoDock then
+  questStatusWin:disableAutoDock() 
+end
 enableScrollBar("queststatuswin")
 
 questStatusWin:hide()
@@ -18509,7 +18664,7 @@ setupWin.buttons = setupWinbuttons or {}
 local row = 1
 local col = 1
 
-local btnheight = 100
+local btnheight = 50
 local btnwidth  = 200
 
 
@@ -18595,7 +18750,7 @@ setupWin.buttons.msdp =
       border-top: 1px solid white;
     ]])
   
- setupWin.buttons.partybarleft:echo("Side Party: Left" .. tostring(mysettings.uicomponents.partybarleft),"white","c16")
+ setupWin.buttons.partybarleft:echo("Side Party: Left","white","c16")
  
   setupWin.buttons.partybarleft:setClickCallback("setupWinpartybarleftClick")
  
@@ -18626,7 +18781,7 @@ setupWin.buttons.msdp =
       border-top: 1px solid white;
     ]])
   
- setupWin.buttons.partybarright:echo("Side Party: right" .. tostring(mysettings.uicomponents.partybarright),"white","c16")
+ setupWin.buttons.partybarright:echo("Side Party: right","white","c16")
  
   setupWin.buttons.partybarright:setClickCallback("setupWinpartybarrightClick")
  
@@ -18657,7 +18812,7 @@ setupWin.buttons.msdp =
       border-top: 1px solid white;
     ]])
   
- setupWin.buttons.partybaroff:echo("Side Party: off" .. tostring(mysettings.uicomponents.partybaroff),"white","c16")
+ setupWin.buttons.partybaroff:echo("Side Party: off","white","c16")
  
   setupWin.buttons.partybaroff:setClickCallback("setupWinpartybaroffClick")
  
@@ -18669,12 +18824,111 @@ setupWin.buttons.msdp =
 	
   end 
  
+ row = row + 1
+ col = 1
+  
+setupWin.buttons.datafontsizeup = 
+  setupWin.buttons.datafontsizeup or Geyser.Label:new({
+    name = "setupdatafontsizelabel",
+    x = btnwidth*col .. "px", y = btnheight*row .. "px",
+    width = btnwidth-10 .. "px", height = btnheight-10 .. "px",
+    fgColor = "blue",
+    color = "white",
+  },setupWin)
+  
+setupWin.buttons.datafontsizeup:setStyleSheet([[
+      background-color: blue;
+      color: white;
+      margin-off: 1px;
+      margin-off: 1px;
+      border-top: 1px solid white;
+    ]])
+  
+setupWin.buttons.datafontsizeup:echo("Font Up ","white","c16")
  
+setupWin.buttons.datafontsizeup:setClickCallback("setupWindatafontsizeupClick")
+
+function setupWindatafontsizeupClick()
+
+	mysettings.datafontsize = mysettings.datafontsize + 1
+	savemysettings()
+  updateDataFont()
+end 
+ 
+  col = col + 1
+  
+setupWin.buttons.datafontsizedown = 
+  setupWin.buttons.datafontsizedown or Geyser.Label:new({
+    name = "setupdatafontsizedownlabel",
+    x = btnwidth*col .. "px", y = btnheight*row .. "px",
+    width = btnwidth-10 .. "px", height = btnheight-10 .. "px",
+    fgColor = "blue",
+    color = "white",
+  },setupWin)
+  
+setupWin.buttons.datafontsizedown:setStyleSheet([[
+      background-color: blue;
+      color: white;
+      margin-off: 1px;
+      margin-off: 1px;
+      border-top: 1px solid white;
+    ]])
+  
+setupWin.buttons.datafontsizedown:echo("Font Down ","white","c16")
+ 
+setupWin.buttons.datafontsizedown:setClickCallback("setupWindatafontsizedownClick")
+
+function setupWindatafontsizedownClick()
+
+	mysettings.datafontsize = mysettings.datafontsize - 1
+	savemysettings()
+  updateDataFont()
+end 
+
+
+
+row = row + 1
+ col = 1
+ 
+ setupWin.buttons.debuffbar = 
+  setupWin.buttons.debuffbar or Geyser.Label:new({
+    name = "setupdebuffbarlabel",
+    x = btnwidth*col .. "px", y = btnheight*row .. "px",
+    width = btnwidth-10 .. "px", height = btnheight-10 .. "px",
+    fgColor = "blue",
+    color = "white",
+  },setupWin)
+  
+ setupWin.buttons.debuffbar:setStyleSheet([[
+      background-color: blue;
+      color: white;
+      margin-right: 1px;
+      margin-left: 1px;
+      border-top: 1px solid white;
+    ]])
+  
+ setupWin.buttons.debuffbar:echo("Debuff Bar: " .. tostring(mysettings.uicomponents.debuffbar),"white","c16")
+ 
+  setupWin.buttons.debuffbar:setClickCallback("setupWindebuffbarClick")
+ 
+  function setupWindebuffbarClick()
+    if mysettings.uicomponents.debuffbar == "on" then
+      mysettings.uicomponents.debuffbar = "off"
+    else
+      mysettings.uicomponents.debuffbar = "on"
+    end
+    savemysettings()
+    showAlertLabels()
+    setupWin.buttons.debuffbar:echo("Debuff Bar: " .. tostring(mysettings.uicomponents.debuffbar),"white","c16")
+  end 
  
 
-setupWin:disableAutoDock() 
+--END BUTTONS
+
+if setupWin.autoDock then
+  setupWin:disableAutoDock() 
+end
 setupWin:hide()
-
 
 
 </script>
@@ -19875,6 +20129,8 @@ function reloadUI()
   mainWindowWrap = wrap
 
   menu.window:resize(menu.window.width,getDimensions("main").height-130 .. "px")
+  
+  menu.debuffbar:resize(menu.scriptbutton.get_x() .. "px","30px")
 end
 
 </script>
@@ -20519,14 +20775,14 @@ function loadMSDPUI()
     
     msdpPartyDisplay = msdpPartyDisplay or Geyser.VBox:new({
       name = "msdpPartyDisplay",
-      x = "2%", y = "0",
-      width = "96%", height = "40%",
+      x = "5%", y = "5%",
+      width = "90%", height = "40%",
     }, sidecont)
     
     msdpOppDisplay = msdpOppDisplay or Geyser.VBox:new({
       name = "msdpOppDisplay",
-      x = "2%", y = "45%",
-      width = "95%", height = "40%",
+      x = "5%", y = "50%",
+      width = "90%", height = "45%",
     }, sidecont)
     
     msdpTargetDisplay = msdpTargetDisplay or Geyser.VBox:new({
@@ -20576,7 +20832,7 @@ function grabOppGauge(index,targetme)
       end
       
       OPPGauges[index] = OPPGauges[index] or
-          Geyser.Gauge:new({name = "OPPGauges_"..index,  x = "1%", y = 0, width = "98%", height ="100%"}, cont)
+          Geyser.Gauge:new({name = "OPPGauges_"..index,  x = "0%", y = "0%", width = "100%", height ="100%"}, cont)
       
       if not targetme then
         OPPGauges[index].front:setStyleSheet(
@@ -20618,13 +20874,16 @@ function grabOppGauge(index,targetme)
         )
       end
       
-      msdpOppDisplay:resize("95%",math.min(table.size(msdpOppDisplay.windows),5)*40 .. "px")
-      msdpOppDisplay:organize()
-      OPPGauges[index]:reposition()
       if index &gt; 1 then 
         OPPGauges[index]:changeContainer(cont)
         msdpOppDisplay:show()
       end
+      
+      --math.min(table.size(msdpOppDisplay.windows),5)*40 .. "px"
+      msdpOppDisplay:resize("90%",math.min(table.size(msdpOppDisplay.windows),9)*5 .. "%")
+      msdpOppDisplay:organize()
+      OPPGauges[index]:reposition()
+      
       return {gauge=OPPGauges[index]}
     end
   function hideOppGauges(index)
@@ -20724,9 +20983,15 @@ end</script>
 					<packageName></packageName>
 					<script>function grab_AFFECTS()
   debugecho("MSDP:AFFECTS")
+  --display(msdp.AFFECTS)
   xaos.bufflist = {}
+  xaos.debufflist = {}
   for k,v in pairs(msdp.AFFECTS) do
-    table.insert(xaos.bufflist,k)
+    if not isDebuff(k) then
+      table.insert(xaos.bufflist,k)
+    else
+      table.insert(xaos.debufflist,k)
+    end
   end
   
   xaos.statusResolve = table.contains(xaos.bufflist,"resolve")
@@ -20735,7 +21000,18 @@ end</script>
   xaos.statusCenter = table.contains(xaos.bufflist,"center")
   xaos.statusTrance = table.contains(xaos.bufflist,"trance")
   xaos.statusBless = table.contains(xaos.bufflist,"bless")
-end</script>
+  
+
+  showAlertLabels()
+  
+  
+end
+
+ 
+
+
+
+</script>
 					<eventHandlerList>
 						<string>msdp.AFFECTS</string>
 					</eventHandlerList>
@@ -21172,6 +21448,8 @@ end
 					<packageName></packageName>
 					<script>function grab_IN_ROOM()
 
+  --display(msdp.IN_ROOM)
+
   showInRoomPartyBar()
   
 end
@@ -21215,7 +21493,9 @@ function showInRoomPartyBar()
     
     if tonumber(targetmember) ~= 0 then --No Target
       if tonumber(targetmember) ~= -1 then --Blind
-        displayEnemyGauge(targetmember,inroom[targetmember],1,findmember.value.id == tonumber(inroom[targetmember].tid))
+        if inroom[targetmember] ~= nil then --Probably blind, cant find target
+          displayEnemyGauge(targetmember,inroom[targetmember],1,findmember.value.id == tonumber(inroom[targetmember].tid))
+        end
       end 
     else
       hideOppGauges(1)    

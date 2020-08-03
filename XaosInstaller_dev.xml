@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE MudletPackage>
+<MudletPackage version="1.001">
+	<AliasPackage>
+		<Alias isActive="yes" isFolder="no">
+			<name>installxaos</name>
+			<script>downloadVersions()
+downloadUpdate()</script>
+			<command></command>
+			<packageName></packageName>
+			<regex>^(I|i)(N|n)(S|s)(T|t)(A|a)(L|l)(L|l)(U|u)(I|i)$</regex>
+		</Alias>
+	</AliasPackage>
+	<ScriptPackage>
+		<Script isActive="yes" isFolder="no">
+			<name>uiLauncher</name>
+			<packageName></packageName>
+			<script>
+
+profilePath = getMudletHomeDir()
+profilePath = profilePath:gsub("\\","/")
+
+downloadPath = "https://raw.githubusercontent.com/manders6/andersonui/dev"
+
+files = {[[/Xaos.xml]],}
+
+registerAnonymousEventHandler("sysConnectionEvent", "eventHandler")
+registerAnonymousEventHandler("sysDownloadDone", "eventHandler")
+registerAnonymousEventHandler("sysDownloadError", "eventHandler")
+registerAnonymousEventHandler("bootUI", "eventHandler")
+
+function downloadVersions()
+	local path, file = profilePath .. "/ui", "/versions.lua"
+	if not io.exists(path) then lfs.mkdir(path) end
+	downloading = true
+	downloadFile(path .. file, downloadPath .. file)
+end
+
+function checkVersions()
+	downloading = false
+	local path = profilePath .. "/ui/versions.lua"
+	local versions = {}
+	table.load(path, versions)
+	local version = ""
+	if mysettings ~= nil and mysettings.version~=nil then
+		version = mysettings.version
+	end
+	local pos = table.index_of(versions, version) or 0
+	if pos ~= #versions then
+		enableAlias("installui")
+		cecho("\n&lt;BlueViolet&gt;&lt;DarkSlateGrey&gt; - UI is ready to install, enter &lt;white&gt;installui&lt;DarkSlateGrey&gt; to install!")
+	end
+end
+
+function installUpdate()
+	--if not downloading and corefiles is 5
+	local path = profilePath .. "/ui/Xaos.xml"
+	disableAlias("installui")
+	uninstallPackage("Xaos")
+	installPackage(path)
+	cecho("\n&lt;BlueViolet&gt;&lt;DarkSlateGrey&gt; - UI has been installed, continuing with boot.")
+	--tempTimer(4,[[raiseEvent("bootUI")]])
+end
+
+function downloadUpdate()
+	coreFiles = 0
+	downloadTimeout = tempTimer(60,function() coreDownloadFailed("timer") end)
+	cecho("\n&lt;BlueViolet&gt;&lt;DarkSlateGrey&gt; - Downloading UI, please wait.")
+	downloading = true
+	local path = profilePath .."/ui"
+	--cecho("\n           &lt;DarkSlateGrey&gt;Getting ")
+	for k,v in pairs(files) do
+		--cecho("&lt;DarkSlateGrey&gt;"..v..", ")
+		downloadFile(path..v, downloadPath..v)
+	end
+	--cecho("&lt;DarkSlateGrey&gt;from\n           "..downloadPath)
+end
+
+function coreDownloadFinished()
+	coreFiles = tonumber(coreFiles) + 1
+	if coreFiles == tonumber(#files) then
+		cecho("\n&lt;BlueViolet&gt;&lt;DarkSlateGrey&gt; - UI has been downloaded, proceeding with install!")
+		killTimer(downloadTimeout)
+		installUpdate()
+	 end
+end
+
+function coreDownloadFailed(arg)
+	cecho("\n&lt;BlueViolet&gt;&lt;DarkSlateGrey&gt; - A UI component download has failed, install can not proceed.")
+	cecho("\n&lt;DarkSlateGrey&gt;           Reason: "..arg)
+end
+
+function eventHandler(event,...)
+	if event == "sysConnectionEvent" then
+		downloadVersions()
+	elseif event == "sysDownloadDone" then
+		local file = arg[1]
+		if string.ends(file, "/versions.lua") then
+			checkVersions()
+		end
+		for k, v in pairs(files) do
+			if string.ends(file, v) then
+				coreDownloadFinished()
+				break
+			end
+		end
+	elseif event == "sysDownloadError" then
+		local file = arg[1]
+		if string.ends(file, "/versions.lua") then
+			coreDownloadFailed(file)
+		end
+		for k, v in pairs(files) do
+			if string.ends(file, v) then
+				coreDownloadFailed(file)
+				break
+			end
+		end
+	end
+end
+
+temptimer(2,downloadVersions())
+</script>
+			<eventHandlerList />
+		</Script>
+	</ScriptPackage>
+</MudletPackage>
