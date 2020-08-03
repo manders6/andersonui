@@ -15228,6 +15228,16 @@ function containsTableEntry(tbl,name,value)
 
 end
 
+function indexTableEntry(tbl,name,value)
+
+   table.index_of(tbl,findTableEntry(tbl,  
+    function (item) 
+      return item[name] == value 
+    end))
+
+end
+
+
 function getDimensions(name,adjusted)
   if name == "main" then
     local windowwidth,windowheight = getMainWindowSize()
@@ -18659,7 +18669,7 @@ setupWin = setupWin or Geyser.UserWindow:new({
  setupWin:setBgColor (10,10,10)
  setupWin:setFgColor (255,255,255)
 
-setupWin.buttons = setupWinbuttons or {}
+setupWin.buttons = setupWin.buttons or {}
 
 local row = 1
 local col = 1
