@@ -2388,7 +2388,7 @@ recentGold = recentGold + matches[2] </script>
 						<integer>1</integer>
 					</regexCodePropertyList>
 				</Trigger>
-				<TriggerGroup isActive="yes" isFolder="yes" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+				<TriggerGroup isActive="no" isFolder="yes" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
 					<name>Spams</name>
 					<script></script>
 					<triggerType>0</triggerType>
@@ -2418,9 +2418,11 @@ recentGold = recentGold + matches[2] </script>
 						<colorTriggerBgColor>#000000</colorTriggerBgColor>
 						<regexCodeList>
 							<string>You (.*)parry </string>
+							<string>parries your</string>
 						</regexCodeList>
 						<regexCodePropertyList>
 							<integer>1</integer>
+							<integer>0</integer>
 						</regexCodePropertyList>
 					</Trigger>
 					<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
@@ -2458,8 +2460,10 @@ recentGold = recentGold + matches[2] </script>
 						<colorTriggerBgColor>#000000</colorTriggerBgColor>
 						<regexCodeList>
 							<string>You dodge</string>
+							<string>dodges your</string>
 						</regexCodeList>
 						<regexCodePropertyList>
+							<integer>0</integer>
 							<integer>0</integer>
 						</regexCodePropertyList>
 					</Trigger>
@@ -2478,8 +2482,10 @@ recentGold = recentGold + matches[2] </script>
 						<colorTriggerBgColor>#000000</colorTriggerBgColor>
 						<regexCodeList>
 							<string>You phase to avoid</string>
+							<string>phases to avoid</string>
 						</regexCodeList>
 						<regexCodePropertyList>
+							<integer>0</integer>
 							<integer>0</integer>
 						</regexCodePropertyList>
 					</Trigger>
@@ -3547,6 +3553,26 @@ end</script>
 				<colorTriggerBgColor>#000000</colorTriggerBgColor>
 				<regexCodeList />
 				<regexCodePropertyList />
+				<TriggerGroup isActive="yes" isFolder="yes" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+					<name>Not MSDP</name>
+					<script></script>
+					<triggerType>0</triggerType>
+					<conditonLineDelta>0</conditonLineDelta>
+					<mStayOpen>0</mStayOpen>
+					<mCommand></mCommand>
+					<packageName></packageName>
+					<mFgColor>#ff0000</mFgColor>
+					<mBgColor>#ffff00</mBgColor>
+					<mSoundFile></mSoundFile>
+					<colorTriggerFgColor>#000000</colorTriggerFgColor>
+					<colorTriggerBgColor>#000000</colorTriggerBgColor>
+					<regexCodeList>
+						<string>return not mysettings.features.msdp</string>
+					</regexCodeList>
+					<regexCodePropertyList>
+						<integer>4</integer>
+					</regexCodePropertyList>
+				</TriggerGroup>
 				<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
 					<name>Echo Level</name>
 					<script>
@@ -4054,30 +4080,8 @@ end</script>
 				<colorTriggerBgColor>#000000</colorTriggerBgColor>
 				<regexCodeList />
 				<regexCodePropertyList />
-				<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
-					<name>Start</name>
-					<script>startequipmentgrab=true
-held=""
-currentequipment = {}</script>
-					<triggerType>0</triggerType>
-					<conditonLineDelta>0</conditonLineDelta>
-					<mStayOpen>0</mStayOpen>
-					<mCommand></mCommand>
-					<packageName></packageName>
-					<mFgColor>#ff0000</mFgColor>
-					<mBgColor>#ffff00</mBgColor>
-					<mSoundFile></mSoundFile>
-					<colorTriggerFgColor>#000000</colorTriggerFgColor>
-					<colorTriggerBgColor>#000000</colorTriggerBgColor>
-					<regexCodeList>
-						<string>You are wearing</string>
-					</regexCodeList>
-					<regexCodePropertyList>
-						<integer>0</integer>
-					</regexCodePropertyList>
-				</Trigger>
-				<TriggerGroup isActive="yes" isFolder="yes" isTempTrigger="no" isMultiline="yes" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
-					<name>Equipment</name>
+				<TriggerGroup isActive="yes" isFolder="yes" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+					<name>Not MSDP</name>
 					<script></script>
 					<triggerType>0</triggerType>
 					<conditonLineDelta>0</conditonLineDelta>
@@ -4090,14 +4094,55 @@ currentequipment = {}</script>
 					<colorTriggerFgColor>#000000</colorTriggerFgColor>
 					<colorTriggerBgColor>#000000</colorTriggerBgColor>
 					<regexCodeList>
-						<string>return startequipmentgrab</string>
+						<string>return not mysettings.features.msdp</string>
 					</regexCodeList>
 					<regexCodePropertyList>
 						<integer>4</integer>
 					</regexCodePropertyList>
 					<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
-						<name>Grab Gear</name>
-						<script>
+						<name>Start</name>
+						<script>startequipmentgrab=true
+held=""
+currentequipment = {}</script>
+						<triggerType>0</triggerType>
+						<conditonLineDelta>0</conditonLineDelta>
+						<mStayOpen>0</mStayOpen>
+						<mCommand></mCommand>
+						<packageName></packageName>
+						<mFgColor>#ff0000</mFgColor>
+						<mBgColor>#ffff00</mBgColor>
+						<mSoundFile></mSoundFile>
+						<colorTriggerFgColor>#000000</colorTriggerFgColor>
+						<colorTriggerBgColor>#000000</colorTriggerBgColor>
+						<regexCodeList>
+							<string>You are wearing</string>
+						</regexCodeList>
+						<regexCodePropertyList>
+							<integer>0</integer>
+						</regexCodePropertyList>
+					</Trigger>
+					<TriggerGroup isActive="yes" isFolder="yes" isTempTrigger="no" isMultiline="yes" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+						<name>Equipment</name>
+						<script></script>
+						<triggerType>0</triggerType>
+						<conditonLineDelta>0</conditonLineDelta>
+						<mStayOpen>0</mStayOpen>
+						<mCommand></mCommand>
+						<packageName></packageName>
+						<mFgColor>#ff0000</mFgColor>
+						<mBgColor>#ffff00</mBgColor>
+						<mSoundFile></mSoundFile>
+						<colorTriggerFgColor>#000000</colorTriggerFgColor>
+						<colorTriggerBgColor>#000000</colorTriggerBgColor>
+						<regexCodeList>
+							<string>return startequipmentgrab</string>
+						</regexCodeList>
+						<regexCodePropertyList>
+							<integer>4</integer>
+						</regexCodePropertyList>
+						<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+							<name>Grab Gear</name>
+							<script>
 --&lt;(worn on \w*|worn about \w*|worn around \w*|floating nearby|held (?:in|with) (?:right|left|both) hands?)&gt;  \[[\w\s]*\](?: \(Bound\))?(?: \(Artifact\))?(?: \(Glowing\))?(?: \(Humming\))?(?: \(Spiked\))?(?: \(Visored\))? (?:an|the|a)?(.*)
 
 local wear = string.trim(matches[2])
@@ -4132,46 +4177,47 @@ end
 table.insert(currentequipment,{location=wear,item=item})
 echo("  -- grabbed")
 </script>
-						<triggerType>0</triggerType>
-						<conditonLineDelta>0</conditonLineDelta>
-						<mStayOpen>0</mStayOpen>
-						<mCommand></mCommand>
-						<packageName></packageName>
-						<mFgColor>#ff0000</mFgColor>
-						<mBgColor>#ffff00</mBgColor>
-						<mSoundFile></mSoundFile>
-						<colorTriggerFgColor>#000000</colorTriggerFgColor>
-						<colorTriggerBgColor>#000000</colorTriggerBgColor>
-						<regexCodeList>
-							<string>&lt;(worn on \w*|worn about \w*|worn around \w*|floating nearby|held (?:in|with) (?:right|left|both) hands?)&gt;  \[[\w\s]*\](?: \(Bound\))?(?: \(Artifact\))?(?: \(Glowing\))?(?: \(Humming\))?(?: \(Spiked\))?(?: \(Visored\))? (?:an|the|a)?(.*)</string>
-						</regexCodeList>
-						<regexCodePropertyList>
-							<integer>1</integer>
-						</regexCodePropertyList>
-					</Trigger>
-					<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="yes" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
-						<name>Prompt reset</name>
-						<script>equipmentgrab=false
+							<triggerType>0</triggerType>
+							<conditonLineDelta>0</conditonLineDelta>
+							<mStayOpen>0</mStayOpen>
+							<mCommand></mCommand>
+							<packageName></packageName>
+							<mFgColor>#ff0000</mFgColor>
+							<mBgColor>#ffff00</mBgColor>
+							<mSoundFile></mSoundFile>
+							<colorTriggerFgColor>#000000</colorTriggerFgColor>
+							<colorTriggerBgColor>#000000</colorTriggerBgColor>
+							<regexCodeList>
+								<string>&lt;(worn on \w*|worn about \w*|worn around \w*|floating nearby|held (?:in|with) (?:right|left|both) hands?)&gt;  \[[\w\s]*\](?: \(Bound\))?(?: \(Artifact\))?(?: \(Glowing\))?(?: \(Humming\))?(?: \(Spiked\))?(?: \(Visored\))? (?:an|the|a)?(.*)</string>
+							</regexCodeList>
+							<regexCodePropertyList>
+								<integer>1</integer>
+							</regexCodePropertyList>
+						</Trigger>
+						<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="yes" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+							<name>Prompt reset</name>
+							<script>equipmentgrab=false
 startequipmentgrab=false</script>
-						<triggerType>0</triggerType>
-						<conditonLineDelta>0</conditonLineDelta>
-						<mStayOpen>0</mStayOpen>
-						<mCommand></mCommand>
-						<packageName></packageName>
-						<mFgColor>#ff0000</mFgColor>
-						<mBgColor>#ffff00</mBgColor>
-						<mSoundFile></mSoundFile>
-						<colorTriggerFgColor>#000000</colorTriggerFgColor>
-						<colorTriggerBgColor>#000000</colorTriggerBgColor>
-						<regexCodeList>
-							<string>return isXaosPrompt()</string>
-							<string>return startequipmentgrab</string>
-						</regexCodeList>
-						<regexCodePropertyList>
-							<integer>4</integer>
-							<integer>4</integer>
-						</regexCodePropertyList>
-					</Trigger>
+							<triggerType>0</triggerType>
+							<conditonLineDelta>0</conditonLineDelta>
+							<mStayOpen>0</mStayOpen>
+							<mCommand></mCommand>
+							<packageName></packageName>
+							<mFgColor>#ff0000</mFgColor>
+							<mBgColor>#ffff00</mBgColor>
+							<mSoundFile></mSoundFile>
+							<colorTriggerFgColor>#000000</colorTriggerFgColor>
+							<colorTriggerBgColor>#000000</colorTriggerBgColor>
+							<regexCodeList>
+								<string>return isXaosPrompt()</string>
+								<string>return startequipmentgrab</string>
+							</regexCodeList>
+							<regexCodePropertyList>
+								<integer>4</integer>
+								<integer>4</integer>
+							</regexCodePropertyList>
+						</Trigger>
+					</TriggerGroup>
 				</TriggerGroup>
 			</TriggerGroup>
 			<TriggerGroup isActive="yes" isFolder="yes" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
@@ -4189,30 +4235,8 @@ startequipmentgrab=false</script>
 				<colorTriggerBgColor>#000000</colorTriggerBgColor>
 				<regexCodeList />
 				<regexCodePropertyList />
-				<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
-					<name>Start Grab</name>
-					<script>grabskills=true
-xaos.skills = {}
-</script>
-					<triggerType>0</triggerType>
-					<conditonLineDelta>0</conditonLineDelta>
-					<mStayOpen>0</mStayOpen>
-					<mCommand></mCommand>
-					<packageName></packageName>
-					<mFgColor>#ff0000</mFgColor>
-					<mBgColor>#ffff00</mBgColor>
-					<mSoundFile></mSoundFile>
-					<colorTriggerFgColor>#000000</colorTriggerFgColor>
-					<colorTriggerBgColor>#000000</colorTriggerBgColor>
-					<regexCodeList>
-						<string>---------------------------------- Uncategorized ----------------------------------</string>
-					</regexCodeList>
-					<regexCodePropertyList>
-						<integer>0</integer>
-					</regexCodePropertyList>
-				</Trigger>
 				<TriggerGroup isActive="yes" isFolder="yes" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
-					<name>Grabbing</name>
+					<name>Not MSDP</name>
 					<script></script>
 					<triggerType>0</triggerType>
 					<conditonLineDelta>0</conditonLineDelta>
@@ -4225,14 +4249,15 @@ xaos.skills = {}
 					<colorTriggerFgColor>#000000</colorTriggerFgColor>
 					<colorTriggerBgColor>#000000</colorTriggerBgColor>
 					<regexCodeList>
-						<string>return grabskills</string>
+						<string>return not mysettings.features.msdp</string>
 					</regexCodeList>
 					<regexCodePropertyList>
 						<integer>4</integer>
 					</regexCodePropertyList>
-					<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="yes" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
-						<name>Prompt reset - Skills</name>
-						<script>grabskills=false
+					<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+						<name>Start Grab</name>
+						<script>grabskills=true
+xaos.skills = {}
 </script>
 						<triggerType>0</triggerType>
 						<conditonLineDelta>0</conditonLineDelta>
@@ -4245,15 +4270,15 @@ xaos.skills = {}
 						<colorTriggerFgColor>#000000</colorTriggerFgColor>
 						<colorTriggerBgColor>#000000</colorTriggerBgColor>
 						<regexCodeList>
-							<string>return isXaosPrompt()</string>
+							<string>---------------------------------- Uncategorized ----------------------------------</string>
 						</regexCodeList>
 						<regexCodePropertyList>
-							<integer>4</integer>
+							<integer>0</integer>
 						</regexCodePropertyList>
 					</Trigger>
-					<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
-						<name>Header</name>
-						<script>          </script>
+					<TriggerGroup isActive="yes" isFolder="yes" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+						<name>Grabbing</name>
+						<script></script>
 						<triggerType>0</triggerType>
 						<conditonLineDelta>0</conditonLineDelta>
 						<mStayOpen>0</mStayOpen>
@@ -4265,15 +4290,55 @@ xaos.skills = {}
 						<colorTriggerFgColor>#000000</colorTriggerFgColor>
 						<colorTriggerBgColor>#000000</colorTriggerBgColor>
 						<regexCodeList>
-							<string>^\s{10}(.*)</string>
+							<string>return grabskills</string>
 						</regexCodeList>
 						<regexCodePropertyList>
-							<integer>1</integer>
+							<integer>4</integer>
 						</regexCodePropertyList>
-					</Trigger>
-					<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="yes" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
-						<name>Skill</name>
-						<script>if grabskills then
+						<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="yes" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+							<name>Prompt reset - Skills</name>
+							<script>grabskills=false
+</script>
+							<triggerType>0</triggerType>
+							<conditonLineDelta>0</conditonLineDelta>
+							<mStayOpen>0</mStayOpen>
+							<mCommand></mCommand>
+							<packageName></packageName>
+							<mFgColor>#ff0000</mFgColor>
+							<mBgColor>#ffff00</mBgColor>
+							<mSoundFile></mSoundFile>
+							<colorTriggerFgColor>#000000</colorTriggerFgColor>
+							<colorTriggerBgColor>#000000</colorTriggerBgColor>
+							<regexCodeList>
+								<string>return isXaosPrompt()</string>
+							</regexCodeList>
+							<regexCodePropertyList>
+								<integer>4</integer>
+							</regexCodePropertyList>
+						</Trigger>
+						<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+							<name>Header</name>
+							<script>          </script>
+							<triggerType>0</triggerType>
+							<conditonLineDelta>0</conditonLineDelta>
+							<mStayOpen>0</mStayOpen>
+							<mCommand></mCommand>
+							<packageName></packageName>
+							<mFgColor>#ff0000</mFgColor>
+							<mBgColor>#ffff00</mBgColor>
+							<mSoundFile></mSoundFile>
+							<colorTriggerFgColor>#000000</colorTriggerFgColor>
+							<colorTriggerBgColor>#000000</colorTriggerBgColor>
+							<regexCodeList>
+								<string>^\s{10}(.*)</string>
+							</regexCodeList>
+							<regexCodePropertyList>
+								<integer>1</integer>
+							</regexCodePropertyList>
+						</Trigger>
+						<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="yes" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+							<name>Skill</name>
+							<script>if grabskills then
   local index = 0
   
   local k
@@ -4287,23 +4352,24 @@ xaos.skills = {}
     
   end
 end</script>
-						<triggerType>0</triggerType>
-						<conditonLineDelta>0</conditonLineDelta>
-						<mStayOpen>0</mStayOpen>
-						<mCommand></mCommand>
-						<packageName></packageName>
-						<mFgColor>#ff0000</mFgColor>
-						<mBgColor>#ffff00</mBgColor>
-						<mSoundFile></mSoundFile>
-						<colorTriggerFgColor>#000000</colorTriggerFgColor>
-						<colorTriggerBgColor>#000000</colorTriggerBgColor>
-						<regexCodeList>
-							<string>([^0-9%]+)([0-9]+)\%</string>
-						</regexCodeList>
-						<regexCodePropertyList>
-							<integer>1</integer>
-						</regexCodePropertyList>
-					</Trigger>
+							<triggerType>0</triggerType>
+							<conditonLineDelta>0</conditonLineDelta>
+							<mStayOpen>0</mStayOpen>
+							<mCommand></mCommand>
+							<packageName></packageName>
+							<mFgColor>#ff0000</mFgColor>
+							<mBgColor>#ffff00</mBgColor>
+							<mSoundFile></mSoundFile>
+							<colorTriggerFgColor>#000000</colorTriggerFgColor>
+							<colorTriggerBgColor>#000000</colorTriggerBgColor>
+							<regexCodeList>
+								<string>([^0-9%]+)([0-9]+)\%</string>
+							</regexCodeList>
+							<regexCodePropertyList>
+								<integer>1</integer>
+							</regexCodePropertyList>
+						</Trigger>
+					</TriggerGroup>
 				</TriggerGroup>
 			</TriggerGroup>
 			<TriggerGroup isActive="yes" isFolder="yes" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
@@ -4321,30 +4387,8 @@ end</script>
 				<colorTriggerBgColor>#000000</colorTriggerBgColor>
 				<regexCodeList />
 				<regexCodePropertyList />
-				<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
-					<name>Start Grab</name>
-					<script>grabspells=true
-xaos.spells = {}
-</script>
-					<triggerType>0</triggerType>
-					<conditonLineDelta>0</conditonLineDelta>
-					<mStayOpen>0</mStayOpen>
-					<mCommand></mCommand>
-					<packageName></packageName>
-					<mFgColor>#ff0000</mFgColor>
-					<mBgColor>#ffff00</mBgColor>
-					<mSoundFile></mSoundFile>
-					<colorTriggerFgColor>#000000</colorTriggerFgColor>
-					<colorTriggerBgColor>#000000</colorTriggerBgColor>
-					<regexCodeList>
-						<string>-=regular=-</string>
-					</regexCodeList>
-					<regexCodePropertyList>
-						<integer>0</integer>
-					</regexCodePropertyList>
-				</Trigger>
 				<TriggerGroup isActive="yes" isFolder="yes" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
-					<name>Grabbing</name>
+					<name>Not MSDP</name>
 					<script></script>
 					<triggerType>0</triggerType>
 					<conditonLineDelta>0</conditonLineDelta>
@@ -4357,14 +4401,15 @@ xaos.spells = {}
 					<colorTriggerFgColor>#000000</colorTriggerFgColor>
 					<colorTriggerBgColor>#000000</colorTriggerBgColor>
 					<regexCodeList>
-						<string>return grabspells</string>
+						<string>return not mysettings.features.msdp</string>
 					</regexCodeList>
 					<regexCodePropertyList>
 						<integer>4</integer>
 					</regexCodePropertyList>
-					<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="yes" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
-						<name>Prompt reset - Spells</name>
-						<script>grabspells=false
+					<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+						<name>Start Grab</name>
+						<script>grabspells=true
+xaos.spells = {}
 </script>
 						<triggerType>0</triggerType>
 						<conditonLineDelta>0</conditonLineDelta>
@@ -4377,15 +4422,15 @@ xaos.spells = {}
 						<colorTriggerFgColor>#000000</colorTriggerFgColor>
 						<colorTriggerBgColor>#000000</colorTriggerBgColor>
 						<regexCodeList>
-							<string>return isXaosPrompt()</string>
+							<string>-=regular=-</string>
 						</regexCodeList>
 						<regexCodePropertyList>
-							<integer>4</integer>
+							<integer>0</integer>
 						</regexCodePropertyList>
 					</Trigger>
-					<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
-						<name>Header</name>
-						<script>          </script>
+					<TriggerGroup isActive="yes" isFolder="yes" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+						<name>Grabbing</name>
+						<script></script>
 						<triggerType>0</triggerType>
 						<conditonLineDelta>0</conditonLineDelta>
 						<mStayOpen>0</mStayOpen>
@@ -4397,15 +4442,55 @@ xaos.spells = {}
 						<colorTriggerFgColor>#000000</colorTriggerFgColor>
 						<colorTriggerBgColor>#000000</colorTriggerBgColor>
 						<regexCodeList>
-							<string>^\s{10}(.*)</string>
+							<string>return grabspells</string>
 						</regexCodeList>
 						<regexCodePropertyList>
-							<integer>1</integer>
+							<integer>4</integer>
 						</regexCodePropertyList>
-					</Trigger>
-					<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="yes" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
-						<name>Spell</name>
-						<script>
+						<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="yes" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+							<name>Prompt reset - Spells</name>
+							<script>grabspells=false
+</script>
+							<triggerType>0</triggerType>
+							<conditonLineDelta>0</conditonLineDelta>
+							<mStayOpen>0</mStayOpen>
+							<mCommand></mCommand>
+							<packageName></packageName>
+							<mFgColor>#ff0000</mFgColor>
+							<mBgColor>#ffff00</mBgColor>
+							<mSoundFile></mSoundFile>
+							<colorTriggerFgColor>#000000</colorTriggerFgColor>
+							<colorTriggerBgColor>#000000</colorTriggerBgColor>
+							<regexCodeList>
+								<string>return isXaosPrompt()</string>
+							</regexCodeList>
+							<regexCodePropertyList>
+								<integer>4</integer>
+							</regexCodePropertyList>
+						</Trigger>
+						<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+							<name>Header</name>
+							<script>          </script>
+							<triggerType>0</triggerType>
+							<conditonLineDelta>0</conditonLineDelta>
+							<mStayOpen>0</mStayOpen>
+							<mCommand></mCommand>
+							<packageName></packageName>
+							<mFgColor>#ff0000</mFgColor>
+							<mBgColor>#ffff00</mBgColor>
+							<mSoundFile></mSoundFile>
+							<colorTriggerFgColor>#000000</colorTriggerFgColor>
+							<colorTriggerBgColor>#000000</colorTriggerBgColor>
+							<regexCodeList>
+								<string>^\s{10}(.*)</string>
+							</regexCodeList>
+							<regexCodePropertyList>
+								<integer>1</integer>
+							</regexCodePropertyList>
+						</Trigger>
+						<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="yes" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+							<name>Spell</name>
+							<script>
 local k
 for k=1,7,3 do
   
@@ -4416,23 +4501,24 @@ for k=1,7,3 do
   end
   
 end</script>
-						<triggerType>0</triggerType>
-						<conditonLineDelta>0</conditonLineDelta>
-						<mStayOpen>0</mStayOpen>
-						<mCommand></mCommand>
-						<packageName></packageName>
-						<mFgColor>#ff0000</mFgColor>
-						<mBgColor>#ffff00</mBgColor>
-						<mSoundFile></mSoundFile>
-						<colorTriggerFgColor>#000000</colorTriggerFgColor>
-						<colorTriggerBgColor>#000000</colorTriggerBgColor>
-						<regexCodeList>
-							<string>([^0-9]+)([0-9]+)\%  (?:[0-9]+)</string>
-						</regexCodeList>
-						<regexCodePropertyList>
-							<integer>1</integer>
-						</regexCodePropertyList>
-					</Trigger>
+							<triggerType>0</triggerType>
+							<conditonLineDelta>0</conditonLineDelta>
+							<mStayOpen>0</mStayOpen>
+							<mCommand></mCommand>
+							<packageName></packageName>
+							<mFgColor>#ff0000</mFgColor>
+							<mBgColor>#ffff00</mBgColor>
+							<mSoundFile></mSoundFile>
+							<colorTriggerFgColor>#000000</colorTriggerFgColor>
+							<colorTriggerBgColor>#000000</colorTriggerBgColor>
+							<regexCodeList>
+								<string>([^0-9]+)([0-9]+)\%  (?:[0-9]+)</string>
+							</regexCodeList>
+							<regexCodePropertyList>
+								<integer>1</integer>
+							</regexCodePropertyList>
+						</Trigger>
+					</TriggerGroup>
 				</TriggerGroup>
 			</TriggerGroup>
 			<TriggerGroup isActive="yes" isFolder="yes" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
@@ -4450,198 +4536,6 @@ end</script>
 				<colorTriggerBgColor>#000000</colorTriggerBgColor>
 				<regexCodeList />
 				<regexCodePropertyList />
-				<TriggerGroup isActive="yes" isFolder="yes" isTempTrigger="no" isMultiline="yes" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
-					<name>Party Grab</name>
-					<script></script>
-					<triggerType>0</triggerType>
-					<conditonLineDelta>0</conditonLineDelta>
-					<mStayOpen>0</mStayOpen>
-					<mCommand></mCommand>
-					<packageName></packageName>
-					<mFgColor>#ff0000</mFgColor>
-					<mBgColor>#ffff00</mBgColor>
-					<mSoundFile></mSoundFile>
-					<colorTriggerFgColor>#000000</colorTriggerFgColor>
-					<colorTriggerBgColor>#000000</colorTriggerBgColor>
-					<regexCodeList>
-						<string>return partygrab</string>
-					</regexCodeList>
-					<regexCodePropertyList>
-						<integer>4</integer>
-					</regexCodePropertyList>
-					<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
-						<name>Member</name>
-						<script>--echo(" -- grabbed")
-
-table.insert(curpartystatus.members,
-{
-  name = string.trim(matches[5]),
-  hp = matches[2],
-  mana = matches[3],
-  move = matches[4],
-  missingcount = 0,
-  charmie = rex.match(matches[5],[[^([aA] |[tT]he |[aA]n )]]) ~= nil
-})
-
-if partystatusgrab then
-  deleteLine()
-end</script>
-						<triggerType>0</triggerType>
-						<conditonLineDelta>0</conditonLineDelta>
-						<mStayOpen>0</mStayOpen>
-						<mCommand></mCommand>
-						<packageName></packageName>
-						<mFgColor>#ff0000</mFgColor>
-						<mBgColor>#ffff00</mBgColor>
-						<mSoundFile></mSoundFile>
-						<colorTriggerFgColor>#000000</colorTriggerFgColor>
-						<colorTriggerBgColor>#000000</colorTriggerBgColor>
-						<regexCodeList>
-							<string>[0-9]+\) ([0-9 ]{1,3})% ([0-9 ]{1,3})% ([0-9 ]{1,3})% (.*) (?:attacking:)</string>
-							<string>[0-9]+\) ([0-9 ]{1,3})% ([0-9 ]{1,3})% ([0-9 ]{1,3})% (.*)(?: ) (?:\(Guarding\))</string>
-							<string>[0-9]+\) ([0-9 ]{1,3})% ([0-9 ]{1,3})% ([0-9 ]{1,3})% (.*) (?:\(Guarded by\))</string>
-							<string>[0-9]+\) ([0-9 ]{1,3})% ([0-9 ]{1,3})% ([0-9 ]{1,3})% (.*)</string>
-						</regexCodeList>
-						<regexCodePropertyList>
-							<integer>1</integer>
-							<integer>1</integer>
-							<integer>1</integer>
-							<integer>1</integer>
-						</regexCodePropertyList>
-					</Trigger>
-					<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
-						<name>Missing</name>
-						<script>--echo(" -- grabbed")
-
-local missingcount = 0
-local findmember = table.n_filter(xaos.party.members,function (item) return item.name == matches[2] end)
---debugecho(table.size(findmember))
-if table.size(findmember) ~= 0 then
-  missingcount = findmember[1].missingcount
-end
-table.insert(curpartystatus.members,
-{
-  name = string.trim(matches[2]),
-  hp = "??",
-  mana = 0,
-  move = 0,
-  missingcount=missingcount+1,
-  charmie = rex.match(matches[2],[[^([aA] |[tT]he |[aA]n )]]) ~= nil
-})
---debugecho(missingcount)
-if xaos.party.leader == "Your" and matches[2] ~= "someone" and xaos.config.scripting.findmode and missingcount &gt; 0 then
-  --playSoundFile([[C:\Windows\media\chimes.wav]])
-  if followTarget == "" then
-    debugecho("we lost " ..  matches[2])
-    lastkillTarget=killTarget
-    expandAlias("fhunt " .. matches[2])
-  end
-end
-if partystatusgrab then
-  deleteLine()
-end</script>
-						<triggerType>0</triggerType>
-						<conditonLineDelta>0</conditonLineDelta>
-						<mStayOpen>0</mStayOpen>
-						<mCommand></mCommand>
-						<packageName></packageName>
-						<mFgColor>#ff0000</mFgColor>
-						<mBgColor>#ffff00</mBgColor>
-						<mSoundFile></mSoundFile>
-						<colorTriggerFgColor>#000000</colorTriggerFgColor>
-						<colorTriggerBgColor>#000000</colorTriggerBgColor>
-						<regexCodeList>
-							<string>[0-9]+\) ---- ---- ---- (.*)</string>
-						</regexCodeList>
-						<regexCodePropertyList>
-							<integer>1</integer>
-						</regexCodePropertyList>
-					</Trigger>
-					<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="yes" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
-						<name>Prompt reset</name>
-						<script>partygrab=false
-partystatusgrab=false
-
-xaos.party = curpartystatus
-</script>
-						<triggerType>0</triggerType>
-						<conditonLineDelta>0</conditonLineDelta>
-						<mStayOpen>0</mStayOpen>
-						<mCommand></mCommand>
-						<packageName></packageName>
-						<mFgColor>#ff0000</mFgColor>
-						<mBgColor>#ffff00</mBgColor>
-						<mSoundFile></mSoundFile>
-						<colorTriggerFgColor>#000000</colorTriggerFgColor>
-						<colorTriggerBgColor>#000000</colorTriggerBgColor>
-						<regexCodeList>
-							<string>return isXaosPrompt()</string>
-						</regexCodeList>
-						<regexCodePropertyList>
-							<integer>4</integer>
-						</regexCodePropertyList>
-					</Trigger>
-				</TriggerGroup>
-				<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
-					<name>Start Grab</name>
-					<script>partygrab=true
-curpartystatus = {
-  leader = string.trim(matches[2]),
-  members = {}
-}
-
-if partystatusgrab then
-  deleteLine()
-end</script>
-					<triggerType>0</triggerType>
-					<conditonLineDelta>0</conditonLineDelta>
-					<mStayOpen>0</mStayOpen>
-					<mCommand></mCommand>
-					<packageName></packageName>
-					<mFgColor>#ff0000</mFgColor>
-					<mBgColor>#ffff00</mBgColor>
-					<mSoundFile></mSoundFile>
-					<colorTriggerFgColor>#000000</colorTriggerFgColor>
-					<colorTriggerBgColor>#000000</colorTriggerBgColor>
-					<regexCodeList>
-						<string>^(.*)\'s party:</string>
-						<string>^(Your) Party:</string>
-						<string>^(.*) party:</string>
-					</regexCodeList>
-					<regexCodePropertyList>
-						<integer>1</integer>
-						<integer>1</integer>
-						<integer>1</integer>
-					</regexCodePropertyList>
-				</Trigger>
-				<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
-					<name>Not in a Party</name>
-					<script>if partystatusgrab then
-  deleteLine()
-  partystatusgrab=false
-end
-
-xaos.party = {
-  leader = "Your",
-  members = {}
-}</script>
-					<triggerType>0</triggerType>
-					<conditonLineDelta>0</conditonLineDelta>
-					<mStayOpen>0</mStayOpen>
-					<mCommand></mCommand>
-					<packageName></packageName>
-					<mFgColor>#ff0000</mFgColor>
-					<mBgColor>#ffff00</mBgColor>
-					<mSoundFile></mSoundFile>
-					<colorTriggerFgColor>#000000</colorTriggerFgColor>
-					<colorTriggerBgColor>#000000</colorTriggerBgColor>
-					<regexCodeList>
-						<string>You are not currently in a party.</string>
-					</regexCodeList>
-					<regexCodePropertyList>
-						<integer>0</integer>
-					</regexCodePropertyList>
-				</Trigger>
 				<TriggerGroup isActive="yes" isFolder="yes" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
 					<name>Grouping</name>
 					<script></script>
@@ -5032,6 +4926,218 @@ end</script>
 						</TriggerGroup>
 					</TriggerGroup>
 				</TriggerGroup>
+				<TriggerGroup isActive="yes" isFolder="yes" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+					<name>Not MSDP</name>
+					<script></script>
+					<triggerType>0</triggerType>
+					<conditonLineDelta>0</conditonLineDelta>
+					<mStayOpen>0</mStayOpen>
+					<mCommand></mCommand>
+					<packageName></packageName>
+					<mFgColor>#ff0000</mFgColor>
+					<mBgColor>#ffff00</mBgColor>
+					<mSoundFile></mSoundFile>
+					<colorTriggerFgColor>#000000</colorTriggerFgColor>
+					<colorTriggerBgColor>#000000</colorTriggerBgColor>
+					<regexCodeList>
+						<string>return not mysettings.features.msdp</string>
+					</regexCodeList>
+					<regexCodePropertyList>
+						<integer>4</integer>
+					</regexCodePropertyList>
+					<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+						<name>Start Grab</name>
+						<script>partygrab=true
+curpartystatus = {
+  leader = string.trim(matches[2]),
+  members = {}
+}
+
+if partystatusgrab then
+  deleteLine()
+end</script>
+						<triggerType>0</triggerType>
+						<conditonLineDelta>0</conditonLineDelta>
+						<mStayOpen>0</mStayOpen>
+						<mCommand></mCommand>
+						<packageName></packageName>
+						<mFgColor>#ff0000</mFgColor>
+						<mBgColor>#ffff00</mBgColor>
+						<mSoundFile></mSoundFile>
+						<colorTriggerFgColor>#000000</colorTriggerFgColor>
+						<colorTriggerBgColor>#000000</colorTriggerBgColor>
+						<regexCodeList>
+							<string>^(.*)\'s party:</string>
+							<string>^(Your) Party:</string>
+							<string>^(.*) party:</string>
+						</regexCodeList>
+						<regexCodePropertyList>
+							<integer>1</integer>
+							<integer>1</integer>
+							<integer>1</integer>
+						</regexCodePropertyList>
+					</Trigger>
+					<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+						<name>Not in a Party</name>
+						<script>if partystatusgrab then
+  deleteLine()
+  partystatusgrab=false
+end
+
+xaos.party = {
+  leader = "Your",
+  members = {}
+}</script>
+						<triggerType>0</triggerType>
+						<conditonLineDelta>0</conditonLineDelta>
+						<mStayOpen>0</mStayOpen>
+						<mCommand></mCommand>
+						<packageName></packageName>
+						<mFgColor>#ff0000</mFgColor>
+						<mBgColor>#ffff00</mBgColor>
+						<mSoundFile></mSoundFile>
+						<colorTriggerFgColor>#000000</colorTriggerFgColor>
+						<colorTriggerBgColor>#000000</colorTriggerBgColor>
+						<regexCodeList>
+							<string>You are not currently in a party.</string>
+						</regexCodeList>
+						<regexCodePropertyList>
+							<integer>0</integer>
+						</regexCodePropertyList>
+					</Trigger>
+					<TriggerGroup isActive="yes" isFolder="yes" isTempTrigger="no" isMultiline="yes" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+						<name>Party Grab</name>
+						<script></script>
+						<triggerType>0</triggerType>
+						<conditonLineDelta>0</conditonLineDelta>
+						<mStayOpen>0</mStayOpen>
+						<mCommand></mCommand>
+						<packageName></packageName>
+						<mFgColor>#ff0000</mFgColor>
+						<mBgColor>#ffff00</mBgColor>
+						<mSoundFile></mSoundFile>
+						<colorTriggerFgColor>#000000</colorTriggerFgColor>
+						<colorTriggerBgColor>#000000</colorTriggerBgColor>
+						<regexCodeList>
+							<string>return partygrab</string>
+						</regexCodeList>
+						<regexCodePropertyList>
+							<integer>4</integer>
+						</regexCodePropertyList>
+						<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+							<name>Member</name>
+							<script>--echo(" -- grabbed")
+
+table.insert(curpartystatus.members,
+{
+  name = string.trim(matches[5]),
+  hp = matches[2],
+  mana = matches[3],
+  move = matches[4],
+  missingcount = 0,
+  charmie = rex.match(matches[5],[[^([aA] |[tT]he |[aA]n )]]) ~= nil
+})
+
+if partystatusgrab then
+  deleteLine()
+end</script>
+							<triggerType>0</triggerType>
+							<conditonLineDelta>0</conditonLineDelta>
+							<mStayOpen>0</mStayOpen>
+							<mCommand></mCommand>
+							<packageName></packageName>
+							<mFgColor>#ff0000</mFgColor>
+							<mBgColor>#ffff00</mBgColor>
+							<mSoundFile></mSoundFile>
+							<colorTriggerFgColor>#000000</colorTriggerFgColor>
+							<colorTriggerBgColor>#000000</colorTriggerBgColor>
+							<regexCodeList>
+								<string>[0-9]+\) ([0-9 ]{1,3})% ([0-9 ]{1,3})% ([0-9 ]{1,3})% (.*) (?:attacking:)</string>
+								<string>[0-9]+\) ([0-9 ]{1,3})% ([0-9 ]{1,3})% ([0-9 ]{1,3})% (.*)(?: ) (?:\(Guarding\))</string>
+								<string>[0-9]+\) ([0-9 ]{1,3})% ([0-9 ]{1,3})% ([0-9 ]{1,3})% (.*) (?:\(Guarded by\))</string>
+								<string>[0-9]+\) ([0-9 ]{1,3})% ([0-9 ]{1,3})% ([0-9 ]{1,3})% (.*)</string>
+							</regexCodeList>
+							<regexCodePropertyList>
+								<integer>1</integer>
+								<integer>1</integer>
+								<integer>1</integer>
+								<integer>1</integer>
+							</regexCodePropertyList>
+						</Trigger>
+						<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+							<name>Missing</name>
+							<script>--echo(" -- grabbed")
+
+local missingcount = 0
+local findmember = table.n_filter(xaos.party.members,function (item) return item.name == matches[2] end)
+--debugecho(table.size(findmember))
+if table.size(findmember) ~= 0 then
+  missingcount = findmember[1].missingcount
+end
+table.insert(curpartystatus.members,
+{
+  name = string.trim(matches[2]),
+  hp = "??",
+  mana = 0,
+  move = 0,
+  missingcount=missingcount+1,
+  charmie = rex.match(matches[2],[[^([aA] |[tT]he |[aA]n )]]) ~= nil
+})
+--debugecho(missingcount)
+if xaos.party.leader == "Your" and matches[2] ~= "someone" and xaos.config.scripting.findmode and missingcount &gt; 0 then
+  --playSoundFile([[C:\Windows\media\chimes.wav]])
+  if followTarget == "" then
+    debugecho("we lost " ..  matches[2])
+    lastkillTarget=killTarget
+    expandAlias("fhunt " .. matches[2])
+  end
+end
+if partystatusgrab then
+  deleteLine()
+end</script>
+							<triggerType>0</triggerType>
+							<conditonLineDelta>0</conditonLineDelta>
+							<mStayOpen>0</mStayOpen>
+							<mCommand></mCommand>
+							<packageName></packageName>
+							<mFgColor>#ff0000</mFgColor>
+							<mBgColor>#ffff00</mBgColor>
+							<mSoundFile></mSoundFile>
+							<colorTriggerFgColor>#000000</colorTriggerFgColor>
+							<colorTriggerBgColor>#000000</colorTriggerBgColor>
+							<regexCodeList>
+								<string>[0-9]+\) ---- ---- ---- (.*)</string>
+							</regexCodeList>
+							<regexCodePropertyList>
+								<integer>1</integer>
+							</regexCodePropertyList>
+						</Trigger>
+						<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="yes" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+							<name>Prompt reset</name>
+							<script>partygrab=false
+partystatusgrab=false
+
+xaos.party = curpartystatus
+</script>
+							<triggerType>0</triggerType>
+							<conditonLineDelta>0</conditonLineDelta>
+							<mStayOpen>0</mStayOpen>
+							<mCommand></mCommand>
+							<packageName></packageName>
+							<mFgColor>#ff0000</mFgColor>
+							<mBgColor>#ffff00</mBgColor>
+							<mSoundFile></mSoundFile>
+							<colorTriggerFgColor>#000000</colorTriggerFgColor>
+							<colorTriggerBgColor>#000000</colorTriggerBgColor>
+							<regexCodeList>
+								<string>return isXaosPrompt()</string>
+							</regexCodeList>
+							<regexCodePropertyList>
+								<integer>4</integer>
+							</regexCodePropertyList>
+						</Trigger>
+					</TriggerGroup>
+				</TriggerGroup>
 			</TriggerGroup>
 			<TriggerGroup isActive="yes" isFolder="yes" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
 				<name>Buffs</name>
@@ -5063,179 +5169,8 @@ end</script>
 					<colorTriggerBgColor>#000000</colorTriggerBgColor>
 					<regexCodeList />
 					<regexCodePropertyList />
-					<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
-						<name>Start Check Buffs</name>
-						<script>affectgrab=true
-for key,value in pairs(xaos.buffs) do
-  xaos.buffs[key] = false
-end
-
-xaos.bufflist = {}
-
-if gagmode then
-  deleteLine()
-end
-</script>
-						<triggerType>0</triggerType>
-						<conditonLineDelta>0</conditonLineDelta>
-						<mStayOpen>0</mStayOpen>
-						<mCommand></mCommand>
-						<packageName></packageName>
-						<mFgColor>#ff0000</mFgColor>
-						<mBgColor>#ffff00</mBgColor>
-						<mSoundFile></mSoundFile>
-						<colorTriggerFgColor>#000000</colorTriggerFgColor>
-						<colorTriggerBgColor>#000000</colorTriggerBgColor>
-						<regexCodeList>
-							<string>You are affected by the following:</string>
-						</regexCodeList>
-						<regexCodePropertyList>
-							<integer>0</integer>
-						</regexCodePropertyList>
-					</Trigger>
-					<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
-						<name>Affects - center</name>
-						<script>xaos.buffs.statusCenter=true</script>
-						<triggerType>0</triggerType>
-						<conditonLineDelta>0</conditonLineDelta>
-						<mStayOpen>0</mStayOpen>
-						<mCommand></mCommand>
-						<packageName></packageName>
-						<mFgColor>#ff0000</mFgColor>
-						<mBgColor>#ffff00</mBgColor>
-						<mSoundFile></mSoundFile>
-						<colorTriggerFgColor>#000000</colorTriggerFgColor>
-						<colorTriggerBgColor>#000000</colorTriggerBgColor>
-						<regexCodeList>
-							<string>Skill: discipline        modifies</string>
-						</regexCodeList>
-						<regexCodePropertyList>
-							<integer>0</integer>
-						</regexCodePropertyList>
-					</Trigger>
-					<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
-						<name>Affects - berserk</name>
-						<script>xaos.buffs.statusBerserk=true</script>
-						<triggerType>0</triggerType>
-						<conditonLineDelta>0</conditonLineDelta>
-						<mStayOpen>0</mStayOpen>
-						<mCommand></mCommand>
-						<packageName></packageName>
-						<mFgColor>#ff0000</mFgColor>
-						<mBgColor>#ffff00</mBgColor>
-						<mSoundFile></mSoundFile>
-						<colorTriggerFgColor>#000000</colorTriggerFgColor>
-						<colorTriggerBgColor>#000000</colorTriggerBgColor>
-						<regexCodeList>
-							<string> Skill: berserk           modifies</string>
-						</regexCodeList>
-						<regexCodePropertyList>
-							<integer>0</integer>
-						</regexCodePropertyList>
-					</Trigger>
-					<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
-						<name>Affects - resolve</name>
-						<script>xaos.buffs.statusResolve=true</script>
-						<triggerType>0</triggerType>
-						<conditonLineDelta>0</conditonLineDelta>
-						<mStayOpen>0</mStayOpen>
-						<mCommand></mCommand>
-						<packageName></packageName>
-						<mFgColor>#ff0000</mFgColor>
-						<mBgColor>#ffff00</mBgColor>
-						<mSoundFile></mSoundFile>
-						<colorTriggerFgColor>#000000</colorTriggerFgColor>
-						<colorTriggerBgColor>#000000</colorTriggerBgColor>
-						<regexCodeList>
-							<string>Skill: resolve           modifies</string>
-						</regexCodeList>
-						<regexCodePropertyList>
-							<integer>0</integer>
-						</regexCodePropertyList>
-					</Trigger>
-					<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
-						<name>Affects - warcry</name>
-						<script>xaos.buffs.statusWarcry=true</script>
-						<triggerType>0</triggerType>
-						<conditonLineDelta>0</conditonLineDelta>
-						<mStayOpen>0</mStayOpen>
-						<mCommand></mCommand>
-						<packageName></packageName>
-						<mFgColor>#ff0000</mFgColor>
-						<mBgColor>#ffff00</mBgColor>
-						<mSoundFile></mSoundFile>
-						<colorTriggerFgColor>#000000</colorTriggerFgColor>
-						<colorTriggerBgColor>#000000</colorTriggerBgColor>
-						<regexCodeList>
-							<string>Skill: warcry            modifies</string>
-						</regexCodeList>
-						<regexCodePropertyList>
-							<integer>0</integer>
-						</regexCodePropertyList>
-					</Trigger>
-					<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
-						<name>Affects - bless</name>
-						<script>xaos.buffs.statusBless=true</script>
-						<triggerType>0</triggerType>
-						<conditonLineDelta>0</conditonLineDelta>
-						<mStayOpen>0</mStayOpen>
-						<mCommand></mCommand>
-						<packageName></packageName>
-						<mFgColor>#ff0000</mFgColor>
-						<mBgColor>#ffff00</mBgColor>
-						<mSoundFile></mSoundFile>
-						<colorTriggerFgColor>#000000</colorTriggerFgColor>
-						<colorTriggerBgColor>#000000</colorTriggerBgColor>
-						<regexCodeList>
-							<string>Spell: bless             modifies</string>
-						</regexCodeList>
-						<regexCodePropertyList>
-							<integer>0</integer>
-						</regexCodePropertyList>
-					</Trigger>
-					<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
-						<name>Affects - trance</name>
-						<script>xaos.buffs.statusTrance=true</script>
-						<triggerType>0</triggerType>
-						<conditonLineDelta>0</conditonLineDelta>
-						<mStayOpen>0</mStayOpen>
-						<mCommand></mCommand>
-						<packageName></packageName>
-						<mFgColor>#ff0000</mFgColor>
-						<mBgColor>#ffff00</mBgColor>
-						<mSoundFile></mSoundFile>
-						<colorTriggerFgColor>#000000</colorTriggerFgColor>
-						<colorTriggerBgColor>#000000</colorTriggerBgColor>
-						<regexCodeList>
-							<string>Skill: trance            modifies</string>
-						</regexCodeList>
-						<regexCodePropertyList>
-							<integer>0</integer>
-						</regexCodePropertyList>
-					</Trigger>
-					<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
-						<name>GetList</name>
-						<script>table.insert(xaos.bufflist,string.trim(matches[2]))
-</script>
-						<triggerType>0</triggerType>
-						<conditonLineDelta>0</conditonLineDelta>
-						<mStayOpen>0</mStayOpen>
-						<mCommand></mCommand>
-						<packageName></packageName>
-						<mFgColor>#ff0000</mFgColor>
-						<mBgColor>#ffff00</mBgColor>
-						<mSoundFile></mSoundFile>
-						<colorTriggerFgColor>#000000</colorTriggerFgColor>
-						<colorTriggerBgColor>#000000</colorTriggerBgColor>
-						<regexCodeList>
-							<string>^(?:\s*)(?:Skill:|Spell:| misc:|Effect:) (.*) (modifies|grants|makes|adds|gives|will)</string>
-						</regexCodeList>
-						<regexCodePropertyList>
-							<integer>1</integer>
-						</regexCodePropertyList>
-					</Trigger>
 					<TriggerGroup isActive="yes" isFolder="yes" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
-						<name>AffectGrabs</name>
+						<name>Not MSDP</name>
 						<script></script>
 						<triggerType>0</triggerType>
 						<conditonLineDelta>0</conditonLineDelta>
@@ -5248,46 +5183,14 @@ end
 						<colorTriggerFgColor>#000000</colorTriggerFgColor>
 						<colorTriggerBgColor>#000000</colorTriggerBgColor>
 						<regexCodeList>
-							<string>return affectgrab</string>
+							<string>return not mysettings.features.msdp</string>
 						</regexCodeList>
 						<regexCodePropertyList>
 							<integer>4</integer>
 						</regexCodePropertyList>
 						<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
 							<name>GetList</name>
-							<script>if gagmode then
-  deleteLine()
-end</script>
-							<triggerType>0</triggerType>
-							<conditonLineDelta>0</conditonLineDelta>
-							<mStayOpen>0</mStayOpen>
-							<mCommand></mCommand>
-							<packageName></packageName>
-							<mFgColor>#ff0000</mFgColor>
-							<mBgColor>#ffff00</mBgColor>
-							<mSoundFile></mSoundFile>
-							<colorTriggerFgColor>#000000</colorTriggerFgColor>
-							<colorTriggerBgColor>#000000</colorTriggerBgColor>
-							<regexCodeList>
-								<string>(?:Skill:|Spell:| misc:|Effect:)</string>
-								<string>(modifies)</string>
-							</regexCodeList>
-							<regexCodePropertyList>
-								<integer>1</integer>
-								<integer>1</integer>
-							</regexCodePropertyList>
-						</Trigger>
-						<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="yes" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
-							<name>Prompt reset</name>
-							<script>affectgrab=false
-
-if gagmode then
-  statcount = statcount+1
-else
-  --echo(checkbuffs().missing)
-  tempTimer(.1,function() echo(checkbuffs().missing) end)
-end
-
+							<script>table.insert(xaos.bufflist,string.trim(matches[2]))
 </script>
 							<triggerType>0</triggerType>
 							<conditonLineDelta>0</conditonLineDelta>
@@ -5300,12 +5203,235 @@ end
 							<colorTriggerFgColor>#000000</colorTriggerFgColor>
 							<colorTriggerBgColor>#000000</colorTriggerBgColor>
 							<regexCodeList>
-								<string>return isXaosPrompt()</string>
+								<string>^(?:\s*)(?:Skill:|Spell:| misc:|Effect:) (.*) (modifies|grants|makes|adds|gives|will)</string>
+							</regexCodeList>
+							<regexCodePropertyList>
+								<integer>1</integer>
+							</regexCodePropertyList>
+						</Trigger>
+						<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+							<name>Affects - center</name>
+							<script>xaos.buffs.statusCenter=true</script>
+							<triggerType>0</triggerType>
+							<conditonLineDelta>0</conditonLineDelta>
+							<mStayOpen>0</mStayOpen>
+							<mCommand></mCommand>
+							<packageName></packageName>
+							<mFgColor>#ff0000</mFgColor>
+							<mBgColor>#ffff00</mBgColor>
+							<mSoundFile></mSoundFile>
+							<colorTriggerFgColor>#000000</colorTriggerFgColor>
+							<colorTriggerBgColor>#000000</colorTriggerBgColor>
+							<regexCodeList>
+								<string>Skill: discipline        modifies</string>
+							</regexCodeList>
+							<regexCodePropertyList>
+								<integer>0</integer>
+							</regexCodePropertyList>
+						</Trigger>
+						<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+							<name>Affects - berserk</name>
+							<script>xaos.buffs.statusBerserk=true</script>
+							<triggerType>0</triggerType>
+							<conditonLineDelta>0</conditonLineDelta>
+							<mStayOpen>0</mStayOpen>
+							<mCommand></mCommand>
+							<packageName></packageName>
+							<mFgColor>#ff0000</mFgColor>
+							<mBgColor>#ffff00</mBgColor>
+							<mSoundFile></mSoundFile>
+							<colorTriggerFgColor>#000000</colorTriggerFgColor>
+							<colorTriggerBgColor>#000000</colorTriggerBgColor>
+							<regexCodeList>
+								<string> Skill: berserk           modifies</string>
+							</regexCodeList>
+							<regexCodePropertyList>
+								<integer>0</integer>
+							</regexCodePropertyList>
+						</Trigger>
+						<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+							<name>Affects - resolve</name>
+							<script>xaos.buffs.statusResolve=true</script>
+							<triggerType>0</triggerType>
+							<conditonLineDelta>0</conditonLineDelta>
+							<mStayOpen>0</mStayOpen>
+							<mCommand></mCommand>
+							<packageName></packageName>
+							<mFgColor>#ff0000</mFgColor>
+							<mBgColor>#ffff00</mBgColor>
+							<mSoundFile></mSoundFile>
+							<colorTriggerFgColor>#000000</colorTriggerFgColor>
+							<colorTriggerBgColor>#000000</colorTriggerBgColor>
+							<regexCodeList>
+								<string>Skill: resolve           modifies</string>
+							</regexCodeList>
+							<regexCodePropertyList>
+								<integer>0</integer>
+							</regexCodePropertyList>
+						</Trigger>
+						<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+							<name>Affects - warcry</name>
+							<script>xaos.buffs.statusWarcry=true</script>
+							<triggerType>0</triggerType>
+							<conditonLineDelta>0</conditonLineDelta>
+							<mStayOpen>0</mStayOpen>
+							<mCommand></mCommand>
+							<packageName></packageName>
+							<mFgColor>#ff0000</mFgColor>
+							<mBgColor>#ffff00</mBgColor>
+							<mSoundFile></mSoundFile>
+							<colorTriggerFgColor>#000000</colorTriggerFgColor>
+							<colorTriggerBgColor>#000000</colorTriggerBgColor>
+							<regexCodeList>
+								<string>Skill: warcry            modifies</string>
+							</regexCodeList>
+							<regexCodePropertyList>
+								<integer>0</integer>
+							</regexCodePropertyList>
+						</Trigger>
+						<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+							<name>Affects - bless</name>
+							<script>xaos.buffs.statusBless=true</script>
+							<triggerType>0</triggerType>
+							<conditonLineDelta>0</conditonLineDelta>
+							<mStayOpen>0</mStayOpen>
+							<mCommand></mCommand>
+							<packageName></packageName>
+							<mFgColor>#ff0000</mFgColor>
+							<mBgColor>#ffff00</mBgColor>
+							<mSoundFile></mSoundFile>
+							<colorTriggerFgColor>#000000</colorTriggerFgColor>
+							<colorTriggerBgColor>#000000</colorTriggerBgColor>
+							<regexCodeList>
+								<string>Spell: bless             modifies</string>
+							</regexCodeList>
+							<regexCodePropertyList>
+								<integer>0</integer>
+							</regexCodePropertyList>
+						</Trigger>
+						<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+							<name>Affects - trance</name>
+							<script>xaos.buffs.statusTrance=true</script>
+							<triggerType>0</triggerType>
+							<conditonLineDelta>0</conditonLineDelta>
+							<mStayOpen>0</mStayOpen>
+							<mCommand></mCommand>
+							<packageName></packageName>
+							<mFgColor>#ff0000</mFgColor>
+							<mBgColor>#ffff00</mBgColor>
+							<mSoundFile></mSoundFile>
+							<colorTriggerFgColor>#000000</colorTriggerFgColor>
+							<colorTriggerBgColor>#000000</colorTriggerBgColor>
+							<regexCodeList>
+								<string>Skill: trance            modifies</string>
+							</regexCodeList>
+							<regexCodePropertyList>
+								<integer>0</integer>
+							</regexCodePropertyList>
+						</Trigger>
+						<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+							<name>Start Check Buffs</name>
+							<script>affectgrab=true
+for key,value in pairs(xaos.buffs) do
+  xaos.buffs[key] = false
+end
+
+xaos.bufflist = {}
+
+if gagmode then
+  deleteLine()
+end
+</script>
+							<triggerType>0</triggerType>
+							<conditonLineDelta>0</conditonLineDelta>
+							<mStayOpen>0</mStayOpen>
+							<mCommand></mCommand>
+							<packageName></packageName>
+							<mFgColor>#ff0000</mFgColor>
+							<mBgColor>#ffff00</mBgColor>
+							<mSoundFile></mSoundFile>
+							<colorTriggerFgColor>#000000</colorTriggerFgColor>
+							<colorTriggerBgColor>#000000</colorTriggerBgColor>
+							<regexCodeList>
+								<string>You are affected by the following:</string>
+							</regexCodeList>
+							<regexCodePropertyList>
+								<integer>0</integer>
+							</regexCodePropertyList>
+						</Trigger>
+						<TriggerGroup isActive="yes" isFolder="yes" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+							<name>AffectGrabs</name>
+							<script></script>
+							<triggerType>0</triggerType>
+							<conditonLineDelta>0</conditonLineDelta>
+							<mStayOpen>0</mStayOpen>
+							<mCommand></mCommand>
+							<packageName></packageName>
+							<mFgColor>#ff0000</mFgColor>
+							<mBgColor>#ffff00</mBgColor>
+							<mSoundFile></mSoundFile>
+							<colorTriggerFgColor>#000000</colorTriggerFgColor>
+							<colorTriggerBgColor>#000000</colorTriggerBgColor>
+							<regexCodeList>
+								<string>return affectgrab</string>
 							</regexCodeList>
 							<regexCodePropertyList>
 								<integer>4</integer>
 							</regexCodePropertyList>
-						</Trigger>
+							<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+								<name>GetList</name>
+								<script>if gagmode then
+  deleteLine()
+end</script>
+								<triggerType>0</triggerType>
+								<conditonLineDelta>0</conditonLineDelta>
+								<mStayOpen>0</mStayOpen>
+								<mCommand></mCommand>
+								<packageName></packageName>
+								<mFgColor>#ff0000</mFgColor>
+								<mBgColor>#ffff00</mBgColor>
+								<mSoundFile></mSoundFile>
+								<colorTriggerFgColor>#000000</colorTriggerFgColor>
+								<colorTriggerBgColor>#000000</colorTriggerBgColor>
+								<regexCodeList>
+									<string>(?:Skill:|Spell:| misc:|Effect:)</string>
+									<string>(modifies)</string>
+								</regexCodeList>
+								<regexCodePropertyList>
+									<integer>1</integer>
+									<integer>1</integer>
+								</regexCodePropertyList>
+							</Trigger>
+							<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="yes" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+								<name>Prompt reset</name>
+								<script>affectgrab=false
+
+if gagmode then
+  statcount = statcount+1
+else
+  --echo(checkbuffs().missing)
+  tempTimer(.1,function() echo(checkbuffs().missing) end)
+end
+
+</script>
+								<triggerType>0</triggerType>
+								<conditonLineDelta>0</conditonLineDelta>
+								<mStayOpen>0</mStayOpen>
+								<mCommand></mCommand>
+								<packageName></packageName>
+								<mFgColor>#ff0000</mFgColor>
+								<mBgColor>#ffff00</mBgColor>
+								<mSoundFile></mSoundFile>
+								<colorTriggerFgColor>#000000</colorTriggerFgColor>
+								<colorTriggerBgColor>#000000</colorTriggerBgColor>
+								<regexCodeList>
+									<string>return isXaosPrompt()</string>
+								</regexCodeList>
+								<regexCodePropertyList>
+									<integer>4</integer>
+								</regexCodePropertyList>
+							</Trigger>
+						</TriggerGroup>
 					</TriggerGroup>
 				</TriggerGroup>
 				<TriggerGroup isActive="yes" isFolder="yes" isTempTrigger="no" isMultiline="yes" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
@@ -5864,8 +5990,6 @@ xaos.buffs.statusResolve=false</script>
 
 if fullautoempower then
 continueempower()
-else
-  
 end</script>
 					<triggerType>0</triggerType>
 					<conditonLineDelta>0</conditonLineDelta>
@@ -5884,33 +6008,8 @@ end</script>
 						<integer>1</integer>
 					</regexCodePropertyList>
 				</Trigger>
-				<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
-					<name>Start Empower Grab</name>
-					<script>startempowergrab=true
-xaos.heroempowers={}
-
-if gagmode then
-  deleteLine()
-end</script>
-					<triggerType>0</triggerType>
-					<conditonLineDelta>0</conditonLineDelta>
-					<mStayOpen>0</mStayOpen>
-					<mCommand></mCommand>
-					<packageName></packageName>
-					<mFgColor>#ff0000</mFgColor>
-					<mBgColor>#ffff00</mBgColor>
-					<mSoundFile></mSoundFile>
-					<colorTriggerFgColor>#000000</colorTriggerFgColor>
-					<colorTriggerBgColor>#000000</colorTriggerBgColor>
-					<regexCodeList>
-						<string>Available empowerments:</string>
-					</regexCodeList>
-					<regexCodePropertyList>
-						<integer>0</integer>
-					</regexCodePropertyList>
-				</Trigger>
 				<TriggerGroup isActive="yes" isFolder="yes" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
-					<name>Empower Grab</name>
+					<name>Not MSDP</name>
 					<script></script>
 					<triggerType>0</triggerType>
 					<conditonLineDelta>0</conditonLineDelta>
@@ -5923,14 +6022,58 @@ end</script>
 					<colorTriggerFgColor>#000000</colorTriggerFgColor>
 					<colorTriggerBgColor>#000000</colorTriggerBgColor>
 					<regexCodeList>
-						<string>return startempowergrab</string>
+						<string>return not mysettings.features.msdp</string>
 					</regexCodeList>
 					<regexCodePropertyList>
 						<integer>4</integer>
 					</regexCodePropertyList>
-					<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="yes" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
-						<name>Grab Empower</name>
-						<script>for k=1,table.size(matches),3 do
+					<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+						<name>Start Empower Grab</name>
+						<script>startempowergrab=true
+xaos.heroempowers={}
+
+if gagmode then
+  deleteLine()
+end</script>
+						<triggerType>0</triggerType>
+						<conditonLineDelta>0</conditonLineDelta>
+						<mStayOpen>0</mStayOpen>
+						<mCommand></mCommand>
+						<packageName></packageName>
+						<mFgColor>#ff0000</mFgColor>
+						<mBgColor>#ffff00</mBgColor>
+						<mSoundFile></mSoundFile>
+						<colorTriggerFgColor>#000000</colorTriggerFgColor>
+						<colorTriggerBgColor>#000000</colorTriggerBgColor>
+						<regexCodeList>
+							<string>Available empowerments:</string>
+						</regexCodeList>
+						<regexCodePropertyList>
+							<integer>0</integer>
+						</regexCodePropertyList>
+					</Trigger>
+					<TriggerGroup isActive="yes" isFolder="yes" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+						<name>Empower Grab</name>
+						<script></script>
+						<triggerType>0</triggerType>
+						<conditonLineDelta>0</conditonLineDelta>
+						<mStayOpen>0</mStayOpen>
+						<mCommand></mCommand>
+						<packageName></packageName>
+						<mFgColor>#ff0000</mFgColor>
+						<mBgColor>#ffff00</mBgColor>
+						<mSoundFile></mSoundFile>
+						<colorTriggerFgColor>#000000</colorTriggerFgColor>
+						<colorTriggerBgColor>#000000</colorTriggerBgColor>
+						<regexCodeList>
+							<string>return startempowergrab</string>
+						</regexCodeList>
+						<regexCodePropertyList>
+							<integer>4</integer>
+						</regexCodePropertyList>
+						<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="yes" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+							<name>Grab Empower</name>
+							<script>for k=1,table.size(matches),3 do
   local ind = (k-1)
   --echo(ind)
   local cost = string.trim(matches[2+ind])
@@ -5945,70 +6088,71 @@ if gagmode then
 end
 
 </script>
-						<triggerType>0</triggerType>
-						<conditonLineDelta>0</conditonLineDelta>
-						<mStayOpen>0</mStayOpen>
-						<mCommand></mCommand>
-						<packageName></packageName>
-						<mFgColor>#ff0000</mFgColor>
-						<mBgColor>#ffff00</mBgColor>
-						<mSoundFile></mSoundFile>
-						<colorTriggerFgColor>#000000</colorTriggerFgColor>
-						<colorTriggerBgColor>#000000</colorTriggerBgColor>
-						<regexCodeList>
-							<string>([0-9]+)\s+(?:[-0-9]+)  (.{22})</string>
-						</regexCodeList>
-						<regexCodePropertyList>
-							<integer>1</integer>
-						</regexCodePropertyList>
-					</Trigger>
-					<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
-						<name>Prompt Finish</name>
-						<script>startempowergrab=false
+							<triggerType>0</triggerType>
+							<conditonLineDelta>0</conditonLineDelta>
+							<mStayOpen>0</mStayOpen>
+							<mCommand></mCommand>
+							<packageName></packageName>
+							<mFgColor>#ff0000</mFgColor>
+							<mBgColor>#ffff00</mBgColor>
+							<mSoundFile></mSoundFile>
+							<colorTriggerFgColor>#000000</colorTriggerFgColor>
+							<colorTriggerBgColor>#000000</colorTriggerBgColor>
+							<regexCodeList>
+								<string>([0-9]+)\s+(?:[-0-9]+)  (.{22})</string>
+							</regexCodeList>
+							<regexCodePropertyList>
+								<integer>1</integer>
+							</regexCodePropertyList>
+						</Trigger>
+						<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+							<name>Prompt Finish</name>
+							<script>startempowergrab=false
 table.sort(xaos.heroempowers,function (e1,e2) return tonumber(e1.cost) &lt; tonumber(e2.cost) end)
 
 if gagmode then
   statcount = statcount+1
 end</script>
-						<triggerType>0</triggerType>
-						<conditonLineDelta>0</conditonLineDelta>
-						<mStayOpen>0</mStayOpen>
-						<mCommand></mCommand>
-						<packageName></packageName>
-						<mFgColor>#ff0000</mFgColor>
-						<mBgColor>#ffff00</mBgColor>
-						<mSoundFile></mSoundFile>
-						<colorTriggerFgColor>#000000</colorTriggerFgColor>
-						<colorTriggerBgColor>#000000</colorTriggerBgColor>
-						<regexCodeList>
-							<string>return isXaosPrompt()</string>
-						</regexCodeList>
-						<regexCodePropertyList>
-							<integer>4</integer>
-						</regexCodePropertyList>
-					</Trigger>
-					<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
-						<name>Hero Empower Extra Gag</name>
-						<script>if gagmode then
+							<triggerType>0</triggerType>
+							<conditonLineDelta>0</conditonLineDelta>
+							<mStayOpen>0</mStayOpen>
+							<mCommand></mCommand>
+							<packageName></packageName>
+							<mFgColor>#ff0000</mFgColor>
+							<mBgColor>#ffff00</mBgColor>
+							<mSoundFile></mSoundFile>
+							<colorTriggerFgColor>#000000</colorTriggerFgColor>
+							<colorTriggerBgColor>#000000</colorTriggerBgColor>
+							<regexCodeList>
+								<string>return isXaosPrompt()</string>
+							</regexCodeList>
+							<regexCodePropertyList>
+								<integer>4</integer>
+							</regexCodePropertyList>
+						</Trigger>
+						<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+							<name>Hero Empower Extra Gag</name>
+							<script>if gagmode then
   deleteLine()
 end</script>
-						<triggerType>0</triggerType>
-						<conditonLineDelta>0</conditonLineDelta>
-						<mStayOpen>0</mStayOpen>
-						<mCommand></mCommand>
-						<packageName></packageName>
-						<mFgColor>#ff0000</mFgColor>
-						<mBgColor>#ffff00</mBgColor>
-						<mSoundFile></mSoundFile>
-						<colorTriggerFgColor>#000000</colorTriggerFgColor>
-						<colorTriggerBgColor>#000000</colorTriggerBgColor>
-						<regexCodeList>
-							<string>Cost  Empower   </string>
-						</regexCodeList>
-						<regexCodePropertyList>
-							<integer>0</integer>
-						</regexCodePropertyList>
-					</Trigger>
+							<triggerType>0</triggerType>
+							<conditonLineDelta>0</conditonLineDelta>
+							<mStayOpen>0</mStayOpen>
+							<mCommand></mCommand>
+							<packageName></packageName>
+							<mFgColor>#ff0000</mFgColor>
+							<mBgColor>#ffff00</mBgColor>
+							<mSoundFile></mSoundFile>
+							<colorTriggerFgColor>#000000</colorTriggerFgColor>
+							<colorTriggerBgColor>#000000</colorTriggerBgColor>
+							<regexCodeList>
+								<string>Cost  Empower   </string>
+							</regexCodeList>
+							<regexCodePropertyList>
+								<integer>0</integer>
+							</regexCodePropertyList>
+						</Trigger>
+					</TriggerGroup>
 				</TriggerGroup>
 			</TriggerGroup>
 			<TriggerGroup isActive="yes" isFolder="yes" isTempTrigger="no" isMultiline="yes" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
@@ -6599,7 +6743,7 @@ end
 					<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
 						<name>End Round</name>
 						<script>if (RoundCalc.mine.damage&gt;0 or RoundCalc.opp.damage&gt;0) then
-  local tempdamage = "&lt;cyan&gt;" .. "My Dam: " .. RoundCalc.mine.damage .. ", Opp Dam: " .. RoundCalc.opp.damage
+  local tempdamage = "&lt;cyan&gt;" .. "My Dam: " .. RoundCalc.mine.damage .. ", Opp Dam: " .. RoundCalc.opp.damage .. "\n"
   tempTimer(.01,function() cecho(tempdamage) end)
 
   TotalCalc.Combine(RoundCalc)
@@ -6640,6 +6784,57 @@ end
 						<colorTriggerBgColor>#000000</colorTriggerBgColor>
 						<regexCodeList />
 						<regexCodePropertyList />
+						<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+							<name>Damage</name>
+							<script>--^Your \w+(?: critical)?(?: precise)?(?: propelled)? (.*) (?:misses|nicks|lightly skins|skins|lightly grazes|grazes|scratches|scrapes|hits|strikes|wounds|injures|mauls|scars|maims|mangles|destroys|decimates|guts|leaves GASHES|forever SCARS|DEMOLISHES|MASSACRES|DEVASTATES|does UNSPEAKABLE|SPLATTERS|-ANNIHILATES-|-=OBLITERATES=-|-=EVICERATES=-|-=LAYS WASTE=-) .*\((\d+) dam\)$
+local damcount = matches[4]
+local damtype = matches[3]
+local crit = matches[2] ~= ""
+
+
+
+if RoundCalc.damtypes[damtype] == nil then
+  RoundCalc.damtypes[damtype] = {hit=0,critical=0,damage=0,block=0,dodge=0,parry=0,miss=0,reflect=0,phase=0,}
+end
+RoundCalc.damtypes[damtype].damage=RoundCalc.damtypes[damtype].damage+damcount
+
+RoundCalc.damtypes[damtype].hit=RoundCalc.damtypes[damtype].hit+1
+
+RoundCalc.mine.damage = tonumber(RoundCalc.mine.damage) + tonumber(damcount)
+RoundCalc.mine.hit = tonumber(RoundCalc.mine.hit) + 1
+
+if crit then
+  RoundCalc.mine.critical = tonumber(RoundCalc.mine.critical) + 1
+  RoundCalc.damtypes[damtype].critical=RoundCalc.damtypes[damtype].critical+1
+end
+
+--local strlen = string.len(matches[1])
+local strlen = tonumber(mainWindowWrap) - string.len(matches[1]) - string.len(damcount) - 3 --3 for scroll bar
+if strlen &lt; 0 then --word wrap
+  
+end
+local spacer = ""
+for i=1,strlen do
+  spacer = spacer .. " "
+end
+cecho("&lt;yellow&gt;" .. spacer .. damcount)</script>
+							<triggerType>0</triggerType>
+							<conditonLineDelta>0</conditonLineDelta>
+							<mStayOpen>0</mStayOpen>
+							<mCommand></mCommand>
+							<packageName></packageName>
+							<mFgColor>#ff0000</mFgColor>
+							<mBgColor>#ffff00</mBgColor>
+							<mSoundFile></mSoundFile>
+							<colorTriggerFgColor>#000000</colorTriggerFgColor>
+							<colorTriggerBgColor>#000000</colorTriggerBgColor>
+							<regexCodeList>
+								<string>^Your \w+( critical)?(?: precise)?(?: propelled)? (.*) (?:misses|nicks|lightly skins|skins|lightly grazes|grazes|scratches|scrapes|hits|strikes|wounds|injures|mauls|scars|maims|mangles|destroys|decimates|guts|leaves GASHES|forever SCARS|DEMOLISHES|MASSACRES|DEVASTATES|does UNSPEAKABLE|SPLATTERS|-ANNIHILATES-|-=OBLITERATES=-|-=EVICERATES=-|-=LAYS WASTE=-) .*\((\d+) dam\)$</string>
+							</regexCodeList>
+							<regexCodePropertyList>
+								<integer>1</integer>
+							</regexCodePropertyList>
+						</Trigger>
 						<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
 							<name>Parry</name>
 							<script>RoundCalc.mine.parry = RoundCalc.mine.parry + 1</script>
@@ -6721,51 +6916,6 @@ end
 							</regexCodePropertyList>
 						</Trigger>
 						<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
-							<name>Damage</name>
-							<script>--^Your \w+(?: critical)?(?: precise)?(?: propelled)? (.*) (?:misses|nicks|lightly skins|skins|lightly grazes|grazes|scratches|scrapes|hits|strikes|wounds|injures|mauls|scars|maims|mangles|destroys|decimates|guts|leaves GASHES|forever SCARS|DEMOLISHES|MASSACRES|DEVASTATES|does UNSPEAKABLE|SPLATTERS|-ANNIHILATES-|-=OBLITERATES=-|-=EVICERATES=-|-=LAYS WASTE=-) .*\((\d+) dam\)$
-local damcount = matches[3]
-local damtype = matches[2]
-
-if damcounts == nil then
-  damcounts = {}
-end
-if damcounts[damtype] == nil then
-  damcounts[damtype]=0
-end
-damcounts[damtype]=damcounts[damtype]+damcount
---debugecho(RoundCalc.mine.damage)
---debugecho(RoundCalc.mine.hit)
-RoundCalc.mine.damage = tonumber(RoundCalc.mine.damage) + tonumber(damcount)
-RoundCalc.mine.hit = tonumber(RoundCalc.mine.hit) + 1
-
---local strlen = string.len(matches[1])
-local strlen = tonumber(mainWindowWrap) - string.len(matches[1]) - string.len(damcount) - 3 --3 for scroll bar
-if strlen &lt; 0 then --word wrap
-  
-end
-local spacer = ""
-for i=1,strlen do
-  spacer = spacer .. " "
-end
-cecho("&lt;yellow&gt;" .. spacer .. damcount)</script>
-							<triggerType>0</triggerType>
-							<conditonLineDelta>0</conditonLineDelta>
-							<mStayOpen>0</mStayOpen>
-							<mCommand></mCommand>
-							<packageName></packageName>
-							<mFgColor>#ff0000</mFgColor>
-							<mBgColor>#ffff00</mBgColor>
-							<mSoundFile></mSoundFile>
-							<colorTriggerFgColor>#000000</colorTriggerFgColor>
-							<colorTriggerBgColor>#000000</colorTriggerBgColor>
-							<regexCodeList>
-								<string>^Your \w+(?: critical)?(?: precise)?(?: propelled)? (.*) (?:misses|nicks|lightly skins|skins|lightly grazes|grazes|scratches|scrapes|hits|strikes|wounds|injures|mauls|scars|maims|mangles|destroys|decimates|guts|leaves GASHES|forever SCARS|DEMOLISHES|MASSACRES|DEVASTATES|does UNSPEAKABLE|SPLATTERS|-ANNIHILATES-|-=OBLITERATES=-|-=EVICERATES=-|-=LAYS WASTE=-) .*\((\d+) dam\)$</string>
-							</regexCodeList>
-							<regexCodePropertyList>
-								<integer>1</integer>
-							</regexCodePropertyList>
-						</Trigger>
-						<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
 							<name>Phase</name>
 							<script>RoundCalc.mine.phase = RoundCalc.mine.phase + 1</script>
 							<triggerType>0</triggerType>
@@ -6821,6 +6971,45 @@ cecho("&lt;yellow&gt;" .. spacer .. damcount)</script>
 						<colorTriggerBgColor>#000000</colorTriggerBgColor>
 						<regexCodeList />
 						<regexCodePropertyList />
+						<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+							<name>Incoming Damage</name>
+							<script>RoundCalc.opp.damage = RoundCalc.opp.damage + tonumber(matches[3])
+RoundCalc.opp.hit = RoundCalc.opp.hit + 1
+--display(matches)
+if matches[2] ~= "" then
+  RoundCalc.opp.critical = RoundCalc.opp.critical + 1
+end
+
+local strlen = tonumber(mainWindowWrap) - string.len(matches[1]) - string.len(matches[3]) - 3 --3 for scroll bar
+local spacer = ""
+for i=1,strlen do
+  spacer = spacer .. " "
+end
+cecho("&lt;red&gt;" .. spacer .. matches[2])
+--cecho("&lt;red&gt;   " .. matches[2])</script>
+							<triggerType>0</triggerType>
+							<conditonLineDelta>0</conditonLineDelta>
+							<mStayOpen>0</mStayOpen>
+							<mCommand></mCommand>
+							<packageName></packageName>
+							<mFgColor>#ff0000</mFgColor>
+							<mBgColor>#ffff00</mBgColor>
+							<mSoundFile></mSoundFile>
+							<colorTriggerFgColor>#000000</colorTriggerFgColor>
+							<colorTriggerBgColor>#000000</colorTriggerBgColor>
+							<regexCodeList>
+								<string>^.+( critical).+ your .+\. \((\d+) dam\)$</string>
+								<string>^.+( critical).+ you\. \((\d+) dam\)$</string>
+								<string>^.+( critical)?.+ your .+\. \((\d+) dam\)$</string>
+								<string>^.+( critical)?.+ you\. \((\d+) dam\)$</string>
+							</regexCodeList>
+							<regexCodePropertyList>
+								<integer>1</integer>
+								<integer>1</integer>
+								<integer>1</integer>
+								<integer>1</integer>
+							</regexCodePropertyList>
+						</Trigger>
 						<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
 							<name>Parry</name>
 							<script>RoundCalc.opp.parry = RoundCalc.opp.parry + 1</script>
@@ -6920,38 +7109,6 @@ cecho("&lt;yellow&gt;" .. spacer .. damcount)</script>
 							</regexCodeList>
 							<regexCodePropertyList>
 								<integer>0</integer>
-							</regexCodePropertyList>
-						</Trigger>
-						<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
-							<name>Incoming Damage</name>
-							<script>RoundCalc.opp.damage = RoundCalc.opp.damage + tonumber(matches[2])
-RoundCalc.opp.hit = RoundCalc.opp.hit + 1
-
-
-local strlen = tonumber(mainWindowWrap) - string.len(matches[1]) - string.len(matches[2]) - 3 --3 for scroll bar
-local spacer = ""
-for i=1,strlen do
-  spacer = spacer .. " "
-end
-cecho("&lt;red&gt;" .. spacer .. matches[2])
---cecho("&lt;red&gt;   " .. matches[2])</script>
-							<triggerType>0</triggerType>
-							<conditonLineDelta>0</conditonLineDelta>
-							<mStayOpen>0</mStayOpen>
-							<mCommand></mCommand>
-							<packageName></packageName>
-							<mFgColor>#ff0000</mFgColor>
-							<mBgColor>#ffff00</mBgColor>
-							<mSoundFile></mSoundFile>
-							<colorTriggerFgColor>#000000</colorTriggerFgColor>
-							<colorTriggerBgColor>#000000</colorTriggerBgColor>
-							<regexCodeList>
-								<string>^.+ your .+\. \((\d+) dam\)$</string>
-								<string>^.+ you\. \((\d+) dam\)$</string>
-							</regexCodeList>
-							<regexCodePropertyList>
-								<integer>1</integer>
-								<integer>1</integer>
 							</regexCodePropertyList>
 						</Trigger>
 						<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
@@ -7159,7 +7316,7 @@ end</script>
 				</regexCodePropertyList>
 			</Trigger>
 		</TriggerGroup>
-		<TriggerGroup isActive="no" isFolder="yes" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="yes" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+		<TriggerGroup isActive="yes" isFolder="yes" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="yes" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
 			<name>Gains</name>
 			<script></script>
 			<triggerType>0</triggerType>
@@ -7175,8 +7332,10 @@ end</script>
 			<regexCodeList />
 			<regexCodePropertyList />
 			<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
-				<name>Spells Start</name>
-				<script>gainmode = "spells"</script>
+				<name>New trigger</name>
+				<script>xaos.gainlist = {}
+gaincapture = true
+echo("starting capture")</script>
 				<triggerType>0</triggerType>
 				<conditonLineDelta>0</conditonLineDelta>
 				<mStayOpen>0</mStayOpen>
@@ -7189,34 +7348,24 @@ end</script>
 				<colorTriggerBgColor>#000000</colorTriggerBgColor>
 				<regexCodeList>
 					<string>Spell gains:</string>
-				</regexCodeList>
-				<regexCodePropertyList>
-					<integer>0</integer>
-				</regexCodePropertyList>
-			</Trigger>
-			<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
-				<name>New trigger</name>
-				<script>gainmode="uncategorized"</script>
-				<triggerType>0</triggerType>
-				<conditonLineDelta>0</conditonLineDelta>
-				<mStayOpen>0</mStayOpen>
-				<mCommand></mCommand>
-				<packageName></packageName>
-				<mFgColor>#ff0000</mFgColor>
-				<mBgColor>#ffff00</mBgColor>
-				<mSoundFile></mSoundFile>
-				<colorTriggerFgColor>#000000</colorTriggerFgColor>
-				<colorTriggerBgColor>#000000</colorTriggerBgColor>
-				<regexCodeList>
 					<string>-------------------------------------- Uncategorized skills --------------------------------------</string>
+					<string>------------------------------------------ Combat skills ------------------------------------------</string>
+					<string>-------------------------------------- Weapon mastery skills --------------------------------------</string>
+					<string>----------------------------------------- Crafting skills -----------------------------------------</string>
+					<string>-------------------------------------- Miscelleneous skills --------------------------------------</string>
 				</regexCodeList>
 				<regexCodePropertyList>
 					<integer>0</integer>
+					<integer>0</integer>
+					<integer>0</integer>
+					<integer>0</integer>
+					<integer>0</integer>
+					<integer>0</integer>
 				</regexCodePropertyList>
 			</Trigger>
-			<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="yes" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
-				<name>Prompt reset</name>
-				<script>gainmode=""</script>
+			<TriggerGroup isActive="yes" isFolder="yes" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+				<name>Gain Capture</name>
+				<script></script>
 				<triggerType>0</triggerType>
 				<conditonLineDelta>0</conditonLineDelta>
 				<mStayOpen>0</mStayOpen>
@@ -7228,39 +7377,236 @@ end</script>
 				<colorTriggerFgColor>#000000</colorTriggerFgColor>
 				<colorTriggerBgColor>#000000</colorTriggerBgColor>
 				<regexCodeList>
-					<string>return isXaosPrompt()</string>
+					<string>return gaincapture</string>
 				</regexCodeList>
 				<regexCodePropertyList>
 					<integer>4</integer>
 				</regexCodePropertyList>
-			</Trigger>
-			<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="yes" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
-				<name>All</name>
-				<script>
+				<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+					<name>Spells Start</name>
+					<script>gainmode = "spells"
+gainmodetype = ""</script>
+					<triggerType>0</triggerType>
+					<conditonLineDelta>0</conditonLineDelta>
+					<mStayOpen>0</mStayOpen>
+					<mCommand></mCommand>
+					<packageName></packageName>
+					<mFgColor>#ff0000</mFgColor>
+					<mBgColor>#ffff00</mBgColor>
+					<mSoundFile></mSoundFile>
+					<colorTriggerFgColor>#000000</colorTriggerFgColor>
+					<colorTriggerBgColor>#000000</colorTriggerBgColor>
+					<regexCodeList>
+						<string>Spell gains:</string>
+					</regexCodeList>
+					<regexCodePropertyList>
+						<integer>0</integer>
+					</regexCodePropertyList>
+				</Trigger>
+				<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+					<name>Uncategorized</name>
+					<script>gainmode="skills"
+gainmidetype="uncategorized"</script>
+					<triggerType>0</triggerType>
+					<conditonLineDelta>0</conditonLineDelta>
+					<mStayOpen>0</mStayOpen>
+					<mCommand></mCommand>
+					<packageName></packageName>
+					<mFgColor>#ff0000</mFgColor>
+					<mBgColor>#ffff00</mBgColor>
+					<mSoundFile></mSoundFile>
+					<colorTriggerFgColor>#000000</colorTriggerFgColor>
+					<colorTriggerBgColor>#000000</colorTriggerBgColor>
+					<regexCodeList>
+						<string>-------------------------------------- Uncategorized skills --------------------------------------</string>
+					</regexCodeList>
+					<regexCodePropertyList>
+						<integer>0</integer>
+					</regexCodePropertyList>
+				</Trigger>
+				<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+					<name>Combat</name>
+					<script>gainmode="skills"
+gainmidetype="combat"</script>
+					<triggerType>0</triggerType>
+					<conditonLineDelta>0</conditonLineDelta>
+					<mStayOpen>0</mStayOpen>
+					<mCommand></mCommand>
+					<packageName></packageName>
+					<mFgColor>#ff0000</mFgColor>
+					<mBgColor>#ffff00</mBgColor>
+					<mSoundFile></mSoundFile>
+					<colorTriggerFgColor>#000000</colorTriggerFgColor>
+					<colorTriggerBgColor>#000000</colorTriggerBgColor>
+					<regexCodeList>
+						<string>------------------------------------------ Combat skills ------------------------------------------</string>
+					</regexCodeList>
+					<regexCodePropertyList>
+						<integer>0</integer>
+					</regexCodePropertyList>
+				</Trigger>
+				<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+					<name>Weapon Mastery</name>
+					<script>gainmode="skills"
+gainmidetype="weapon"</script>
+					<triggerType>0</triggerType>
+					<conditonLineDelta>0</conditonLineDelta>
+					<mStayOpen>0</mStayOpen>
+					<mCommand></mCommand>
+					<packageName></packageName>
+					<mFgColor>#ff0000</mFgColor>
+					<mBgColor>#ffff00</mBgColor>
+					<mSoundFile></mSoundFile>
+					<colorTriggerFgColor>#000000</colorTriggerFgColor>
+					<colorTriggerBgColor>#000000</colorTriggerBgColor>
+					<regexCodeList>
+						<string>-------------------------------------- Weapon mastery skills --------------------------------------</string>
+					</regexCodeList>
+					<regexCodePropertyList>
+						<integer>0</integer>
+					</regexCodePropertyList>
+				</Trigger>
+				<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+					<name>Crafting</name>
+					<script>gainmode="skills"
+gainmidetype="crafting"</script>
+					<triggerType>0</triggerType>
+					<conditonLineDelta>0</conditonLineDelta>
+					<mStayOpen>0</mStayOpen>
+					<mCommand></mCommand>
+					<packageName></packageName>
+					<mFgColor>#ff0000</mFgColor>
+					<mBgColor>#ffff00</mBgColor>
+					<mSoundFile></mSoundFile>
+					<colorTriggerFgColor>#000000</colorTriggerFgColor>
+					<colorTriggerBgColor>#000000</colorTriggerBgColor>
+					<regexCodeList>
+						<string>----------------------------------------- Crafting skills -----------------------------------------</string>
+					</regexCodeList>
+					<regexCodePropertyList>
+						<integer>0</integer>
+					</regexCodePropertyList>
+				</Trigger>
+				<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+					<name>Misc</name>
+					<script>gainmode="skills"
+gainmidetype="misc"</script>
+					<triggerType>0</triggerType>
+					<conditonLineDelta>0</conditonLineDelta>
+					<mStayOpen>0</mStayOpen>
+					<mCommand></mCommand>
+					<packageName></packageName>
+					<mFgColor>#ff0000</mFgColor>
+					<mBgColor>#ffff00</mBgColor>
+					<mSoundFile></mSoundFile>
+					<colorTriggerFgColor>#000000</colorTriggerFgColor>
+					<colorTriggerBgColor>#000000</colorTriggerBgColor>
+					<regexCodeList>
+						<string>-------------------------------------- Miscelleneous skills --------------------------------------</string>
+					</regexCodeList>
+					<regexCodePropertyList>
+						<integer>0</integer>
+					</regexCodePropertyList>
+				</Trigger>
+				<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="yes" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+					<name>Prompt reset</name>
+					<script>gainmode=""
+gainmodetype=""
+gaincapture=false</script>
+					<triggerType>0</triggerType>
+					<conditonLineDelta>0</conditonLineDelta>
+					<mStayOpen>0</mStayOpen>
+					<mCommand></mCommand>
+					<packageName></packageName>
+					<mFgColor>#ff0000</mFgColor>
+					<mBgColor>#ffff00</mBgColor>
+					<mSoundFile></mSoundFile>
+					<colorTriggerFgColor>#000000</colorTriggerFgColor>
+					<colorTriggerBgColor>#000000</colorTriggerBgColor>
+					<regexCodeList>
+						<string>return isXaosPrompt()</string>
+					</regexCodeList>
+					<regexCodePropertyList>
+						<integer>4</integer>
+					</regexCodePropertyList>
+				</Trigger>
+				<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="yes" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+					<name>Traint Count Reset</name>
+					<script>gainmode=""
+gainmodetype=""
+gaincapture=false</script>
+					<triggerType>0</triggerType>
+					<conditonLineDelta>0</conditonLineDelta>
+					<mStayOpen>0</mStayOpen>
+					<mCommand></mCommand>
+					<packageName></packageName>
+					<mFgColor>#ff0000</mFgColor>
+					<mBgColor>#ffff00</mBgColor>
+					<mSoundFile></mSoundFile>
+					<colorTriggerFgColor>#000000</colorTriggerFgColor>
+					<colorTriggerBgColor>#000000</colorTriggerBgColor>
+					<regexCodeList>
+						<string>You have ([0-9]+) trains available</string>
+					</regexCodeList>
+					<regexCodePropertyList>
+						<integer>1</integer>
+					</regexCodePropertyList>
+				</Trigger>
+				<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+					<name>Return Continue</name>
+					<script>send("\n")</script>
+					<triggerType>0</triggerType>
+					<conditonLineDelta>0</conditonLineDelta>
+					<mStayOpen>0</mStayOpen>
+					<mCommand></mCommand>
+					<packageName></packageName>
+					<mFgColor>#ff0000</mFgColor>
+					<mBgColor>#ffff00</mBgColor>
+					<mSoundFile></mSoundFile>
+					<colorTriggerFgColor>#000000</colorTriggerFgColor>
+					<colorTriggerBgColor>#000000</colorTriggerBgColor>
+					<regexCodeList>
+						<string>[Hit Return to continue]</string>
+					</regexCodeList>
+					<regexCodePropertyList>
+						<integer>0</integer>
+					</regexCodePropertyList>
+				</Trigger>
+				<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="yes" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+					<name>Grab All</name>
+					<script>
+
 if gainmode=="spells" then
   for i=2,12,3 do
     --echo(string.trim(matches[i]))
-    send("gain " .. string.trim(matches[i]))
+    --send("gain " .. string.trim(matches[i]))
   end
   
+end
+
+for i=2,12,3 do
+  if matches[i] ~= nil and gainmode ~= "" then
+    table.insert(xaos.gainlist,{mode=gainmode, type=gainmodetype, name=string.trim(matches[i])})
+  end
 end</script>
-				<triggerType>0</triggerType>
-				<conditonLineDelta>0</conditonLineDelta>
-				<mStayOpen>0</mStayOpen>
-				<mCommand></mCommand>
-				<packageName></packageName>
-				<mFgColor>#ff0000</mFgColor>
-				<mBgColor>#ffff00</mBgColor>
-				<mSoundFile></mSoundFile>
-				<colorTriggerFgColor>#000000</colorTriggerFgColor>
-				<colorTriggerBgColor>#000000</colorTriggerBgColor>
-				<regexCodeList>
-					<string>([^0-9]+)([0-9]+)</string>
-				</regexCodeList>
-				<regexCodePropertyList>
-					<integer>1</integer>
-				</regexCodePropertyList>
-			</Trigger>
+					<triggerType>0</triggerType>
+					<conditonLineDelta>0</conditonLineDelta>
+					<mStayOpen>0</mStayOpen>
+					<mCommand></mCommand>
+					<packageName></packageName>
+					<mFgColor>#ff0000</mFgColor>
+					<mBgColor>#ffff00</mBgColor>
+					<mSoundFile></mSoundFile>
+					<colorTriggerFgColor>#000000</colorTriggerFgColor>
+					<colorTriggerBgColor>#000000</colorTriggerBgColor>
+					<regexCodeList>
+						<string>([^0-9]+)([0-9]+)</string>
+					</regexCodeList>
+					<regexCodePropertyList>
+						<integer>1</integer>
+					</regexCodePropertyList>
+				</Trigger>
+			</TriggerGroup>
 		</TriggerGroup>
 		<TriggerGroup isActive="no" isFolder="yes" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
 			<name>Archive, for future use</name>
@@ -8184,6 +8530,8 @@ updateXPbars(displaytimespan)
 
 
 cecho("CombatList",damageDisplay(TotalCalc))
+cecho("CombatList","\n\n")
+cecho("CombatList",prettyPrintDamageCounts())
 
 </script>
 					<command></command>
@@ -8434,173 +8782,9 @@ writevariablename("Show Exp",tostring(xaos.config.show_killed),[[printCmdLine"sh
 if  command ~= nil then
   command = string.lower(string.trim(command))
 end
-local helpdesc = {}
-
-table.insert(helpdesc,
-  {name="script",
-   commands={
-    {name="setarea",options="&lt;name&gt;?",desc="Sets the current area, for use in scan mode.  Supplying no name will show a list."},
-    {name="cleararea",options="",desc="Clears the current area."},
-    {name="startscripting",options="&lt;name&gt;?",desc="Starts scripting the current area, or if a name is included, starts hunting the mob name.  In BETA."},   
-    {name="stopscripting",options="",desc="Stops the current script."},
-    {name="followleader",options="",desc="Will attempt to stay with your party leader. This will AUTO switch if the leader changes."},
-    {name="overrideleader",options="&lt;name&gt;",desc="This will override the leader, to force following someome.  Make sure this is the exact name of the character."},
-    {name="phunt",options="&lt;mob&gt;",desc="Prey Hunt: Set target and kill to &lt;mobname&gt; and start hunting.  This does not work with scan mode."},
-    {name="fhunt",options="&lt;friend&gt;",desc="Friend Hunt: Set target to &lt;name&gt;, clear kill and start hunting"},
-    {name="detectarea",options="",desc="Will attempt to determine the current area.  Make sure you are surrounded by area mobs."},
-   
-   }
-  }
-)
-table.insert(helpdesc,
-  {name="scriptconfig",
-   commands={
-    {name="endcombatwait",options="&lt;number&gt;",desc="Sets how long to wait at the end of combat, before continuing."},
-    {name="huntwait",options="&lt;number&gt;",desc="Sets how long to wait before every hunt or scan action, before continuing."},
-    {name="setinitial",options="&lt;command&gt;",desc="Will execute this command, once at the start of combat per mob."},
-    {name="autoloot",options="&lt;comma seperated list of items&gt;",desc="Will attempt to loot the items from every corpse."},
-    {name="autopickup",options="&lt;comma seperated list of items&gt;",desc="Will attemp to pickup the items after every death."},
-    {name="maxmobs",options="&lt;number&gt;",desc="Sets the maximum number of scriptable mobs before it will move into a room.  If over the limit will attempt to pull with lightning bolt."},
-    {name="scanmode",options="",desc="Turns on/off scan mode for scripting."},
-    {name="findmode",options="",desc="Turns on/off find mode for scripting.  If one of your party members gets left behind, it will try and go find them."},
-    {name="buffmode",options="",desc="Turns on/off whether you will try and use buffs such as berserk, turning off can help with staying with your party leader."},
-    {name="xconfig",options="&lt;berserkovercenter|minmana|minhp|showprompt&gt;",desc="Sets configuration options. Min Mana and HP require a 0-100."},
-   }
-  }
-)
-table.insert(helpdesc,
-  {name="empowers",
-   commands={
-    {name="fullempower",options="",desc="Starts the empower process.  Used for when you have alot of hero points (aka ascend)"},
-    {name="startempower",options="&lt;all&gt;?",desc="Will full empower either ac resists, or all resists. (5 times each)"},
-    {name="autoempower",options="&lt;set/remove/view&gt; &lt;name&gt;? &lt;percent&gt;?",desc="Will automatically empower whenever you kill or run fullempower based on your ratios.  view will show you your current configuration."},
-   }
-  }
-)
-table.insert(helpdesc,
-  {name="quest",
-   commands={
-    {name="questfilter",options="qf &lt;qm|q|clear&gt; &lt;name?&gt;",desc="Filters the quest list based on the provided questmaster(qm) or quest."},
-    {name="autoquest",options="aq &lt;questname|questnumber|clear|queue&gt;",desc="Will attempt to complete all kill objectives in a quest. In BETA."},
-   }
-  }
-)
-table.insert(helpdesc,
-  {name="other",
-   commands={
-    {name="multi",options="&lt;#&gt; &lt;command&gt;",desc="runs the command # of times, use {id} in the command string to reference the number."},
-    {name="afkmode",options="&lt;on|off|show&gt;?",desc="turns on afkmode, this starts tracking things that happen when you are away.  Turning it off will present the xp difference and loot gained."},
-    {name="showkills",options="",desc="Turns on/off kill counters in the data window."},
-    {name="stash/unstash",options="",desc="Your stash is whatever you are currently wearing on your body. This works as eiterh stash &lt;item&gt; or get all.item stash"},
-    {name="beckon",options="",desc="If you are in the same party as a person, will get them to turn on their hunt triggers to you."},
-    {name="gt guard",options="",desc="Will request a guard from the leader."},
-    {name="gt rescue",options="",desc="Will request a rescue from the leader."},
-    {name="gt heal",options="",desc="Will request a heal from your party."},
-    {name="rescueall",options="",desc="Will try to rescue all players in the party."},
-   }
-  }
-)
-table.insert(helpdesc,
-  {name="gear",
-   
-   commands={
-    {name="wearall",options="&lt;name&gt;",desc="Will put on a full set of gear based on a name (for spell up sets)"},
-    {name="wearnormal",options="",desc="Will put on your normal gear (set with seteq)"},
-    {name="seteq",options="",desc="Sets your 'normal' gear"},
-   }
-  }
-)
-table.insert(helpdesc,
-  {name="damagescenario",
-   commands={
-    {name="SetScenario",options="&lt;roundcount&gt; &lt;name&gt;",desc=""},
-    {name="ClearScenario",options="",desc="Resets the current scenario."},
-    {name="FinishScenario",options="",desc="Ends the current scenario and adds it to the array."},
-    {name="ShowScenario",options="",desc="Displays the log window for the scenario."},
-   }
-  }
-)
-table.insert(helpdesc,
-  {name="craft",
-   desc="IN BETA",
-   commands={
-    {name="setcrafting",options="&lt;size&gt; &lt;colour&gt; &lt;quality&gt;",desc="set the crafting parameters\n\tcolor: orange=conjuration, teal=enchantment, pink=religion, maroon=abjuration"},
-    {name="makespellset",options="",desc=""},
-   }
-  }
-)
-table.insert(helpdesc,
-  {name="enchant",
-   desc="IN BETA - currently disabled",
-   commands={
-    {name="setenchant",options="",desc=""},
-    {name="startenchant",options="&lt;target&gt;",desc=""},
-   }
-  }
-)
-
-table.insert(helpdesc,
-  {name="sort",
-   desc="IN BETA",
-   commands={
-    {name="sortroom",options="",desc=""},
-    {name="sorthelp",options="",desc=""},
-    {name="id",options="&lt;name&gt;",desc=""},
-   }
-  }
-)
 
 
-
-
-if command == "" then
-  helpheadecho("Available Help Sections")
-  helpdescecho("type xhelp &lt;section&gt; for more")
-  helpbodyecho("all")
-  for k,v in pairs(helpdesc) do
-    helpbodyecho(v.name)    
-  end
-  helpbodyecho("")
-elseif command == "all" then
-  helpheadecho("UI Help")
-  helpheadecho("&lt;arg&gt; defines arguments, ? means its optional.")
-  for k,v in pairs(helpdesc) do
-    helpheadecho(v.name) 
-    if v.desc ~= nil then
-      helpheaddescecho(v.desc)
-    end   
-    for ck,cv in pairs(v.commands) do
-      helpbodyecho(cv.name .. " " .. cv.options)
-      helpdescecho(cv.desc)
-    end
-  end
-else
-  local command1 = string.split(command," ")[1]
-  local command2 = string.split(command," ")[2]
-  local filttable = table.n_filter(helpdesc, function (item) return item.name==command1 end)
-  
-  
-  if command2 == nil then
-    helpheadecho("UI Help")
-    helpheadecho("&lt;arg&gt; defines arguments, ? means its optional.")
-    for k,v in pairs(filttable) do
-      helpheadecho(v.name)    
-      for ck,cv in pairs(v.commands) do
-        helpbodyecho(cv.name .. " " .. cv.options)
-        helpdescecho(cv.desc)
-      end
-    end
-  else
-    for k,v in pairs(filttable) do   
-      for ck,cv in pairs(v.commands) do
-        if cv.name == command2 then
-          helpbodyecho(cv.name .. " " .. cv.options)
-          helpdescecho(cv.desc)
-        end
-      end
-    end
-  end
-end
+echoHelpToConsole(command) 
 </script>
 					<command></command>
 					<packageName></packageName>
@@ -9360,7 +9544,8 @@ else
   
 
   if xaos.scripting.area.name ~= nil then
-    expandAlias("scripthunt")    
+    expandAlias("scripthunt") 
+    menu.scriptbutton:echo("&lt;center&gt;Stop Script&lt;/center&gt;")
   else
     expandAlias("detectarea")
   end
@@ -9436,7 +9621,7 @@ killcapture = {}</script>
 					<regex>^newareakillcapture</regex>
 				</Alias>
 				<Alias isActive="yes" isFolder="no">
-					<name>detectareaa</name>
+					<name>detectarea</name>
 					<script>auto_hunt = false
 detectmode=true
 expandAlias("cleararea")
@@ -9451,7 +9636,9 @@ send("scan")</script>
 disableTimer("scan listener")
 disableTimer("leader listener")
 
-auto_hunt = false</script>
+auto_hunt = false
+
+menu.scriptbutton:echo("&lt;center&gt;Start Script&lt;/center&gt;")</script>
 					<command></command>
 					<packageName></packageName>
 					<regex>^stopscripting</regex>
@@ -10016,7 +10203,7 @@ send("proc")</script>
 							<regex></regex>
 							<Alias isActive="yes" isFolder="no">
 								<name>wield</name>
-								<script>deleteLine()
+								<script>--deleteLine()
 wielded = matches[2]
 send("wield "..matches[2])
 debugc("Setting wield variable to "..wielded)
@@ -15140,11 +15327,11 @@ if mysettings == nil then mysettings = {} end
 
 local firstload = true
 
-mysettings.version = "0.2.0.2"
-
 if io.exists(getMudletHomeDir() .. "/mysettings.dat") then
   table.load(getMudletHomeDir() .. "/mysettings.dat",mysettings)
 end
+
+mysettings.version = "0.2.1.2"
 
 if mysettings.oocchatsize == nil then mysettings.oocchatsize = 12 end
 if mysettings.questfontsize == nil then mysettings.questfontsize = 10 end
@@ -15207,7 +15394,7 @@ firstload = false</script>
 				<script></script>
 				<eventHandlerList />
 				<Script isActive="yes" isFolder="no">
-					<name>Helpers</name>
+					<name>Mudlet Helpers</name>
 					<packageName></packageName>
 					<script>function findTableEntry(tbl,func)
 
@@ -16429,15 +16616,17 @@ end</script>
 				<script>
 if RoundCalc == nil then
   RoundCalc = {
-    mine = {hit=0,damage=0,block=0,dodge=0,parry=0,miss=0,reflect=0,phase=0,},
-    opp = {hit=0,damage=0,block=0,dodge=0,parry=0,miss=0,reflect=0,phase=0,},
+    mine = {hit=0,critical=0,damage=0,block=0,dodge=0,parry=0,miss=0,reflect=0,phase=0,},
+    opp = {hit=0,critical=0,damage=0,block=0,dodge=0,parry=0,miss=0,reflect=0,phase=0,},
+    damtypes = {},
   }
 end
 if TotalCalc == nil then
   TotalCalc = {count=0,
-    mine = {hit=0,damage=0,block=0,dodge=0,parry=0,miss=0,reflect=0,phase=0,},
-    opp = {hit=0,damage=0,block=0,dodge=0,parry=0,miss=0,reflect=0,phase=0,},
-    history = {}
+    mine = {hit=0,critical=0,damage=0,block=0,dodge=0,parry=0,miss=0,reflect=0,phase=0,},
+    opp = {hit=0,critical=0,damage=0,block=0,dodge=0,parry=0,miss=0,reflect=0,phase=0,},
+    history = {},
+    damtypes = {},
   }
 end
 if scenario_round_count == nil then
@@ -16449,17 +16638,27 @@ end
 
 function prettyPrintDamageCounts()
 
-  local str = ""
-  local sumcount = 0
-  for k,v in pairs(damcounts) do
-    sumcount = sumcount + v
+  local str = "Damage Type         : Dam % - Hit %\n"
+  local sumdamcount = 0
+  for k,v in pairs(TotalCalc.damcounts) do
+    sumdamcount = sumdamcount + v
+  end
+  local sumhitcount = 0
+  for k,v in pairs(TotalCalc.hitcounts) do
+    sumhitcount = sumhitcount + v
   end
   
-  for k,v in pairs(damcounts) do
-    str = str .. k .. ": " .. string.format("%4.2f",(v/sumcount)*100) .. "\n"
+  
+  for k,v in pairs(TotalCalc.damcounts) do
+    local tempname = string.sub(k .. "                   ",1,20)
+    str = str .. tempname .. ": " .. string.format("%4.1f",(v/sumdamcount)*100) .. "% - " 
+      .. string.format("%4.1f",(TotalCalc.hitcounts[k]/sumhitcount)*100) .. "% - "
+      .. string.format("%6.1f",(TotalCalc.hitcounts[k]/TotalCalc.count)) .. " \n"
   end
   return str
 end
+
+
 function scenarioDisplay(index)
   return DamageScenarios[index].name .. "\n" .. damageDisplay(DamageScenarios[index].data)
 end
@@ -16480,6 +16679,7 @@ function getDef(sub,opp)
 	subreturn = subreturn .. " Reflect: " .. string.format("%5.2f",100*(sub.reflect / hitcnt)) .. "%  - " .. sub.reflect .. "\n"
 	subreturn = subreturn .. " Miss   : " .. string.format("%5.2f",100*(sub.miss / hitcnt)) .. "%  - " .. sub.miss .. "\n"
 	subreturn = subreturn .. " Hit    : " .. string.format("%5.2f",100*(opp.hit / hitcnt)) .. "%  - " .. opp.hit .. "\n"
+  subreturn = subreturn .. " Crit   : " .. string.format("%5.2f",100*(opp.critical / opp.hit)) .. "%  - " .. opp.critical .. "\n"
 	  --subreturn = subreturn .. totalhit(opp,sub) .. "\n"
 	return subreturn
 end
@@ -16508,6 +16708,7 @@ function TotalCalc.Remove(rnd)
   --TotalCalc.SubRemove(self.opp,rnd.opp)
   
   TotalCalc.mine.hit=TotalCalc.mine.hit-rnd.mine.hit
+  TotalCalc.mine.critical=TotalCalc.mine.critical-rnd.mine.critical
   TotalCalc.mine.damage=TotalCalc.mine.damage-rnd.mine.damage
   TotalCalc.mine.block=TotalCalc.mine.block-rnd.mine.block
   TotalCalc.mine.dodge=TotalCalc.mine.dodge-rnd.mine.dodge
@@ -16517,6 +16718,7 @@ function TotalCalc.Remove(rnd)
   TotalCalc.mine.phase=TotalCalc.mine.phase-rnd.mine.phase
   
   TotalCalc.opp.hit=TotalCalc.opp.hit-rnd.opp.hit
+  TotalCalc.opp.critical=TotalCalc.opp.critical-rnd.opp.critical
   TotalCalc.opp.damage=TotalCalc.opp.damage-rnd.opp.damage
   TotalCalc.opp.block=TotalCalc.opp.block-rnd.opp.block
   TotalCalc.opp.dodge=TotalCalc.opp.dodge-rnd.opp.dodge
@@ -16524,10 +16726,32 @@ function TotalCalc.Remove(rnd)
   TotalCalc.opp.miss=TotalCalc.opp.miss-rnd.opp.miss
   TotalCalc.opp.reflect=TotalCalc.opp.reflect-rnd.opp.reflect
   TotalCalc.opp.phase=TotalCalc.opp.phase-rnd.opp.phase
+  
+  for k,v in pairs(rnd.damtypes) do
+    TotalCalc.damtypes[k].hit=TotalCalc.damtypes[k].hit-rnd.damtypes[k].hit
+    TotalCalc.damtypes[k].critical=TotalCalc.damtypes[k].critical-rnd.damtypes[k].critical
+    TotalCalc.damtypes[k].damage=TotalCalc.damtypes[k].damage-rnd.damtypes[k].damage
+    TotalCalc.damtypes[k].block=TotalCalc.damtypes[k].block-rnd.damtypes[k].block
+    TotalCalc.damtypes[k].dodge=TotalCalc.damtypes[k].dodge-rnd.damtypes[k].dodge
+    TotalCalc.damtypes[k].parry=TotalCalc.damtypes[k].parry-rnd.damtypes[k].parry
+    TotalCalc.damtypes[k].miss=TotalCalc.damtypes[k].miss-rnd.damtypes[k].miss
+    TotalCalc.damtypes[k].reflect=TotalCalc.damtypes[k].reflect-rnd.damtypes[k].reflect
+    TotalCalc.damtypes[k].phase=TotalCalc.damtypes[k].phase-rnd.damtypes[k].phase
+  end
+  
+  for k,v in pairs(rnd.damcounts) do
+    TotalCalc.damcounts[k]=TotalCalc.damcounts[k]-rnd.damcounts[k]
+  end
+  
+  for k,v in pairs(rnd.hitcounts) do
+    TotalCalc.hitcounts[k]=TotalCalc.hitcounts[k]-rnd.hitcounts[k]
+  end
+  
 end
 
 function TotalCalc.SubRemove(self,rnd)
   self.hit=self.hit-rnd.hit
+  self.critical=self.critical-rnd.critical
   self.damage=self.damage-rnd.damage
   self.block=self.block-rnd.block
   self.dodge=self.dodge-rnd.dodge
@@ -16539,12 +16763,13 @@ end
 
 function TotalCalc.SubCombine(self,rnd)
   self.hit=self.hit+rnd.hit
+  self.critical=self.critical-rnd.critical
   self.damage=self.damage+rnd.damage
   self.block=self.block+rnd.block
   self.dodge=self.dodge+rnd.dodge
   self.parry=self.parry+rnd.parry
   self.miss=self.miss+rnd.miss
-  self.reflect=self.reflect+rnd.reflect
+  self.reflect=self.reflect+rnd.reflect   
   self.phase=self.phase+rnd.phase
 end
 
@@ -16553,6 +16778,7 @@ function TotalCalc.Combine(rnd)
   --TotalCalc.SubCombine(TotalCalc.opp,TotalCalc.opp)
   
   TotalCalc.mine.hit=TotalCalc.mine.hit+rnd.mine.hit
+  TotalCalc.mine.critical=TotalCalc.mine.critical+rnd.mine.critical
   TotalCalc.mine.damage=TotalCalc.mine.damage+rnd.mine.damage
   TotalCalc.mine.block=TotalCalc.mine.block+rnd.mine.block
   TotalCalc.mine.dodge=TotalCalc.mine.dodge+rnd.mine.dodge
@@ -16562,6 +16788,7 @@ function TotalCalc.Combine(rnd)
   TotalCalc.mine.phase=TotalCalc.mine.phase+rnd.mine.phase
   
   TotalCalc.opp.hit=TotalCalc.opp.hit+rnd.opp.hit
+  TotalCalc.opp.critical=TotalCalc.opp.critical+rnd.opp.critical
   TotalCalc.opp.damage=TotalCalc.opp.damage+rnd.opp.damage
   TotalCalc.opp.block=TotalCalc.opp.block+rnd.opp.block
   TotalCalc.opp.dodge=TotalCalc.opp.dodge+rnd.opp.dodge
@@ -16571,6 +16798,35 @@ function TotalCalc.Combine(rnd)
   TotalCalc.opp.phase=TotalCalc.opp.phase+rnd.opp.phase
   
   TotalCalc.count=TotalCalc.count+1
+  
+  for k,v in pairs(rnd.damtypes) do
+    if TotalCalc.damtypes[k] == nil then
+      TotalCalc.damtypes[k]= {hit=0,critical=0,damage=0,block=0,dodge=0,parry=0,miss=0,reflect=0,phase=0,}
+    end
+    TotalCalc.damtypes[k].hit=TotalCalc.damtypes[k].hit+rnd.damtypes[k].hit
+    TotalCalc.damtypes[k].critical=TotalCalc.damtypes[k].critical+rnd.damtypes[k].critical
+    TotalCalc.damtypes[k].damage=TotalCalc.damtypes[k].damage+rnd.damtypes[k].damage
+    TotalCalc.damtypes[k].block=TotalCalc.damtypes[k].block+rnd.damtypes[k].block
+    TotalCalc.damtypes[k].dodge=TotalCalc.damtypes[k].dodge+rnd.damtypes[k].dodge
+    TotalCalc.damtypes[k].parry=TotalCalc.damtypes[k].parry+rnd.damtypes[k].parry
+    TotalCalc.damtypes[k].miss=TotalCalc.damtypes[k].miss+rnd.damtypes[k].miss
+    TotalCalc.damtypes[k].reflect=TotalCalc.damtypes[k].reflect+rnd.damtypes[k].reflect
+    TotalCalc.damtypes[k].phase=TotalCalc.damtypes[k].phase+rnd.damtypes[k].phase
+  end
+  
+  for k,v in pairs(rnd.damcounts) do
+    if TotalCalc.damcounts[k] == nil then
+      TotalCalc.damcounts[k]=0
+    end
+    TotalCalc.damcounts[k]=TotalCalc.damcounts[k]+rnd.damcounts[k]
+  end
+  
+  for k,v in pairs(rnd.hitcounts) do
+    if TotalCalc.hitcounts[k] == nil then
+      TotalCalc.hitcounts[k]=0
+    end
+    TotalCalc.hitcounts[k]=TotalCalc.hitcounts[k]+rnd.hitcounts[k]
+  end
   
   table.insert(TotalCalc.history,table.deepcopy(rnd))
   
@@ -16598,6 +16854,7 @@ end
 
 function TotalCalc.Clear()
   TotalCalc.mine.hit=0
+  TotalCalc.mine.critical=0
   TotalCalc.mine.damage=0
   TotalCalc.mine.block=0
   TotalCalc.mine.dodge=0
@@ -16607,6 +16864,7 @@ function TotalCalc.Clear()
   TotalCalc.mine.phase=0
   
   TotalCalc.opp.hit=0
+  TotalCalc.opp.critical=0
   TotalCalc.opp.damage=0
   TotalCalc.opp.block=0
   TotalCalc.opp.dodge=0
@@ -16617,11 +16875,17 @@ function TotalCalc.Clear()
   
   TotalCalc.history = {}
   
+  --TotalCalc.damcounts = {}
+  --TotalCalc.hitcounts = {}
+  
+  TotalCalc.damtypes = {}
+  
   TotalCalc.count=0
  end
 
 function RoundCalc.Clear()
   RoundCalc.mine.hit=0
+  RoundCalc.mine.critical=0
   RoundCalc.mine.damage=0
   RoundCalc.mine.block=0
   RoundCalc.mine.dodge=0
@@ -16631,6 +16895,7 @@ function RoundCalc.Clear()
   RoundCalc.mine.phase=0
   
   RoundCalc.opp.hit=0
+  RoundCalc.opp.critical=0
   RoundCalc.opp.damage=0
   RoundCalc.opp.block=0
   RoundCalc.opp.dodge=0
@@ -16638,6 +16903,12 @@ function RoundCalc.Clear()
   RoundCalc.opp.miss=0
   RoundCalc.opp.reflect=0
   RoundCalc.opp.phase=0
+  
+  --RoundCalc.damcounts = {}
+  --RoundCalc.hitcounts = {}
+  
+  RoundCalc.damtypes = {}
+  
  end</script>
 				<eventHandlerList />
 			</Script>
@@ -16732,19 +17003,7 @@ function debugwrite(text)
     cecho("main","[DE " .. getTime(true,"HH.mm.ss") .. "] " ..text .. "\n")
   end
 end
-function helpheadecho(text) 
-  hecho("main","#c0FFFF\n" .. text .. "\n")
-end
-function helpheaddescecho(text) 
-  hecho("main","  " .. text .. "\n")
-end
-function helpbodyecho(text) 
-  hecho("main","#c0FFFF  " .. text .. "\n")
-end
 
-function helpdescecho(text) 
-  hecho("main","    " .. text .. "\n")
-end
 
 function uicom(message)
   cecho("\n[ UI ] &lt;light_blue&gt;"..message.."\n")
@@ -17059,6 +17318,630 @@ tempTimer(5,[[raiseEvent("layer1")]])</script>
 </script>
 					<eventHandlerList />
 					<ScriptGroup isActive="yes" isFolder="yes">
+						<name>UI Helpers</name>
+						<packageName></packageName>
+						<script>-------------------------------------------------
+--         Put your Lua functions here.        --
+--                                             --
+-- Note that you can also use external scripts --
+-------------------------------------------------
+</script>
+						<eventHandlerList />
+						<Script isActive="yes" isFolder="no">
+							<name>UI Helpers</name>
+							<packageName></packageName>
+							<script>function updateDisplayTime()
+
+  updateXPbars(displaytimespan)
+  updateKillbars(displaytimespan)
+  xprText:echo(calcAscendTime(xaos.Level,xaos.LevelPercent,displaytimespan))
+
+end
+
+function calcAscendTime(lvl,lvlpercent,timespan) 
+
+  if timespan == nil then
+    timespan = 5
+  end
+
+  lvl = lvl % 100
+  lvl = lvl -1
+	local curascdings = lvl*((2+(lvl*2))/2)
+	local nextascdings = (lvl+1)*((2+((lvl+1)*2))/2)
+	
+	local curdings = curascdings + ((nextascdings-curascdings)*(lvlpercent/100))
+	local leftdings = 9900-curdings
+	leftdings = leftdings * 100 
+	--debugecho(leftdings)
+	local firstindex = table.size(xpcollector)
+	local lastindex = firstindex-(16*timespan)+1
+	if lastindex &lt;= 0 then
+	lastindex = 1
+	end
+	if firstindex == lastindex then return "unknown" end
+	local total = 0
+  local cnter=0
+	for k=firstindex,lastindex,-1 do
+		total = total + xpcollector[k].xp
+    cnter=cnter+1
+	end
+  debugecho("Counter: " .. (cnter))
+	--Average
+  debugecho("Devisor: " .. (firstindex - lastindex))
+	total = total / (cnter)
+  local avg = total
+  debugecho("Average: " .. total)
+	--Down to minute chunks
+	total = total --/ 5
+	debugecho("Min Avg: " .. total)
+	total = leftdings/total
+	--debugecho(total)
+  
+  totalstring = ""
+  --if (total/1440) &gt; 0 then
+  totalstring = totalstring .. math.floor(total/1440) .. " days, "
+  total = total % 1440
+  --end
+  --if (total/60) &gt; 0 then
+  totalstring = totalstring .. math.floor(total/60) .. " hours, "
+  total = total % 60
+  --end
+  totalstring = totalstring .. string.format("%4.2f",total) .. " minutes."
+  totalstring = totalstring .. " (Avg: " .. string.format("%4.2f",avg*timespan) .. ")"
+  return totalstring
+end
+
+function calcAscendPercent(level, levelPercent)
+  return 100*xaos.ascendcount/10000
+  
+  --level = tonumber(level)%100
+  --levelPercent = tonumber(levelPercent)
+  
+  --level = level - 1
+  --nextlevel = level+1
+  
+  --local curasc = level*((2+(level*2))/2)/9900
+  --local nextasc = nextlevel*((2+(nextlevel*2))/2)/9900
+  
+  --return 100*(curasc+((nextasc-curasc)*(levelPercent/100)))
+  
+  --return 100*(levelratio[(level%100)]+((levelratio[(level%100)+1]-levelratio[(level%100)])*(tonumber(levelPercent)/100)))
+end
+
+function updateXPbars(timespan,xptype)
+  if timespan == nil then
+    timespan = 5
+  end
+  
+  if xptype == nil then
+	xptype = 0
+  end
+  
+  for index=1,16 do
+    xpRateBars[index]:setValue(1,100,0)
+  end
+  
+  local firstindex = table.size(xpcollector)
+  local lastindex = firstindex-(16*timespan)+1
+  if lastindex &lt;= 0 then
+    lastindex = 1
+  end
+  local index = 1
+  
+  local calcnum = 0
+  local cnt=0
+  
+  local topnum =1
+  for k=firstindex,lastindex,-1 do
+    calcnum = calcnum + xpcollector[k].xp
+    cnt = cnt + 1
+    if cnt % timespan == 0 then
+      if topnum &lt; calcnum then
+        topnum = calcnum
+      end
+      cnt=0
+      calcnum = 0
+    end
+  end
+  if topnum &lt; calcnum then
+     topnum = calcnum
+  end
+  cnt=0
+  calcnum=0
+  for k=firstindex,lastindex,-1 do
+    local tmpnum = xpcollector[k].xp
+    
+--echo(index)    
+    cnt = cnt + 1
+    calcnum = calcnum + tmpnum
+    
+    if cnt % timespan == 0 then
+      local displaynum = calcnum
+      if calcnum == 0 then calcnum = 1 end
+	  if xptype == 0 then
+		xpRateBars[index]:setValue(calcnum,topnum,displaynum)
+	  else
+		xpRateBars[index]:setValue(calcnum/9900000,topnum/9900000,displaynum/990000)
+	  end
+      cnt=0
+      calcnum = 0
+      index=index+1
+    end
+    
+  end
+  if index &lt;= 16 then
+  xpRateBars[index]:setValue(calcnum,topnum,calcnum)
+  end
+  
+  xprText:echo("Approx Time to Ascend: " ..calcAscendTime(xaos.Level,xaos.LevelPercent,displaytimespan))
+end
+
+function updateKillbars(timespan)
+
+  if timespan == nil then
+    timespan = 5
+  end
+  
+  for index=1,16 do
+    killRateBars[index]:setValue(1,100,0)
+  end
+  
+  local firstindex = table.size(killcollector)
+  local lastindex = firstindex-(16*timespan)+1
+  if lastindex &lt;= 0 then
+    lastindex = 1
+  end
+  local index = 1
+  
+  local calcnum = 0
+  local cnt=0
+  
+  local topnum =1
+  for k=firstindex,lastindex,-1 do
+    calcnum = calcnum + killcollector[k].kills
+    cnt = cnt + 1
+    if cnt % timespan == 0 then
+      if topnum &lt; calcnum then
+        topnum = calcnum
+      end
+      cnt=0
+      calcnum = 0
+    end
+  end
+  if topnum &lt; calcnum then
+     topnum = calcnum
+  end
+  cnt=0
+  calcnum=0
+  for k=firstindex,lastindex,-1 do
+    local tmpnum = killcollector[k].kills
+    --if tmpnum == 0 then tmpnum = 1 end
+--echo(index)    
+    cnt = cnt + 1
+    calcnum = calcnum + tmpnum
+    
+    if cnt % timespan == 0 then
+      local displaynum = calcnum
+      if calcnum == 0 then calcnum = 1 end
+      killRateBars[index]:setValue(calcnum,topnum,displaynum)
+      cnt=0
+      calcnum = 0
+      index=index+1
+    end
+    
+  end
+  if index &lt;= 16 then
+  killRateBars[index]:setValue(calcnum,topnum,calcnum)
+  end
+  
+  
+
+end
+
+
+function updatestats() 
+  if mysettings.features.msdp then
+    --statcount=0
+    --maxstatcount=1
+    --gagmode=true
+    expandAlias("questeat",false)
+  else
+    statcount=0
+    maxstatcount=5
+    gagmode=true
+    expandAlias("questeat",false)
+    expandAlias("scoreeat",false)
+    send("aff",false)
+    send("tactics",false)
+    send("hero empower",false)
+    send("uipulse",false)
+  end 
+end
+
+
+</script>
+							<eventHandlerList />
+						</Script>
+						<Script isActive="yes" isFolder="no">
+							<name>Help File</name>
+							<packageName></packageName>
+							<script>
+
+function echoHelpToConsole(command,cons) 
+  local helpdesc = getHelpTable()
+  if command == "" then
+    helpheadecho("Available Help Sections",cons)
+    helpbodyecho("",cons)
+    if cons == "main" then
+      helpdescecho("type xhelp &lt;section&gt; for more",cons)
+      helpbodyecho("",cons)
+      helpbodyecho("all",cons)
+      helpbodyecho("",cons)
+    end
+    for k,v in pairs(helpdesc) do
+      helplinkecho(v.name,cons)    
+      helpbodyecho("",cons)
+    end
+    helpbodyecho("",cons)
+  elseif command == "all" then
+    helpheadecho("UI Help",cons)
+    helpheadecho("&lt;arg&gt; defines arguments, ? means its optional.",cons)
+    for k,v in pairs(helpdesc) do
+      helpheadecho(v.name,cons) 
+      if v.desc ~= nil then
+        helpheaddescecho(v.desc,cons)
+      end   
+      for ck,cv in pairs(v.commands) do
+        helpbodyecho(cv.name .. " " .. cv.options,cons)
+        helpdescecho(cv.desc,cons)
+      end
+    end
+  else
+    local command1 = string.split(command," ")[1]
+    local command2 = string.split(command," ")[2]
+    local filttable = table.n_filter(helpdesc, function (item) return item.name==command1 end)
+    
+    
+    if command2 == nil then
+      helpheadecho("UI Help",cons)
+      helpheadecho("&lt;arg&gt; defines arguments, ? means its optional.",cons)
+      for k,v in pairs(filttable) do
+        helpheadecho(v.name,cons)    
+        for ck,cv in pairs(v.commands) do
+          helpbodyecho(cv.name .. " " .. cv.options,cons)
+          helpdescecho(cv.desc,cons)
+        end
+      end
+    else
+      for k,v in pairs(filttable) do   
+        for ck,cv in pairs(v.commands) do
+          if cv.name == command2 then
+            helpbodyecho(cv.name .. " " .. cv.options,cons)
+            helpdescecho(cv.desc,cons)
+          end
+        end
+      end
+    end
+    if cons ~= "main" then
+      helpbodyecho("",cons)
+      helplinkecho("",cons,"Help Home")
+    end
+    
+  end
+end
+
+
+function returnHelpText(command) 
+  local helpdesc = getHelpTable()
+  local returntext = ""
+  if command == "" then
+    returntext = returntext .. helpheadprint("Available Help Sections",cons)
+    returntext = returntext .. helpdescprint("type xhelp &lt;section&gt; for more",cons)
+    returntext = returntext .. helpbodyprint("all",cons)
+    for k,v in pairs(helpdesc) do
+      returntext = returntext .. helpbodyprint(v.name,cons)    
+    end
+    returntext = returntext .. helpbodyprint("",cons)
+  elseif command == "all" then
+    returntext = returntext .. helpheadprint("UI Help",cons)
+    returntext = returntext .. helpheadprint("&lt;arg&gt; defines arguments, ? means its optional.",cons)
+    for k,v in pairs(helpdesc) do
+      returntext = returntext .. helpheadprint(v.name,cons) 
+      if v.desc ~= nil then
+        returntext = returntext .. helpheaddescprint(v.desc,cons)
+      end   
+      for ck,cv in pairs(v.commands) do
+        returntext = returntext .. helpbodyprint(cv.name .. " " .. cv.options,cons)
+        returntext = returntext .. helpdescprint(cv.desc,cons)
+      end
+    end
+  else
+    local command1 = string.split(command," ")[1]
+    local command2 = string.split(command," ")[2]
+    local filttable = table.n_filter(helpdesc, function (item) return item.name==command1 end)
+    
+    
+    if command2 == nil then
+      returntext = returntext .. helpheadprint("UI Help",cons)
+      returntext = returntext .. helpheadprint("&lt;arg&gt; defines arguments, ? means its optional.",cons)
+      for k,v in pairs(filttable) do
+        returntext = returntext .. helpheadprint(v.name,cons)    
+        for ck,cv in pairs(v.commands) do
+          returntext = returntext .. helpbodyprint(cv.name .. " " .. cv.options,cons)
+          returntext = returntext .. helpdescprint(cv.desc,cons)
+        end
+      end
+    else
+      for k,v in pairs(filttable) do   
+        for ck,cv in pairs(v.commands) do
+          if cv.name == command2 then
+            returntext = returntext .. helpbodyprint(cv.name .. " " .. cv.options,cons)
+            returntext = returntext .. helpdescprint(cv.desc,cons)
+          end
+        end
+      end
+    end
+  end
+  return returntext
+end
+
+function returnHelpHTML(command) 
+  local helpdesc = getHelpTable()
+  local returntext = ""
+  if command == "" then
+    returntext = returntext .. helpheadhtml("Available Help Sections",cons)
+    returntext = returntext .. helpdeschtml("type xhelp &lt;section&gt; for more",cons)
+    returntext = returntext .. helpbodyhtml("all",cons)
+    for k,v in pairs(helpdesc) do
+      returntext = returntext .. helpbodyhtml(v.name,cons)    
+    end
+    returntext = returntext .. helpbodyhtml("",cons)
+  elseif command == "all" then
+    returntext = returntext .. helpheadhtml("UI Help",cons)
+    returntext = returntext .. helpheadhtml("&lt;arg&gt; defines arguments, ? means its optional.",cons)
+    for k,v in pairs(helpdesc) do
+      returntext = returntext .. helpheadhtml(v.name,cons) 
+      if v.desc ~= nil then
+        returntext = returntext .. helpheaddeschtml(v.desc,cons)
+      end   
+      for ck,cv in pairs(v.commands) do
+        returntext = returntext .. helpbodyhtml(cv.name .. " " .. cv.options,cons)
+        returntext = returntext .. helpdeschtml(cv.desc,cons)
+      end
+    end
+  else
+    local command1 = string.split(command," ")[1]
+    local command2 = string.split(command," ")[2]
+    local filttable = table.n_filter(helpdesc, function (item) return item.name==command1 end)
+    
+    
+    if command2 == nil then
+      returntext = returntext .. helpheadhtml("UI Help",cons)
+      returntext = returntext .. helpheadhtml("&lt;arg&gt; defines arguments, ? means its optional.",cons)
+      for k,v in pairs(filttable) do
+        returntext = returntext .. helpheadhtml(v.name,cons)    
+        for ck,cv in pairs(v.commands) do
+          returntext = returntext .. helpbodyhtml(cv.name .. " " .. cv.options,cons)
+          returntext = returntext .. helpdeschtml(cv.desc,cons)
+        end
+      end
+    else
+      for k,v in pairs(filttable) do   
+        for ck,cv in pairs(v.commands) do
+          if cv.name == command2 then
+            returntext = returntext .. helpbodyhtml(cv.name .. " " .. cv.options,cons)
+            returntext = returntext .. helpdeschtml(cv.desc,cons)
+          end
+        end
+      end
+    end
+  end
+  return returntext
+end
+
+function getHelpTable()
+
+  local helpdesc = {}
+  
+  table.insert(helpdesc,
+    {name="script",
+     commands={
+      {name="setarea",options="&lt;name&gt;?",desc="Sets the current area, for use in scan mode.  Supplying no name will show a list."},
+      {name="cleararea",options="",desc="Clears the current area."},
+      {name="startscripting",options="&lt;name&gt;?",desc="Starts scripting the current area, or if a name is included, starts hunting the mob name.  In BETA."},   
+      {name="stopscripting",options="",desc="Stops the current script."},
+      {name="followleader",options="",desc="Will attempt to stay with your party leader. This will AUTO switch if the leader changes."},
+      {name="overrideleader",options="&lt;name&gt;",desc="This will override the leader, to force following someome.  Make sure this is the exact name of the character."},
+      {name="phunt",options="&lt;mob&gt;",desc="Prey Hunt: Set target and kill to &lt;mobname&gt; and start hunting.  This does not work with scan mode."},
+      {name="fhunt",options="&lt;friend&gt;",desc="Friend Hunt: Set target to &lt;name&gt;, clear kill and start hunting"},
+      {name="detectarea",options="",desc="Will attempt to determine the current area.  Make sure you are surrounded by area mobs."},
+     
+     }
+    }
+  )
+  table.insert(helpdesc,
+    {name="scriptconfig",
+     commands={
+      {name="endcombatwait",options="&lt;number&gt;",desc="Sets how long to wait at the end of combat, before continuing."},
+      {name="huntwait",options="&lt;number&gt;",desc="Sets how long to wait before every hunt or scan action, before continuing."},
+      {name="setinitial",options="&lt;command&gt;",desc="Will execute this command, once at the start of combat per mob."},
+      {name="autoloot",options="&lt;comma seperated list of items&gt;",desc="Will attempt to loot the items from every corpse."},
+      {name="autopickup",options="&lt;comma seperated list of items&gt;",desc="Will attemp to pickup the items after every death."},
+      {name="maxmobs",options="&lt;number&gt;",desc="Sets the maximum number of scriptable mobs before it will move into a room.  If over the limit will attempt to pull with lightning bolt."},
+      {name="scanmode",options="",desc="Turns on/off scan mode for scripting."},
+      {name="findmode",options="",desc="Turns on/off find mode for scripting.  If one of your party members gets left behind, it will try and go find them."},
+      {name="buffmode",options="",desc="Turns on/off whether you will try and use buffs such as berserk, turning off can help with staying with your party leader."},
+      {name="xconfig",options="&lt;berserkovercenter|minmana|minhp|showprompt&gt;",desc="Sets configuration options. Min Mana and HP require a 0-100."},
+     }
+    }
+  )
+  table.insert(helpdesc,
+    {name="empowers",
+     commands={
+      {name="fullempower",options="",desc="Starts the empower process.  Used for when you have alot of hero points (aka ascend)"},
+      {name="startempower",options="&lt;all&gt;?",desc="Will full empower either ac resists, or all resists. (5 times each)"},
+      {name="autoempower",options="&lt;set/remove/view&gt; &lt;name&gt;? &lt;percent&gt;?",desc="Will automatically empower whenever you kill or run fullempower based on your ratios.  view will show you your current configuration."},
+     }
+    }
+  )
+  table.insert(helpdesc,
+    {name="quest",
+     commands={
+      {name="questfilter",options="qf &lt;qm|q|clear&gt; &lt;name?&gt;",desc="Filters the quest list based on the provided questmaster(qm) or quest."},
+      {name="autoquest",options="aq &lt;questname|questnumber|clear|queue&gt;",desc="Will attempt to complete all kill objectives in a quest. In BETA."},
+     }
+    }
+  )
+  table.insert(helpdesc,
+    {name="other",
+     commands={
+      {name="multi",options="&lt;#&gt; &lt;command&gt;",desc="runs the command # of times, use {id} in the command string to reference the number."},
+      {name="afkmode",options="&lt;on|off|show&gt;?",desc="turns on afkmode, this starts tracking things that happen when you are away.  Turning it off will present the xp difference and loot gained."},
+      {name="showkills",options="",desc="Turns on/off kill counters in the data window."},
+      {name="stash/unstash",options="",desc="Your stash is whatever you are currently wearing on your body. This works as eiterh stash &lt;item&gt; or get all.item stash"},
+      {name="beckon",options="",desc="If you are in the same party as a person, will get them to turn on their hunt triggers to you."},
+      {name="gt guard",options="",desc="Will request a guard from the leader."},
+      {name="gt rescue",options="",desc="Will request a rescue from the leader."},
+      {name="gt heal",options="",desc="Will request a heal from your party."},
+      {name="rescueall",options="",desc="Will try to rescue all players in the party."},
+     }
+    }
+  )
+  table.insert(helpdesc,
+    {name="gear",
+     
+     commands={
+      {name="wearall",options="&lt;name&gt;",desc="Will put on a full set of gear based on a name (for spell up sets)"},
+      {name="wearnormal",options="",desc="Will put on your normal gear (set with seteq)"},
+      {name="seteq",options="",desc="Sets your 'normal' gear"},
+      {name="savegearset",options="&lt;gear set name&gt;",desc="Saves the current equipment setto load later"},
+      {name="loadgearset",options="&lt;gear set name&gt;",desc="Loads the current equipment set you loaded with savegearset"},
+     }
+    }
+  )
+  table.insert(helpdesc,
+    {name="damagescenario",
+     commands={
+      {name="SetScenario",options="&lt;roundcount&gt; &lt;name&gt;",desc=""},
+      {name="ClearScenario",options="",desc="Resets the current scenario."},
+      {name="FinishScenario",options="",desc="Ends the current scenario and adds it to the array."},
+      {name="ShowScenario",options="",desc="Displays the log window for the scenario."},
+     }
+    }
+  )
+  table.insert(helpdesc,
+    {name="craft",
+     desc="IN BETA",
+     commands={
+      {name="setcrafting",options="&lt;size&gt; &lt;colour&gt; &lt;quality&gt;",desc="set the crafting parameters\n\tcolor: orange=conjuration, teal=enchantment, pink=religion, maroon=abjuration"},
+      {name="makespellset",options="",desc=""},
+     }
+    }
+  )
+  table.insert(helpdesc,
+    {name="enchant",
+     desc="IN BETA - currently disabled",
+     commands={
+      {name="setenchant",options="",desc=""},
+      {name="startenchant",options="&lt;target&gt;",desc=""},
+     }
+    }
+  )
+  
+  table.insert(helpdesc,
+    {name="sort",
+     desc="IN BETA",
+     commands={
+      {name="sortroom",options="",desc=""},
+      {name="sorthelp",options="",desc=""},
+      {name="id",options="&lt;name&gt;",desc=""},
+     }
+    }
+  )
+  return helpdesc
+end
+
+function helpheadecho(text,cons)
+  if cons == nil then 
+    cons = "main"
+  end 
+  hecho(cons,"#c0FFFF\n" .. text .. "\n")
+end
+function helpheaddescecho(text,cons) 
+  if cons == nil then 
+    cons = "main"
+  end 
+  hecho(cons,"  " .. text .. "\n")
+end
+function helpbodyecho(text,cons) 
+  if cons == nil then 
+    cons = "main"
+  end 
+  hecho(cons,"#c0FFFF  " .. text .. "\n")
+end
+function helplinkecho(text,cons,linktext) 
+  if cons == nil then 
+    cons = "main"
+  elseif cons.name ~= nil then
+    cons = cons.name
+  end 
+  if linktext == nil then
+    linktext =  text
+  end
+  --hecho(cons,"#c0FFFF  " .. text .. "\n")
+  hechoLink(cons, "#9fe914  " .. linktext .. "\n", 
+    [[
+      if "]] .. cons ..[[" ~= "main" then
+        --cons:clear()
+        clearWindow("]] .. cons .. [[")
+      end
+      echoHelpToConsole("]] .. text .. [[","]] .. cons .. [[")
+    ]]
+  , "Click for more", true)
+end
+function helpdescecho(text,cons)
+  if cons == nil then 
+    cons = "main"
+  end 
+  hecho(cons,"    " .. text .. "\n")
+end
+
+
+function helpheadprint(text,cons)
+  return "#c0FFFF\n" .. text .. "\n"
+end
+function helpheaddescprint(text,cons) 
+  return "#CCCCCC  " .. text .. "\n"
+end
+function helpbodyprint(text,cons) 
+  return "#c0FFFF  " .. text .. "\n"
+end
+function helplinkprint(text,url,cons) 
+  return "#c0FFFF  " .. text .. "\n"
+end
+function helpdescprint(text,cons)
+  return "#CCCCCC    " .. text .. "\n"
+end
+
+function helpheadhtml(text,cons)
+  return "&lt;span style='color:#c0FFFF'&gt;&lt;br/&gt;" .. text .. "&lt;br/&gt;&lt;/span&gt;"
+end
+function helpheaddeschtml(text,cons) 
+  return "  " .. text .. "&lt;br/&gt;"
+end
+function helpbodyhtml(text,cons) 
+  return "&lt;span style='color:#c0FFFF'&gt;  " .. text .. "&lt;br/&gt;&lt;/span&gt;"
+end
+function helplinkhtml(text,url,cons) 
+  return "&lt;span style='color:#c0FFFF'&gt;  " .. text .. "&lt;br/&gt;&lt;/span&gt;"
+end
+function helpdeschtml(text,cons)
+  return "    " .. text .. "&lt;br/&gt;"
+end</script>
+							<eventHandlerList />
+						</Script>
+					</ScriptGroup>
+					<ScriptGroup isActive="yes" isFolder="yes">
 						<name>Parent</name>
 						<packageName></packageName>
 						<script>if focusonlywindows == nil then focusonlywindows = {} end</script>
@@ -17208,7 +18091,10 @@ end
   menu.helpbutton:setClickCallback("menu_helpbutton_click",v)
   
   function menu_helpbutton_click()
-    expandAlias("xhelp all")
+    helpWin.displaylabel:clear()
+    echoHelpToConsole("","helpdisplaylabellabel")
+    
+    helpWin:show()
   end
   buttonoffset = buttonoffset + 110
   
@@ -17233,10 +18119,10 @@ end
       
       combat = false
       hunting = false
-      menu.scriptbutton:echo("&lt;center&gt;Stop Script&lt;/center&gt;")
+      menu.scriptbutton:echo("&lt;center&gt;Start Script&lt;/center&gt;")
     else
       expandAlias("startscripting")
-      menu.scriptbutton:echo("&lt;center&gt;Start Script&lt;/center&gt;")
+      menu.scriptbutton:echo("&lt;center&gt;Stop Script&lt;/center&gt;")
     end
   end
   buttonoffset = buttonoffset + 110
@@ -17335,6 +18221,7 @@ function grabAlertLabel(index,color,func)
   AlertLabels[index]:setStyleSheet([[
     background-color: ]]..color..[[;
     border: 1px solid white;
+    margin:2px;
   ]])
   
   if func ~= nil then
@@ -17404,7 +18291,7 @@ end
     
     --WD
     "blood curdle" ,
-    "Contagion",
+    "contagion",
     "energy drain",
     "fog of gnats",
     "sulfuric wave",
@@ -17413,15 +18300,19 @@ end
     
     --Thief
     "nerve strike" ,
+    "shred armor",
     
     --Warrior
     "dirt kicking",
-    "taunt",
     
+    --Gladiator
+    "assail",
+    "taunt",
+        
     --Other
     "fire breath",
     "cryoblast",
-    
+    "radiant hammer",
   }
   function isDebuff(spellname)
     return table.contains(debuffspelllist,spellname)
@@ -18948,6 +19839,74 @@ setupWin:hide()
 </script>
 							<eventHandlerList />
 						</Script>
+						<Script isActive="yes" isFolder="no">
+							<name>Help Window</name>
+							<packageName></packageName>
+							<script>helpWin = helpWin or Geyser.UserWindow:new({
+  name="helpWin",
+  x="10%", y="10%",
+  autowrap=true,
+  fgColor = "white",
+  color = "grey",
+  width="80%", height="80%",
+  fontSize=mysettings.questfontsize,
+  scrollBar = false,
+})
+
+ helpWin:setBgColor (10,10,10)
+ helpWin:setFgColor (255,255,255)
+ 
+ helpWin.buttons = helpWin.buttons or {}
+ 
+
+helpWin.displaylabel = 
+  helpWin.displaylabel or Geyser.MiniConsole:new({
+    name = "helpdisplaylabellabel",
+    x = "2%", y = "2%",
+    width = "96%", height = "96%",
+  },helpWin)
+   --helpWin.displaylabel:setStyleSheet([[
+   --   background-color: black;
+   --   color: white;
+   -- ]])
+    
+ helpWin.displaylabel:setBgColor (10,10,10)
+ helpWin.displaylabel:setFgColor (255,255,255)
+ enableScrollBar("helpdisplaylabellabel")
+ 
+ helpWin.buttons.okay = 
+  helpWin.buttons.okay or Geyser.Label:new({
+    name = "helpokaylabel",
+    x = "-102px", y = "-52px",
+    width = "100px", height = "50px",
+    fgColor = "blue",
+    color = "white",
+  },helpWin)
+  
+ helpWin.buttons.okay:setStyleSheet([[
+      background-color: blue;
+      color: white;
+      margin-right: 1px;
+      margin-left: 1px;
+      border-top: 1px solid white;
+    ]])
+  
+ helpWin.buttons.okay:echo("Okay","white","c16")
+ 
+  helpWin.buttons.okay:setClickCallback("helpWinokayClick")
+ 
+  function helpWinokayClick()
+    helpWin:hide()
+  end 
+   
+  --helpWin.displaylabel:hecho(returnHelpText(""))
+  
+ if helpWin.autoDock then
+  helpWin:disableAutoDock() 
+end
+ helpWin:hide()</script>
+							<eventHandlerList />
+						</Script>
 					</ScriptGroup>
 					<Script isActive="yes" isFolder="no">
 						<name>Fix Layering</name>
@@ -19008,252 +19967,6 @@ end
 resizeParent()
 
 hideMenu()
-
-</script>
-						<eventHandlerList />
-					</Script>
-				</ScriptGroup>
-				<ScriptGroup isActive="yes" isFolder="yes">
-					<name>UI Helpers</name>
-					<packageName></packageName>
-					<script>-------------------------------------------------
---         Put your Lua functions here.        --
---                                             --
--- Note that you can also use external scripts --
--------------------------------------------------
-</script>
-					<eventHandlerList />
-					<Script isActive="yes" isFolder="no">
-						<name>UI Helpers</name>
-						<packageName></packageName>
-						<script>function updateDisplayTime()
-
-  updateXPbars(displaytimespan)
-  updateKillbars(displaytimespan)
-  xprText:echo(calcAscendTime(xaos.Level,xaos.LevelPercent,displaytimespan))
-
-end
-
-function calcAscendTime(lvl,lvlpercent,timespan) 
-
-  if timespan == nil then
-    timespan = 5
-  end
-
-  lvl = lvl % 100
-  lvl = lvl -1
-	local curascdings = lvl*((2+(lvl*2))/2)
-	local nextascdings = (lvl+1)*((2+((lvl+1)*2))/2)
-	
-	local curdings = curascdings + ((nextascdings-curascdings)*(lvlpercent/100))
-	local leftdings = 9900-curdings
-	leftdings = leftdings * 100 
-	--debugecho(leftdings)
-	local firstindex = table.size(xpcollector)
-	local lastindex = firstindex-(16*timespan)+1
-	if lastindex &lt;= 0 then
-	lastindex = 1
-	end
-	if firstindex == lastindex then return "unknown" end
-	local total = 0
-  local cnter=0
-	for k=firstindex,lastindex,-1 do
-		total = total + xpcollector[k].xp
-    cnter=cnter+1
-	end
-  debugecho("Counter: " .. (cnter))
-	--Average
-  debugecho("Devisor: " .. (firstindex - lastindex))
-	total = total / (cnter)
-  local avg = total
-  debugecho("Average: " .. total)
-	--Down to minute chunks
-	total = total --/ 5
-	debugecho("Min Avg: " .. total)
-	total = leftdings/total
-	--debugecho(total)
-  
-  totalstring = ""
-  --if (total/1440) &gt; 0 then
-  totalstring = totalstring .. math.floor(total/1440) .. " days, "
-  total = total % 1440
-  --end
-  --if (total/60) &gt; 0 then
-  totalstring = totalstring .. math.floor(total/60) .. " hours, "
-  total = total % 60
-  --end
-  totalstring = totalstring .. string.format("%4.2f",total) .. " minutes."
-  totalstring = totalstring .. " (Avg: " .. string.format("%4.2f",avg*timespan) .. ")"
-  return totalstring
-end
-
-function calcAscendPercent(level, levelPercent)
-  return 100*xaos.ascendcount/10000
-  
-  --level = tonumber(level)%100
-  --levelPercent = tonumber(levelPercent)
-  
-  --level = level - 1
-  --nextlevel = level+1
-  
-  --local curasc = level*((2+(level*2))/2)/9900
-  --local nextasc = nextlevel*((2+(nextlevel*2))/2)/9900
-  
-  --return 100*(curasc+((nextasc-curasc)*(levelPercent/100)))
-  
-  --return 100*(levelratio[(level%100)]+((levelratio[(level%100)+1]-levelratio[(level%100)])*(tonumber(levelPercent)/100)))
-end
-
-function updateXPbars(timespan,xptype)
-  if timespan == nil then
-    timespan = 5
-  end
-  
-  if xptype == nil then
-	xptype = 0
-  end
-  
-  for index=1,16 do
-    xpRateBars[index]:setValue(1,100,0)
-  end
-  
-  local firstindex = table.size(xpcollector)
-  local lastindex = firstindex-(16*timespan)+1
-  if lastindex &lt;= 0 then
-    lastindex = 1
-  end
-  local index = 1
-  
-  local calcnum = 0
-  local cnt=0
-  
-  local topnum =1
-  for k=firstindex,lastindex,-1 do
-    calcnum = calcnum + xpcollector[k].xp
-    cnt = cnt + 1
-    if cnt % timespan == 0 then
-      if topnum &lt; calcnum then
-        topnum = calcnum
-      end
-      cnt=0
-      calcnum = 0
-    end
-  end
-  if topnum &lt; calcnum then
-     topnum = calcnum
-  end
-  cnt=0
-  calcnum=0
-  for k=firstindex,lastindex,-1 do
-    local tmpnum = xpcollector[k].xp
-    
---echo(index)    
-    cnt = cnt + 1
-    calcnum = calcnum + tmpnum
-    
-    if cnt % timespan == 0 then
-      local displaynum = calcnum
-      if calcnum == 0 then calcnum = 1 end
-	  if xptype == 0 then
-		xpRateBars[index]:setValue(calcnum,topnum,displaynum)
-	  else
-		xpRateBars[index]:setValue(calcnum/9900000,topnum/9900000,displaynum/990000)
-	  end
-      cnt=0
-      calcnum = 0
-      index=index+1
-    end
-    
-  end
-  if index &lt;= 16 then
-  xpRateBars[index]:setValue(calcnum,topnum,calcnum)
-  end
-  
-  xprText:echo("Approx Time to Ascend: " ..calcAscendTime(xaos.Level,xaos.LevelPercent,displaytimespan))
-end
-
-function updateKillbars(timespan)
-
-  if timespan == nil then
-    timespan = 5
-  end
-  
-  for index=1,16 do
-    killRateBars[index]:setValue(1,100,0)
-  end
-  
-  local firstindex = table.size(killcollector)
-  local lastindex = firstindex-(16*timespan)+1
-  if lastindex &lt;= 0 then
-    lastindex = 1
-  end
-  local index = 1
-  
-  local calcnum = 0
-  local cnt=0
-  
-  local topnum =1
-  for k=firstindex,lastindex,-1 do
-    calcnum = calcnum + killcollector[k].kills
-    cnt = cnt + 1
-    if cnt % timespan == 0 then
-      if topnum &lt; calcnum then
-        topnum = calcnum
-      end
-      cnt=0
-      calcnum = 0
-    end
-  end
-  if topnum &lt; calcnum then
-     topnum = calcnum
-  end
-  cnt=0
-  calcnum=0
-  for k=firstindex,lastindex,-1 do
-    local tmpnum = killcollector[k].kills
-    --if tmpnum == 0 then tmpnum = 1 end
---echo(index)    
-    cnt = cnt + 1
-    calcnum = calcnum + tmpnum
-    
-    if cnt % timespan == 0 then
-      local displaynum = calcnum
-      if calcnum == 0 then calcnum = 1 end
-      killRateBars[index]:setValue(calcnum,topnum,displaynum)
-      cnt=0
-      calcnum = 0
-      index=index+1
-    end
-    
-  end
-  if index &lt;= 16 then
-  killRateBars[index]:setValue(calcnum,topnum,calcnum)
-  end
-  
-  
-
-end
-
-
-function updatestats() 
-  if mysettings.features.msdp then
-    statcount=0
-    maxstatcount=1
-    gagmode=true
-    expandAlias("questeat",false)
-  else
-    statcount=0
-    maxstatcount=5
-    gagmode=true
-    expandAlias("questeat",false)
-    expandAlias("scoreeat",false)
-    send("aff",false)
-    send("tactics",false)
-    send("hero empower",false)
-    send("uipulse",false)
-  end 
-end
-
 
 </script>
 						<eventHandlerList />
@@ -20144,7 +20857,7 @@ function reloadUI()
 
   menu.window:resize(menu.window.width,getDimensions("main").height-130 .. "px")
   
-  menu.debuffbar:resize(menu.scriptbutton.get_x() .. "px","30px")
+  menu.alertbar:resize(menu.scriptbutton.get_x() .. "px","30px")
 end
 
 </script>
@@ -20997,7 +21710,7 @@ end</script>
 					<packageName></packageName>
 					<script>function grab_AFFECTS()
   debugecho("MSDP:AFFECTS")
-  --display(msdp.AFFECTS)
+  display(msdp.AFFECTS)
   xaos.bufflist = {}
   xaos.debufflist = {}
   for k,v in pairs(msdp.AFFECTS) do

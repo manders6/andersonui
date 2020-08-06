@@ -137,14 +137,13 @@ function checkVersions()
 	if mysettings ~= nil and mysettings.version~=nil then
 		version = mysettings.version
 	end
-  --display(versions)
-	--local pos = table.index_of(versions, version) or 0
+  echo(version.. "\n")
   local pos = indexTableEntry(versions,"version",version) or 0
-  echo (pos .. " " .. #versions)
+  echo (pos .. " " .. #versions .. "\n")
 	if pos ~= #versions then
 		enableAlias("installui")
 		--cecho("\n&lt;BlueViolet&gt;&lt;DarkSlateGrey&gt; - UI is ready to install, enter &lt;white&gt;installui&lt;DarkSlateGrey&gt; to install!")
-    echo(versions[table.size(versions)].version) 
+    echo(versions[table.size(versions)].version.. "\n") 
     if not containsTableEntry(xaos.alertlist,"text","UI Update Available") then
       table.insert(xaos.alertlist,
       {
