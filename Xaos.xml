@@ -6745,12 +6745,11 @@ end
 						<script>if (RoundCalc.mine.damage&gt;0 or RoundCalc.opp.damage&gt;0) then
   local tempdamage = "&lt;cyan&gt;" .. "My Dam: " .. RoundCalc.mine.damage .. ", Opp Dam: " .. RoundCalc.opp.damage .. "\n"
   tempTimer(.01,function() cecho(tempdamage) end)
-
+  --display(RoundCalc)
   TotalCalc.Combine(RoundCalc)
   RoundCalc.Clear()  
   --TotalCalc.Display()
 end
---
 </script>
 						<triggerType>0</triggerType>
 						<conditonLineDelta>0</conditonLineDelta>
@@ -7012,7 +7011,14 @@ cecho("&lt;red&gt;" .. spacer .. matches[2])
 						</Trigger>
 						<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
 							<name>Parry</name>
-							<script>RoundCalc.opp.parry = RoundCalc.opp.parry + 1</script>
+							<script>local damtype = string.trim(matches[2])
+RoundCalc.opp.parry = RoundCalc.opp.parry + 1
+
+if RoundCalc.damtypes[damtype] == nil then
+  RoundCalc.damtypes[damtype] = {hit=0,critical=0,damage=0,block=0,dodge=0,parry=0,miss=0,reflect=0,phase=0,}
+end
+
+RoundCalc.damtypes[damtype].parry=RoundCalc.damtypes[damtype].parry+1</script>
 							<triggerType>0</triggerType>
 							<conditonLineDelta>0</conditonLineDelta>
 							<mStayOpen>0</mStayOpen>
@@ -7024,15 +7030,22 @@ cecho("&lt;red&gt;" .. spacer .. matches[2])
 							<colorTriggerFgColor>#000000</colorTriggerFgColor>
 							<colorTriggerBgColor>#000000</colorTriggerBgColor>
 							<regexCodeList>
-								<string>parries your </string>
+								<string>parries your (.*) with a .*\.</string>
 							</regexCodeList>
 							<regexCodePropertyList>
-								<integer>0</integer>
+								<integer>1</integer>
 							</regexCodePropertyList>
 						</Trigger>
 						<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
 							<name>Dodge</name>
-							<script>RoundCalc.opp.dodge = RoundCalc.opp.dodge + 1</script>
+							<script>local damtype = string.trim(matches[2])
+RoundCalc.opp.dodge = RoundCalc.opp.dodge + 1
+
+if RoundCalc.damtypes[damtype] == nil then
+  RoundCalc.damtypes[damtype] = {hit=0,critical=0,damage=0,block=0,dodge=0,parry=0,miss=0,reflect=0,phase=0,}
+end
+
+RoundCalc.damtypes[damtype].dodge=RoundCalc.damtypes[damtype].dodge+1</script>
 							<triggerType>0</triggerType>
 							<conditonLineDelta>0</conditonLineDelta>
 							<mStayOpen>0</mStayOpen>
@@ -7044,10 +7057,10 @@ cecho("&lt;red&gt;" .. spacer .. matches[2])
 							<colorTriggerFgColor>#000000</colorTriggerFgColor>
 							<colorTriggerBgColor>#000000</colorTriggerBgColor>
 							<regexCodeList>
-								<string>dodges your </string>
+								<string>dodges your (.*)\.</string>
 							</regexCodeList>
 							<regexCodePropertyList>
-								<integer>0</integer>
+								<integer>1</integer>
 							</regexCodePropertyList>
 						</Trigger>
 						<Trigger isActive="no" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
@@ -7092,8 +7105,14 @@ cecho("&lt;red&gt;" .. spacer .. matches[2])
 						</Trigger>
 						<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
 							<name>Block</name>
-							<script>RoundCalc.opp.block = RoundCalc.opp.block + 1
-</script>
+							<script>local damtype = string.trim(matches[2])
+RoundCalc.opp.block = RoundCalc.opp.block + 1
+
+if RoundCalc.damtypes[damtype] == nil then
+  RoundCalc.damtypes[damtype] = {hit=0,critical=0,damage=0,block=0,dodge=0,parry=0,miss=0,reflect=0,phase=0,}
+end
+
+RoundCalc.damtypes[damtype].block=RoundCalc.damtypes[damtype].block+1</script>
 							<triggerType>0</triggerType>
 							<conditonLineDelta>0</conditonLineDelta>
 							<mStayOpen>0</mStayOpen>
@@ -7105,16 +7124,22 @@ cecho("&lt;red&gt;" .. spacer .. matches[2])
 							<colorTriggerFgColor>#000000</colorTriggerFgColor>
 							<colorTriggerBgColor>#000000</colorTriggerBgColor>
 							<regexCodeList>
-								<string> blocks your </string>
+								<string> blocks your (.*)\.</string>
 							</regexCodeList>
 							<regexCodePropertyList>
-								<integer>0</integer>
+								<integer>1</integer>
 							</regexCodePropertyList>
 						</Trigger>
 						<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
 							<name>Phase</name>
-							<script>-- debugecho("phased")
-RoundCalc.opp.phase = RoundCalc.opp.phase + 1</script>
+							<script>local damtype = string.trim(matches[2])
+RoundCalc.opp.phase = RoundCalc.opp.phase + 1
+
+if RoundCalc.damtypes[damtype] == nil then
+  RoundCalc.damtypes[damtype] = {hit=0,critical=0,damage=0,block=0,dodge=0,parry=0,miss=0,reflect=0,phase=0,}
+end
+
+RoundCalc.damtypes[damtype].phase=RoundCalc.damtypes[damtype].phase+1</script>
 							<triggerType>0</triggerType>
 							<conditonLineDelta>0</conditonLineDelta>
 							<mStayOpen>0</mStayOpen>
@@ -7126,10 +7151,10 @@ RoundCalc.opp.phase = RoundCalc.opp.phase + 1</script>
 							<colorTriggerFgColor>#000000</colorTriggerFgColor>
 							<colorTriggerBgColor>#000000</colorTriggerBgColor>
 							<regexCodeList>
-								<string>phases to avoid your</string>
+								<string>phases to avoid your (.*)\.</string>
 							</regexCodeList>
 							<regexCodePropertyList>
-								<integer>0</integer>
+								<integer>1</integer>
 							</regexCodePropertyList>
 						</Trigger>
 					</TriggerGroup>
@@ -16638,22 +16663,22 @@ end
 
 function prettyPrintDamageCounts()
 
-  local str = "Damage Type         : Dam % - Hit %\n"
+  local str = "&lt;white&gt;Damage Type       : %Dam | %Hit | %Cri | #/Rnd \n&lt;grey&gt;"
   local sumdamcount = 0
-  for k,v in pairs(TotalCalc.damcounts) do
-    sumdamcount = sumdamcount + v
-  end
   local sumhitcount = 0
-  for k,v in pairs(TotalCalc.hitcounts) do
-    sumhitcount = sumhitcount + v
+  local sumcritcount = 0
+  for k,v in pairs(TotalCalc.damtypes) do
+    sumdamcount = sumdamcount + v.damage
+    sumhitcount = sumhitcount + v.hit
+    sumcritcount = sumcritcount + v.critical
   end
   
-  
-  for k,v in pairs(TotalCalc.damcounts) do
-    local tempname = string.sub(k .. "                   ",1,20)
-    str = str .. tempname .. ": " .. string.format("%4.1f",(v/sumdamcount)*100) .. "% - " 
-      .. string.format("%4.1f",(TotalCalc.hitcounts[k]/sumhitcount)*100) .. "% - "
-      .. string.format("%6.1f",(TotalCalc.hitcounts[k]/TotalCalc.count)) .. " \n"
+  for k,v in pairs(TotalCalc.damtypes) do
+    local tempname = string.sub(k .. "                   ",1,18)
+    str = str .. tempname .. ": " .. string.format("%4.1f",(v.damage/sumdamcount)*100) .. " | " 
+      .. string.format("%4.1f",(v.hit/sumhitcount)*100) .. " | "
+      .. string.format("%4.1f",(v.critical/sumcritcount)*100) .. " | "
+      .. string.format("%4.2f",(v.hit+v.phase+v.dodge+v.parry+v.block)/TotalCalc.count) .. " \n"
   end
   return str
 end
@@ -16739,14 +16764,6 @@ function TotalCalc.Remove(rnd)
     TotalCalc.damtypes[k].phase=TotalCalc.damtypes[k].phase-rnd.damtypes[k].phase
   end
   
-  for k,v in pairs(rnd.damcounts) do
-    TotalCalc.damcounts[k]=TotalCalc.damcounts[k]-rnd.damcounts[k]
-  end
-  
-  for k,v in pairs(rnd.hitcounts) do
-    TotalCalc.hitcounts[k]=TotalCalc.hitcounts[k]-rnd.hitcounts[k]
-  end
-  
 end
 
 function TotalCalc.SubRemove(self,rnd)
@@ -16813,20 +16830,7 @@ function TotalCalc.Combine(rnd)
     TotalCalc.damtypes[k].reflect=TotalCalc.damtypes[k].reflect+rnd.damtypes[k].reflect
     TotalCalc.damtypes[k].phase=TotalCalc.damtypes[k].phase+rnd.damtypes[k].phase
   end
-  
-  for k,v in pairs(rnd.damcounts) do
-    if TotalCalc.damcounts[k] == nil then
-      TotalCalc.damcounts[k]=0
-    end
-    TotalCalc.damcounts[k]=TotalCalc.damcounts[k]+rnd.damcounts[k]
-  end
-  
-  for k,v in pairs(rnd.hitcounts) do
-    if TotalCalc.hitcounts[k] == nil then
-      TotalCalc.hitcounts[k]=0
-    end
-    TotalCalc.hitcounts[k]=TotalCalc.hitcounts[k]+rnd.hitcounts[k]
-  end
+
   
   table.insert(TotalCalc.history,table.deepcopy(rnd))
   
@@ -16874,10 +16878,7 @@ function TotalCalc.Clear()
   TotalCalc.opp.phase=0
   
   TotalCalc.history = {}
-  
-  --TotalCalc.damcounts = {}
-  --TotalCalc.hitcounts = {}
-  
+    
   TotalCalc.damtypes = {}
   
   TotalCalc.count=0
@@ -16903,9 +16904,7 @@ function RoundCalc.Clear()
   RoundCalc.opp.miss=0
   RoundCalc.opp.reflect=0
   RoundCalc.opp.phase=0
-  
-  --RoundCalc.damcounts = {}
-  --RoundCalc.hitcounts = {}
+
   
   RoundCalc.damtypes = {}
   
@@ -17541,8 +17540,8 @@ end
 
 function updatestats() 
   if mysettings.features.msdp then
-    --statcount=0
-    --maxstatcount=1
+    statcount=0
+    maxstatcount=0
     --gagmode=true
     expandAlias("questeat",false)
   else
@@ -21710,7 +21709,7 @@ end</script>
 					<packageName></packageName>
 					<script>function grab_AFFECTS()
   debugecho("MSDP:AFFECTS")
-  display(msdp.AFFECTS)
+  --display(msdp.AFFECTS)
   xaos.bufflist = {}
   xaos.debufflist = {}
   for k,v in pairs(msdp.AFFECTS) do
@@ -21987,9 +21986,12 @@ end
         function (item) 
           return item.name == name 
         end)
-      --table.insert(xaos.heroempowers,{cost=40*(1+tonumber(v)/getEmpowerCost(name)),name=name,current=tonumber(v)/getEmpowerCost(name)})
-      tempitem.value.cost = 40*(1+tonumber(v)/getEmpowerCost(name))
-      tempitem.value.current = tonumber(v)/getEmpowerCost(name)
+      if tempitem ~= nil then
+        tempitem.value.cost = 40*(1+tonumber(v)/getEmpowerCost(name))
+        tempitem.value.current = tonumber(v)/getEmpowerCost(name)
+      else
+        cecho("&lt;yellow&gt; Issue with hero empower: " .. name)
+      end
     end
   end
 end
