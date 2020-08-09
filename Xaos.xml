@@ -940,6 +940,7 @@ end</script>
 							<script>
 if string.lower(string.trim(matches[2])) == string.lower(followTarget) then
   debugwrite("--follow found")
+  
   hunting=false
 end</script>
 							<triggerType>0</triggerType>
@@ -7124,9 +7125,11 @@ RoundCalc.damtypes[damtype].block=RoundCalc.damtypes[damtype].block+1</script>
 							<colorTriggerFgColor>#000000</colorTriggerFgColor>
 							<colorTriggerBgColor>#000000</colorTriggerBgColor>
 							<regexCodeList>
+								<string> blocks your (.*) with a .*\.</string>
 								<string> blocks your (.*)\.</string>
 							</regexCodeList>
 							<regexCodePropertyList>
+								<integer>1</integer>
 								<integer>1</integer>
 							</regexCodePropertyList>
 						</Trigger>
@@ -8416,7 +8419,7 @@ end</script>
 					<packageName></packageName>
 					<time>00:00:04.000</time>
 				</Timer>
-				<Timer isActive="no" isFolder="no" isTempTimer="no" isOffsetTimer="no">
+				<Timer isActive="yes" isFolder="no" isTempTimer="no" isOffsetTimer="no">
 					<name>leader listener</name>
 					<script>  if not hunting then
   
@@ -17747,7 +17750,7 @@ function getHelpTable()
      commands={
       {name="setarea",options="&lt;name&gt;?",desc="Sets the current area, for use in scan mode.  Supplying no name will show a list."},
       {name="cleararea",options="",desc="Clears the current area."},
-      {name="startscripting",options="&lt;name&gt;?",desc="Starts scripting the current area, or if a name is included, starts hunting the mob name.  In BETA."},   
+      {name="startscripting",options="&lt;name&gt;?",desc="Starts scripting the current area, or if a name is included, starts hunting the mob name.  Will autorun detectarea if no current area is set."},   
       {name="stopscripting",options="",desc="Stops the current script."},
       {name="followleader",options="",desc="Will attempt to stay with your party leader. This will AUTO switch if the leader changes."},
       {name="overrideleader",options="&lt;name&gt;",desc="This will override the leader, to force following someome.  Make sure this is the exact name of the character."},
@@ -17777,10 +17780,11 @@ function getHelpTable()
   table.insert(helpdesc,
     {name="empowers",
      commands={
-      {name="fullempower",options="",desc="Starts the empower process.  Used for when you have alot of hero points (aka ascend)"},
-      {name="startempower",options="&lt;all&gt;?",desc="Will full empower either ac resists, or all resists. (5 times each)"},
       {name="autoempower",options="&lt;set/remove/view&gt; &lt;name&gt;? &lt;percent&gt;?",desc="Will automatically empower whenever you kill or run fullempower based on your ratios.  view will show you your current configuration."},
-     }
+     
+      {name="fullempower",options="",desc="Starts the empower process.  Used for when you have alot of hero points (aka ascend). Uses the autoempower settings."},
+      {name="startempower",options="&lt;all&gt;?",desc="Will full empower either ac resists, or all resists. (5 times each)"},
+      }
     }
   )
   table.insert(helpdesc,
@@ -17828,35 +17832,35 @@ function getHelpTable()
      }
     }
   )
-  table.insert(helpdesc,
-    {name="craft",
-     desc="IN BETA",
-     commands={
-      {name="setcrafting",options="&lt;size&gt; &lt;colour&gt; &lt;quality&gt;",desc="set the crafting parameters\n\tcolor: orange=conjuration, teal=enchantment, pink=religion, maroon=abjuration"},
-      {name="makespellset",options="",desc=""},
-     }
-    }
-  )
-  table.insert(helpdesc,
-    {name="enchant",
-     desc="IN BETA - currently disabled",
-     commands={
-      {name="setenchant",options="",desc=""},
-      {name="startenchant",options="&lt;target&gt;",desc=""},
-     }
-    }
-  )
+  -- table.insert(helpdesc,
+    -- {name="craft",
+     -- desc="IN BETA",
+     -- commands={
+      -- {name="setcrafting",options="&lt;size&gt; &lt;colour&gt; &lt;quality&gt;",desc="set the crafting parameters\n\tcolor: orange=conjuration, teal=enchantment, pink=religion, maroon=abjuration"},
+      -- {name="makespellset",options="",desc=""},
+     -- }
+    -- }
+  -- )
+  -- table.insert(helpdesc,
+    -- {name="enchant",
+     -- desc="IN BETA - currently disabled",
+     -- commands={
+      -- {name="setenchant",options="",desc=""},
+      -- {name="startenchant",options="&lt;target&gt;",desc=""},
+     -- }
+    -- }
+  -- )
   
-  table.insert(helpdesc,
-    {name="sort",
-     desc="IN BETA",
-     commands={
-      {name="sortroom",options="",desc=""},
-      {name="sorthelp",options="",desc=""},
-      {name="id",options="&lt;name&gt;",desc=""},
-     }
-    }
-  )
+  -- table.insert(helpdesc,
+    -- {name="sort",
+     -- desc="IN BETA",
+     -- commands={
+      -- {name="sortroom",options="",desc=""},
+      -- {name="sorthelp",options="",desc=""},
+      -- {name="id",options="&lt;name&gt;",desc=""},
+     -- }
+    -- }
+  -- )
   return helpdesc
 end
 
@@ -21557,9 +21561,11 @@ function grabOppGauge(index,targetme)
         contheight = 10
       end
       
-      OPPGauges[index] = OPPGauges[index] or
-          Geyser.Gauge:new({name = "OPPGauges_"..index,  x = "0%", y = "0%", width = "100%", height ="100%"}, cont)
-      
+      if OPPGauges[index] == nil then
+        OPPGauges[index] = Geyser.Gauge:new({name = "OPPGauges_"..index,  x = "0%", y = "0%", width = "100%", height ="100%"}, cont)
+        dataCon:raise()
+        dataConOverlay:raise()
+      end
       if not targetme then
         OPPGauges[index].front:setStyleSheet(
           [[background-color: rgba(0,159,255,100%);
