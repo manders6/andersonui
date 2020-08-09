@@ -8421,7 +8421,7 @@ end</script>
 					<packageName></packageName>
 					<time>00:00:04.000</time>
 				</Timer>
-				<Timer isActive="yes" isFolder="no" isTempTimer="no" isOffsetTimer="no">
+				<Timer isActive="no" isFolder="no" isTempTimer="no" isOffsetTimer="no">
 					<name>leader listener</name>
 					<script>  if not hunting then
   
@@ -15988,6 +15988,8 @@ end</script>
   if xaos.config.equipmentsets == nil then xaos.config.equipmentsets = {} end
   
   if xaos.config.show_race == nil then xaos.config.show_race = false end
+  
+  if xaos.config.data_toggle == nil then xaos.config.data_toggle = false end
 end
 checkConfigDefaults()</script>
 					<eventHandlerList />
@@ -18599,7 +18601,9 @@ function onMainWindowClickHandler( event, button, x, y )
   --dataBackCon:resize("100%","20%")
   --dataConOverlay:show()
   for k,v in pairs(focusonlywindows) do 
-    v()
+    if not xaos.config.data_toggle then
+      v()
+    end
   end
 end
 
@@ -22033,6 +22037,7 @@ end
       end
     end
   end
+  table.sort(xaos.heroempowers,function (e1,e2) return tonumber(e1.cost) &lt; tonumber(e2.cost) end)
 end
 
 function getEmpowerCost(spell)
