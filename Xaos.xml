@@ -345,17 +345,17 @@ end
   local ascstring = string.format("%2.2f",curasc) .. "%"
   
   
-  xp_overflow = xp_overflow or 0
-  if current_xp &gt; 99 then
-    xp_overflow = round(current_xp / 100)
-    current_xp = current_xp % 100
+  --xp_overflow = xp_overflow or 0
+  --if current_xp &gt; 99 then
+  --  xp_overflow = round(current_xp / 100)
+  --  current_xp = current_xp % 100
     -- xuicom("Bucket has value "..bucket.." xp overflow is "..xp_overflow)
     --xpbar.front:echo(current_xp .. "% with " .. xp_overflow .. " dings in reserve (" .. current_xp + ((xp_overflow-1)*100) .. ")", nil, "c")
-    ascstring = ascstring .. " - " .. xp_overflow .. " stored levels"
-  else
+  --  ascstring = ascstring .. " - " .. xp_overflow .. " stored levels"
+  --else
     --  
     --xpbar.back:echo(current_xp .. "%", nil, "c")
-  end
+  --end
   --xpbar:setValue(current_xp, 100, nil)
   --Build a new variable, XP delta, for tracking HP Loss
   
@@ -1881,6 +1881,26 @@ send("wield "..wielded)
 							<integer>0</integer>
 						</regexCodePropertyList>
 					</Trigger>
+					<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+						<name>Jolted</name>
+						<script>send("stand")</script>
+						<triggerType>0</triggerType>
+						<conditonLineDelta>0</conditonLineDelta>
+						<mStayOpen>0</mStayOpen>
+						<mCommand></mCommand>
+						<packageName></packageName>
+						<mFgColor>#ff0000</mFgColor>
+						<mBgColor>#ffff00</mBgColor>
+						<mSoundFile></mSoundFile>
+						<colorTriggerFgColor>#000000</colorTriggerFgColor>
+						<colorTriggerBgColor>#000000</colorTriggerBgColor>
+						<regexCodeList>
+							<string>You are jolted and fall to the ground.</string>
+						</regexCodeList>
+						<regexCodePropertyList>
+							<integer>0</integer>
+						</regexCodePropertyList>
+					</Trigger>
 				</TriggerGroup>
 				<TriggerGroup isActive="yes" isFolder="yes" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
 					<name>Script Helpers</name>
@@ -2314,8 +2334,8 @@ end
 					<colorTriggerFgColor>#000000</colorTriggerFgColor>
 					<colorTriggerBgColor>#000000</colorTriggerBgColor>
 					<regexCodeList>
-						<string>([\w\s]+) says '(.+)'$</string>
-						<string>([\w\s]+) says to \w+ '(.+)'$</string>
+						<string>([\w\s-]+) says '(.+)'$</string>
+						<string>([\w\s-]+) says to \w+ '(.+)'$</string>
 					</regexCodeList>
 					<regexCodePropertyList>
 						<integer>1</integer>
@@ -5411,7 +5431,7 @@ if gagmode then
   statcount = statcount+1
 else
   --echo(checkbuffs().missing)
-  tempTimer(.1,function() echo(checkbuffs().missing) end)
+  --tempTimer(.1,function() echo(checkbuffs().missing) end)
 end
 
 </script>
@@ -5435,6 +5455,28 @@ end
 						</TriggerGroup>
 					</TriggerGroup>
 				</TriggerGroup>
+				<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+					<name>Start Check Buffs</name>
+					<script>if not gagmode then
+tempTimer(.1,function() echo(checkbuffs().missing) end)
+end</script>
+					<triggerType>0</triggerType>
+					<conditonLineDelta>0</conditonLineDelta>
+					<mStayOpen>0</mStayOpen>
+					<mCommand></mCommand>
+					<packageName></packageName>
+					<mFgColor>#ff0000</mFgColor>
+					<mBgColor>#ffff00</mBgColor>
+					<mSoundFile></mSoundFile>
+					<colorTriggerFgColor>#000000</colorTriggerFgColor>
+					<colorTriggerBgColor>#000000</colorTriggerBgColor>
+					<regexCodeList>
+						<string>You are affected by the following:</string>
+					</regexCodeList>
+					<regexCodePropertyList>
+						<integer>0</integer>
+					</regexCodePropertyList>
+				</Trigger>
 				<TriggerGroup isActive="yes" isFolder="yes" isTempTrigger="no" isMultiline="yes" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
 					<name>BuffMode</name>
 					<script>--BuffMode is for combat buffs that cause delay.  If you are following someone, turning this off will help
@@ -7125,7 +7167,7 @@ RoundCalc.damtypes[damtype].block=RoundCalc.damtypes[damtype].block+1</script>
 							<colorTriggerFgColor>#000000</colorTriggerFgColor>
 							<colorTriggerBgColor>#000000</colorTriggerBgColor>
 							<regexCodeList>
-								<string> blocks your (.*) with a .*\.</string>
+								<string> blocks your (.*) with .*\.</string>
 								<string> blocks your (.*)\.</string>
 							</regexCodeList>
 							<regexCodePropertyList>
@@ -9979,23 +10021,27 @@ for k,v in pairs(xaos.currentequip) do
   --held in right hand
   --held in left hand
   --held in both hands
-  echo (v.location)
-  if v.location == "held in right hand" or v.location=="held with both hands" then
-    send("wield " .. v.item .."")
-  elseif v.location == "held in left hand" then
-    send("hold " .. v.item .."")
-  elseif v.location == "floating nearby" then
-    if floatcount == 0 then
-    send("wear '" .. v.item .."' float")
-    else
+  if v.location ~= nil then
+    echo(v.location)
+    if v.location == "held in right hand" or v.location=="held with both hands" then
+      send("wield " .. v.item .."")
+    elseif v.location == "held in left hand" then
+      send("hold " .. v.item .."")
+    elseif v.location == "kinetic" then
       send("kinetic '" .. v.item)
+    elseif v.location == "floating nearby" then
+      if floatcount == 0 then
+        send("wear '" .. v.item .."' float")
+      else
+        send("kinetic '" .. v.item)
+      end
+      floatcount=floatcount+1
+    else
+      local temploc = string.gsub(v.location,"worn on ","")
+      temploc = string.gsub(temploc,"worn about ","")
+      temploc = string.gsub(temploc,"worn around ","")
+      send("wear '" .. v.item .."' " .. temploc)
     end
-    floatcount=floatcount+1
-  else
-    local temploc = string.gsub(v.location,"worn on ","")
-    temploc = string.gsub(temploc,"worn about ","")
-    temploc = string.gsub(temploc,"worn around ","")
-    send("wear '" .. v.item .."' " .. temploc)
   end
 end
 --echo("Dont forget your kinetics!")</script>
@@ -10648,7 +10694,7 @@ send("c id '" .. matches[2])
 				<command></command>
 				<packageName></packageName>
 				<regex></regex>
-				<Alias isActive="yes" isFolder="no">
+				<Alias isActive="no" isFolder="no">
 					<name>Multi Command</name>
 					<script>local counter = tonumber(matches[2])
 local command = string.trim(matches[3])
@@ -10827,6 +10873,27 @@ killTarget="claw"</script>
 					<command></command>
 					<packageName></packageName>
 					<regex>leavecryo</regex>
+				</Alias>
+				<Alias isActive="yes" isFolder="no">
+					<name>Multi Command</name>
+					<script>local counter = matches[2]
+local counter2 = matches[3]
+local command = string.trim(matches[4])
+
+if counter2 == nil then
+  counter2 = counter
+  counter = 1  
+end
+counter = tonumber(counter)
+counter2 = tonumber(counter2)
+for i=counter,counter2 do 
+  --echo(i)
+  local tempcom = string.gsub(command,"{id}",i)
+  expandAlias(tempcom)
+end</script>
+					<command></command>
+					<packageName></packageName>
+					<regex>^multi ([0-9]*)(\s)?([0-9]*)? (.*)</regex>
 				</Alias>
 			</AliasGroup>
 			<AliasGroup isActive="yes" isFolder="yes">
@@ -21978,6 +22045,8 @@ function getWearName(index)
       return "floating nearby"
     elseif index == 28 then
       return "floating nearby"
+    elseif index == 29 then
+      return "kinetic"
     end
 end  
     
