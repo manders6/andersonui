@@ -6786,12 +6786,26 @@ end
 					<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
 						<name>End Round</name>
 						<script>if (RoundCalc.mine.damage&gt;0 or RoundCalc.opp.damage&gt;0) then
-  local tempdamage = "&lt;cyan&gt;" .. "My Dam: " .. RoundCalc.mine.damage .. ", Opp Dam: " .. RoundCalc.opp.damage .. "\n"
+  local tempdamage = "&lt;cyan&gt;" .. "My Dam: " .. RoundCalc.mine.damage .. ", Opp Dam: " .. RoundCalc.opp.damage 
+  if mysettings.features.msdp then
+    tempdamage = tempdamage .. ", HP Change: " .. (msdp.HEALTH - LastRound.hpraw)
+    tempdamage = tempdamage .. ", MP Change: " .. (msdp.MANA - LastRound.manaraw)
+    tempdamage = tempdamage
+  else
+  
+    tempdamage = tempdamage .. ", HP Change: " .. (xPrompt.hp - LastRound.hp)
+    tempdamage = tempdamage .. ", MP Change: " .. (xPrompt.mana - LastRound.mana)
+  end
+  tempdamage = tempdamage .. "\n"
   tempTimer(.01,function() cecho(tempdamage) end)
+  
+  
   --display(RoundCalc)
   TotalCalc.Combine(RoundCalc)
   RoundCalc.Clear()  
   --TotalCalc.Display()
+  LastRound = table.deepcopy(xPrompt)
+  
 end
 </script>
 						<triggerType>0</triggerType>
@@ -8463,7 +8477,7 @@ end</script>
 					<packageName></packageName>
 					<time>00:00:04.000</time>
 				</Timer>
-				<Timer isActive="no" isFolder="no" isTempTimer="no" isOffsetTimer="no">
+				<Timer isActive="yes" isFolder="no" isTempTimer="no" isOffsetTimer="no">
 					<name>leader listener</name>
 					<script>  if not hunting then
   
@@ -22181,7 +22195,7 @@ end
   end
   
   xPrompt.hp = 100*tonumber(msdp.HEALTH)/tonumber(msdp.HEALTH_MAX)
-  
+  xPrompt.hpraw = msdp.HEALTH
   current_health = tonumber(xPrompt.hp)
   hpbar:setValue(current_health, 100, nil)
   --hpbar.front:echo(string.format("%2.1f",xPrompt.hp) .. "%", nil, "c")
@@ -22423,7 +22437,7 @@ end
   end
   
   xPrompt.mana = 100*tonumber(msdp.MANA)/tonumber(msdp.MANA_MAX)
-  
+  xPrompt.manaraw = msdp.MANA
   --current_mana = tonumber(xPrompt.mana)
   manabar:setValue(xPrompt.mana, 100, nil)
   manabar:setText("&lt;center&gt;" .. string.format("%2.1f",xPrompt.mana) .. "% &lt;/center&gt;" )
