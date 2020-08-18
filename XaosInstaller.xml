@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE MudletPackage>
+<MudletPackage version="1.001">
+	<TriggerPackage />
+	<TimerPackage />
+	<AliasPackage>
+		<Alias isActive="yes" isFolder="no">
+			<name>installxaos</name>
+			<script>downloadVersions()
+downloadUpdate()</script>
+			<command></command>
+			<packageName></packageName>
+			<regex>^(I|i)(N|n)(S|s)(T|t)(A|a)(L|l)(L|l)(U|u)(I|i)$</regex>
+		</Alias>
+	</AliasPackage>
+	<ActionPackage />
+	<ScriptPackage>
+		<Script isActive="yes" isFolder="no">
+			<name>Update Window</name>
+			<packageName></packageName>
+			<script>updateWin = updateWin or Geyser.UserWindow:new({
+  name="updateWin",
+  x="25%", y="25%",
+  autowrap=true,
+  fgColor = "white",
+  color = "grey",
+  width="50%", height="50%",
+  fontSize=mysettings.questfontsize,
+  scrollBar = false,
+})
+
+ updateWin:setBgColor (10,10,10)
+ updateWin:setFgColor (255,255,255)
+ 
+ updateWin.buttons = updateWin.buttons or {}
+ 
+
+updateWin.displaylabel = 
+  updateWin.displaylabel or Geyser.Label:new({
+    name = "setupdisplaylabellabel",
+    x = "10%", y = "10%",
+    width = "80%", height = "80%",
+  },updateWin)
+  
+ updateWin.displaylabel:setStyleSheet([[
+      color: black;
+      margin-right: 1px;
+      margin-left: 1px;
+      border-top: 1px solid white;
+    ]])
+
+ 
+ updateWin.buttons.okay = 
+  updateWin.buttons.okay or Geyser.Label:new({
+    name = "setupokaylabel",
+    x = "80%", y = "-10%",
+    width = "8%", height = "10%",
+    fgColor = "blue",
+    color = "white",
+  },updateWin)
+  
+ updateWin.buttons.okay:setStyleSheet([[
+      background-color: blue;
+      color: white;
+      margin-right: 1px;
+      margin-left: 1px;
+      border-top: 1px solid white;
+    ]])
+  
+ updateWin.buttons.okay:echo("Update","white","c16")
+ 
+  updateWin.buttons.okay:setClickCallback("updateWinokayClick")
+ 
+  function updateWinokayClick()
+    echo("\n\nInstalling update\n\n")
+    --expandAlias("installui")
+  end 
+  
+  updateWin.buttons.cancel = 
+  updateWin.buttons.cancel or Geyser.Label:new({
+    name = "setupcancellabel",
+    x = "90%", y = "-10%",
+    width = "8%", height = "10%",
+    fgColor = "blue",
+    color = "white",
+  },updateWin)
+  
+ updateWin.buttons.cancel:setStyleSheet([[
+      background-color: blue;
+      color: white;
+      margin-right: 1px;
+      margin-left: 1px;
+      border-top: 1px solid white;
+    ]])
+  
+ updateWin.buttons.cancel:echo("Cancel","white","c16")
+ 
+  updateWin.buttons.cancel:setClickCallback("updateWincancelClick")
+ 
+  function updateWincancelClick()
+    updateWin:hide()
+  end 
+  
+ updateWin:hide()</script>
+			<eventHandlerList />
+		</Script>
+		<Script isActive="yes" isFolder="no">
+			<name>uiLauncher</name>
+			<packageName></packageName>
+			<script>
+
+profilePath = getMudletHomeDir()
+profilePath = profilePath:gsub("\\","/")
+
+downloadPath = "https://raw.githubusercontent.com/manders6/andersonui/dev"
+
+files = {[[/Xaos.xml]],}
+
+registerAnonymousEventHandler("sysConnectionEvent", "eventHandler")
+registerAnonymousEventHandler("sysDownloadDone", "eventHandler")
+registerAnonymousEventHandler("sysDownloadError", "eventHandler")
+registerAnonymousEventHandler("bootUI", "eventHandler")
+
+function downloadVersions()
+	local path, file = profilePath .. "/ui", "/fullversions.lua"
+	if not io.exists(path) then lfs.mkdir(path) end
+	downloading = true
+	downloadFile(path .. file, downloadPath .. file)
+end
+
+function checkVersions()
+	downloading = false
+	local path = profilePath .. "/ui/fullversions.lua"
+	local versions = {}
+	table.load(path, versions)
+	local version = ""
+	if mysettings ~= nil and mysettings.version~=nil then
+		version = mysettings.version
+	end
+  echo(version.. "\n")
+  local pos = indexTableEntry(versions,"version",version) or 0
+  echo (pos .. " " .. #versions .. "\n")
+	if pos ~= #versions then
+		enableAlias("installui")
+		--cecho("\n&lt;BlueViolet&gt;&lt;DarkSlateGrey&gt; - UI is ready to install, enter &lt;white&gt;installui&lt;DarkSlateGrey&gt; to install!")
+    echo(versions[table.size(versions)].version.. "\n") 
+    if not containsTableEntry(xaos.alertlist,"text","UI Update Available") then
+      table.insert(xaos.alertlist,
+      {
+        text="UI Update Available",
+        func=function () 
+          local newver = versions[table.size(versions)]
+          updateWin.displaylabel:echo("&lt;strong&gt;Version: " .. newver.version .. "&lt;/strong&gt;&lt;br&gt;&lt;br&gt;" .. string.gsub(newver.notes,"\n","&lt;br&gt;"),"black","c16")
+          updateWin:show()
+        end,
+      }
+      )
+      showAlertLabels()
+    end
+	end
+end
+
+function installUpdate()
+	--if not downloading and corefiles is 5
+	local path = profilePath .. "/ui/Xaos.xml"
+	disableAlias("installui")
+	uninstallPackage("Xaos")
+	installPackage(path)
+	cecho("\n&lt;BlueViolet&gt;&lt;DarkSlateGrey&gt; - UI has been installed, continuing with boot.")
+	--tempTimer(4,[[raiseEvent("bootUI")]])
+end
+
+function downloadUpdate()
+	coreFiles = 0
+	downloadTimeout = tempTimer(60,function() coreDownloadFailed("timer") end)
+	cecho("\n&lt;BlueViolet&gt;&lt;DarkSlateGrey&gt; - Downloading UI, please wait.")
+	downloading = true
+	local path = profilePath .."/ui"
+	--cecho("\n           &lt;DarkSlateGrey&gt;Getting ")
+	for k,v in pairs(files) do
+		--cecho("&lt;DarkSlateGrey&gt;"..v..", ")
+		downloadFile(path..v, downloadPath..v)
+	end
+	--cecho("&lt;DarkSlateGrey&gt;from\n           "..downloadPath)
+end
+
+function coreDownloadFinished()
+	coreFiles = tonumber(coreFiles) + 1
+	if coreFiles == tonumber(#files) then
+		cecho("\n&lt;BlueViolet&gt;&lt;DarkSlateGrey&gt; - UI has been downloaded, proceeding with install!")
+		killTimer(downloadTimeout)
+		installUpdate()
+	 end
+end
+
+function coreDownloadFailed(arg)
+	cecho("\n&lt;BlueViolet&gt;&lt;DarkSlateGrey&gt; - A UI component download has failed, install can not proceed.")
+	cecho("\n&lt;DarkSlateGrey&gt;           Reason: "..arg)
+end
+
+function eventHandler(event,...)
+	if event == "sysConnectionEvent" then
+		downloadVersions()
+	elseif event == "sysDownloadDone" then
+		local file = arg[1]
+		if string.ends(file, "/fullversions.lua") then
+			checkVersions()
+		end
+		for k, v in pairs(files) do
+			if string.ends(file, v) then
+				coreDownloadFinished()
+				break
+			end
+		end
+	elseif event == "sysDownloadError" then
+		local file = arg[1]
+		if string.ends(file, "/fullversions.lua") then
+			coreDownloadFailed(file)
+		end
+		for k, v in pairs(files) do
+			if string.ends(file, v) then
+				coreDownloadFailed(file)
+				break
+			end
+		end
+	end
+end
+
+tempTimer(2,function() downloadVersions() end)
+</script>
+			<eventHandlerList />
+		</Script>
+	</ScriptPackage>
+	<KeyPackage />
+	<HelpPackage>
+		<helpURL></helpURL>
+	</HelpPackage>
+</MudletPackage>
